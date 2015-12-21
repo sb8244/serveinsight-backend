@@ -25,7 +25,9 @@ RSpec.describe UsersController, type: :controller do
                                  first_name: user.first_name,
                                  last_name: user.last_name,
                                  email: user.email,
-                                 image_url: user.image_url
+                                 image_url: user.image_url,
+                                 role: "manager",
+                                 admin: true
                                )
     end
   end
