@@ -1,0 +1,11 @@
+development:
+  adapter: postgresql
+  database: serveinsight_development
+  host: localhost
+  min_messages: WARNING
+
+test:
+  adapter: postgresql
+  database: serveinsight_test
+  host: localhost
+  min_messages: WARNING
