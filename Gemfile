@@ -16,6 +16,11 @@ group :development do
   gem 'spring'
 end
 
+group :test do
+  gem 'rspec-rails'
+end
+
 gem 'rack-cors', :require => 'rack/cors'
 gem 'omniauth-google-oauth2', branch: 'master' # master fixes redirect issues with satellize
 gem 'dotenv-rails'
+gem 'jwt'
