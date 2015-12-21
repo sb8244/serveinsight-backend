@@ -18,6 +18,12 @@ module Backend
     config.active_record.raise_in_transactional_callbacks = true
     config.assets.enabled = false
 
+    config.generators do |g|
+      g.assets false
+      g.template_engine false
+      g.helper false
+    end
+
     config.middleware.insert_before 0, "Rack::Cors", debug: true, logger: (-> { Rails.logger }) do
       allow do
         origins '*'

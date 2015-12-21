@@ -1,4 +1,6 @@
 class AuthController < ApplicationController
+  skip_before_filter :authenticate_user!
+
   def callback
     render json: { token: user.auth_token }
   end
