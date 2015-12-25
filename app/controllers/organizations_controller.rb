@@ -16,7 +16,7 @@ class OrganizationsController < ApplicationController
   end
 
   def organization_params
-    params.permit(:name, :domain)
+    params.permit(:name)
   end
 
   def create_and_setup_organization

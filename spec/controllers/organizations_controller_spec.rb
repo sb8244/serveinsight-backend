@@ -14,7 +14,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it "returns the organization" do
       get :show
       expect(response).to be_success
-      expect(response_json).to include(name: organization.name, domain: organization.domain)
+      expect(response_json).to include(name: organization.name)
     end
 
     context "without membership" do

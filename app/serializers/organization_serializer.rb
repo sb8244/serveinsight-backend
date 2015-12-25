@@ -1,3 +1,3 @@
 class OrganizationSerializer < ActiveModel::Serializer
-  attributes :id, :name, :domain
+  attributes :id, :name
 end
