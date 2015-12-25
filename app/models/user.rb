@@ -5,8 +5,16 @@ class User < ActiveRecord::Base
 
   has_many :organization_memberships
 
+  def organization_membership
+    organization_memberships.first
+  end
+
   def organization
-    organization_memberships.first.try!(:organization)
+    organization_membership.try!(:organization)
+  end
+
+  def organization_admin?
+    organization_membership.try!(:admin?) || false
   end
 
   def add_to_organization!(org)
