@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   has_many :organization_memberships
 
   def organization_membership
-    organization_memberships.first
+    organization_memberships.joins(:organization).first
   end
 
   def organization
