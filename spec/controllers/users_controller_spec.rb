@@ -27,7 +27,7 @@ RSpec.describe UsersController, type: :controller do
                                  email: user.email,
                                  image_url: user.image_url,
                                  role: "manager",
-                                 admin: true,
+                                 admin: false,
                                  organization: nil,
                                  organization_admin: false
                                )

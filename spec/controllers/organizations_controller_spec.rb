@@ -41,12 +41,13 @@ RSpec.describe OrganizationsController, type: :controller do
         }.to change{ Organization.count }.by(1)
       end
 
-      it "adds the user to the organization" do
+      it "adds the user to the organization as an admin" do
         expect {
           post :create, params
         }.to change{ user.reload.organization }.from(nil)
 
         expect(user.organization).to eq(Organization.last)
+        expect(user.admin?).to eq(true)
       end
     end
 

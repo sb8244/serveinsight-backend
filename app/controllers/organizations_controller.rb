@@ -21,7 +21,7 @@ class OrganizationsController < ApplicationController
 
   def create_and_setup_organization
     Organization.create(organization_params).tap do |organization|
-      current_user.add_to_organization!(organization) if organization.persisted?
+      current_user.add_to_organization!(organization, admin: true) if organization.persisted?
     end
   end
 

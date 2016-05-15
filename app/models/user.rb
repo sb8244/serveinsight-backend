@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
 
   has_many :organization_memberships
 
+  def admin?
+    organization_membership.try!(:admin) || false
+  end
+
   def organization_membership
     organization_memberships.joins(:organization).first
   end
@@ -17,8 +21,8 @@ class User < ActiveRecord::Base
     organization_membership.try!(:admin?) || false
   end
 
-  def add_to_organization!(org)
-    organization_memberships.where(organization: org).first_or_create!
+  def add_to_organization!(org, admin: false)
+    organization_memberships.where(organization: org).first_or_create!(admin: admin)
   end
 
   def auth_token
