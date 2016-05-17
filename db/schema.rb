@@ -11,22 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160517022124) do
+ActiveRecord::Schema.define(version: 20160517024906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "invites", force: :cascade do |t|
-    t.integer  "organization_id",                 null: false
-    t.string   "email",                           null: false
-    t.boolean  "admin",           default: false, null: false
     t.boolean  "accepted",        default: false, null: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.boolean  "admin",           default: false, null: false
+    t.string   "email",                           null: false
+    t.integer  "organization_id",                 null: false
   end
-
-  add_index "invites", ["organization_id", "email"], name: "index_invites_on_organization_id_and_email", unique: true, using: :btree
-  add_index "invites", ["organization_id"], name: "index_invites_on_organization_id", using: :btree
 
   create_table "organization_memberships", force: :cascade do |t|
     t.integer  "organization_id",                 null: false
@@ -34,10 +31,12 @@ ActiveRecord::Schema.define(version: 20160517022124) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.boolean  "admin",           default: false
+    t.integer  "reviewer_id"
   end
 
   add_index "organization_memberships", ["organization_id", "user_id"], name: "index_organization_memberships_on_organization_id_and_user_id", unique: true, using: :btree
   add_index "organization_memberships", ["organization_id"], name: "index_organization_memberships_on_organization_id", using: :btree
+  add_index "organization_memberships", ["reviewer_id"], name: "index_organization_memberships_on_reviewer_id", using: :btree
   add_index "organization_memberships", ["user_id"], name: "index_organization_memberships_on_user_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
