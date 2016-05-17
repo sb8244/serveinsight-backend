@@ -13,8 +13,7 @@ class AuthController < ApplicationController
 
   def user_params
     {
-      first_name: info.first_name,
-      last_name: info.last_name,
+      name: "#{info.first_name} #{info.last_name}",
       email: info.email,
       image_url: info.image
     }

@@ -16,8 +16,7 @@ RSpec.describe AuthController, type: :controller do
     }.to change{ User.count }.by(1)
 
     expect(User.last.attributes).to include(
-                                      "first_name" => "Steve",
-                                      "last_name" => "Bussey",
+                                      "name" => "Steve Bussey",
                                       "email" => "steve@test.com",
                                       "image_url" => "http://image.test"
                                     )
@@ -30,7 +29,7 @@ RSpec.describe AuthController, type: :controller do
   end
 
   context "with an existing user at the email" do
-    let!(:existing_user) { User.create!(first_name: "Test", last_name: "Test", email: mock_info[:email]) }
+    let!(:existing_user) { User.create!(name: "Test Test", email: mock_info[:email]) }
 
     it "doesn't create a new user" do
       expect {

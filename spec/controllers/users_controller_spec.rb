@@ -54,8 +54,7 @@ RSpec.describe UsersController, type: :controller do
       get :show
       expect(response_json).to eq(
                                  id: user.id,
-                                 first_name: user.first_name,
-                                 last_name: user.last_name,
+                                 name: user.name,
                                  email: user.email,
                                  image_url: user.image_url,
                                  role: "manager",
