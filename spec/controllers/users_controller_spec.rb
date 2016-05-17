@@ -84,4 +84,54 @@ RSpec.describe UsersController, type: :controller do
                                )
     end
   end
+
+  describe "PUT bulk_update" do
+    let!(:user2) { FactoryGirl.create(:user) }
+    let!(:user3) { FactoryGirl.create(:user) }
+
+    context "not an admin" do
+      before do
+        user.add_to_organization!(org, admin: false)
+        user2.add_to_organization!(org, admin: false)
+        user3.add_to_organization!(org, admin: false)
+      end
+
+      it "is 401" do
+        put :bulk_update
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "as an admin" do
+      before do
+        user.add_to_organization!(org, admin: true)
+        user2.add_to_organization!(org, admin: false)
+        user3.add_to_organization!(org, admin: false)
+
+        user2.organization_membership.update!(reviewer: user)
+        user3.organization_membership.update!(reviewer: user)
+      end
+
+      it "works without data" do
+        put :bulk_update
+        expect(response).to be_success
+      end
+
+      it "updates the name of the params" do
+        expect {
+          expect {
+            expect {
+              put :bulk_update, data: [{ id: user.id, name: "change" }, { id: user2.id, name: "change2" }]
+            }.to change { user.reload.name }.to("change")
+          }.to change { user2.reload.name }.to("change2")
+        }.not_to change { user3.reload.attributes }
+      end
+
+      it "updates the reviewer_id" do
+        expect {
+          put :bulk_update, data: [{ id: user.id, reviewer_id: user2.id }]
+        }.to change { user.reload.reviewer }.from(nil).to(user2)
+      end
+    end
+  end
 end

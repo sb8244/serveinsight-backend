@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_organization
+    @current_organization ||= current_user.try!(:organization)
+  end
+
   private
 
   def authenticate_user!
