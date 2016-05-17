@@ -1,9 +1,5 @@
-class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :image_url, :role, :admin?
-
+class UserSerializer < Plain::UserSerializer
   has_one :organization
-
-  def role
-    "manager"
-  end
+  has_many :direct_reports, serializer: Plain::UserSerializer
+  has_one :reviewer, serializer: Plain::UserSerializer
 end

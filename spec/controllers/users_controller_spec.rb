@@ -31,11 +31,29 @@ RSpec.describe UsersController, type: :controller do
         user.add_to_organization!(org, admin: true)
         user2.add_to_organization!(org, admin: false)
         user3.add_to_organization!(org, admin: false)
+
+        user2.organization_membership.update!(reviewer: user)
+        user3.organization_membership.update!(reviewer: user)
       end
 
       it "returns all team users" do
         get :index
         expect(response_json.count).to eq(3)
+      end
+
+      it "returns the direct reports for user" do
+        get :index
+        expect(response_json[0][:direct_reports].count).to eq(2)
+        expect(response_json[0][:direct_reports].map { |h| h[:id] }).to match_array([ user2.id, user3.id ])
+        expect(response_json[1][:direct_reports]).to eq([])
+        expect(response_json[2][:direct_reports]).to eq([])
+      end
+
+      it "returns the reviewer for user2 and user3" do
+        get :index
+        expect(response_json[0][:reviewer]).to eq(nil)
+        expect(response_json[1][:reviewer][:id]).to eq(user.id)
+        expect(response_json[2][:reviewer][:id]).to eq(user.id)
       end
     end
   end
@@ -59,6 +77,8 @@ RSpec.describe UsersController, type: :controller do
                                  image_url: user.image_url,
                                  role: "manager",
                                  admin: false,
+                                 direct_reports: [],
+                                 reviewer: nil,
                                  organization: nil
                                )
     end
