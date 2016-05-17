@@ -79,6 +79,7 @@ RSpec.describe UsersController, type: :controller do
                                  admin: false,
                                  direct_reports: [],
                                  reviewer: nil,
+                                 reviewer_id: nil,
                                  organization: nil
                                )
     end
