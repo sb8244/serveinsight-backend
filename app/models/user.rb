@@ -4,20 +4,15 @@ class User < ActiveRecord::Base
 
   has_many :organization_memberships
 
+  delegate :organization, :direct_reports, :reviewer,
+            to: :organization_membership, allow_nil: true
+
   def admin?
     organization_membership.try!(:admin) || false
   end
 
   def organization_membership
     organization_memberships.joins(:organization).first
-  end
-
-  def organization
-    organization_membership.try!(:organization)
-  end
-
-  def organization_admin?
-    organization_membership.try!(:admin?) || false
   end
 
   def add_to_organization!(org, admin: false)

@@ -59,8 +59,7 @@ RSpec.describe UsersController, type: :controller do
                                  image_url: user.image_url,
                                  role: "manager",
                                  admin: false,
-                                 organization: nil,
-                                 organization_admin: false
+                                 organization: nil
                                )
     end
   end

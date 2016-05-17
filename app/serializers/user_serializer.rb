@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :image_url, :role, :admin?, :organization_admin?
+  attributes :id, :name, :email, :image_url, :role, :admin?
 
   has_one :organization
 
