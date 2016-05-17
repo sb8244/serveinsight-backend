@@ -121,7 +121,7 @@ RSpec.describe UsersController, type: :controller do
         expect {
           expect {
             expect {
-              put :bulk_update, data: [{ id: user.id, name: "change" }, { id: user2.id, name: "change2" }]
+              put :bulk_update, data: [{ id: user.id, name: "change", junk: true }, { id: user2.id, name: "change2" }]
             }.to change { user.reload.name }.to("change")
           }.to change { user2.reload.name }.to("change2")
         }.not_to change { user3.reload.attributes }
