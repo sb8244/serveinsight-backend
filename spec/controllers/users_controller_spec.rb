@@ -132,6 +132,24 @@ RSpec.describe UsersController, type: :controller do
           put :bulk_update, data: [{ id: user.id, reviewer_id: user2.id }]
         }.to change { user.reload.reviewer }.from(nil).to(user2)
       end
+
+      context "when reviewer_id = user_id" do
+        it "doesn't updates the reviewer_id" do
+          expect {
+            expect {
+              put :bulk_update, data: [{ id: user.id, reviewer_id: user.id }]
+            }.to raise_error(ActiveRecord::RecordInvalid)
+          }.not_to change { user.reload.reviewer }.from(nil)
+        end
+
+        it "discards earlier changes" do
+          expect {
+            expect {
+              put :bulk_update, data: [{ id: user2.id, name: "change"}, { id: user.id, reviewer_id: user.id }]
+            }.to raise_error(ActiveRecord::RecordInvalid)
+          }.not_to change { user2.reload.attributes }
+        end
+      end
     end
   end
 end
