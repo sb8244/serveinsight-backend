@@ -23,6 +23,8 @@ class UsersController < ApplicationController
     end
 
     respond_with users
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private

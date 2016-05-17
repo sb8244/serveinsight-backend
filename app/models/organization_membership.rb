@@ -15,7 +15,7 @@ class OrganizationMembership < ActiveRecord::Base
 
   def reviewer_is_not_user
     if reviewer_id == user_id
-      errors.add(:reviewer, "cannot be the user")
+      errors.add(:reviewer, "cannot be self")
     end
   end
 end

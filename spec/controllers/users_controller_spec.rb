@@ -136,17 +136,15 @@ RSpec.describe UsersController, type: :controller do
       context "when reviewer_id = user_id" do
         it "doesn't updates the reviewer_id" do
           expect {
-            expect {
-              put :bulk_update, data: [{ id: user.id, reviewer_id: user.id }]
-            }.to raise_error(ActiveRecord::RecordInvalid)
+            put :bulk_update, data: [{ id: user.id, reviewer_id: user.id }]
+            expect(response.status).to eq(422)
+            expect(response_json[:error]).to eq("Validation failed: Reviewer cannot be self")
           }.not_to change { user.reload.reviewer }.from(nil)
         end
 
         it "discards earlier changes" do
           expect {
-            expect {
-              put :bulk_update, data: [{ id: user2.id, name: "change"}, { id: user.id, reviewer_id: user.id }]
-            }.to raise_error(ActiveRecord::RecordInvalid)
+            put :bulk_update, data: [{ id: user2.id, name: "change"}, { id: user.id, reviewer_id: user.id }]
           }.not_to change { user2.reload.attributes }
         end
       end
