@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   end
 
   def add_to_organization!(org, admin: false)
-    organization_memberships.where(organization: org).first_or_create!(admin: admin)
+    organization_memberships.where(organization: org).first_or_create!(admin: admin, name: name, email: email)
   end
 
   def auth_token
