@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_organization_membership
+    @current_organization_membership ||= current_user.try!(:organization_membership)
+  end
+
   def current_organization
     @current_organization ||= current_user.try!(:organization)
   end

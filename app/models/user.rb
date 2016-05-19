@@ -1,19 +1,10 @@
 class User < ActiveRecord::Base
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true
 
   has_many :organization_memberships
 
-  delegate :organization, :reviewer,
-            to: :organization_membership, allow_nil: true
-
-  def admin?
-    organization_membership.try!(:admin) || false
-  end
-
-  def direct_reports
-    organization_membership.try!(:direct_reports) || []
-  end
+  delegate :organization, to: :organization_membership, allow_nil: true
 
   def organization_membership
     organization_memberships.joins(:organization).first
