@@ -1,6 +1,6 @@
 class InvitesController < ApplicationController
   def index
-    respond_with current_organization.invites
+    respond_with current_organization.invites.includes(:organization_membership)
   end
 
   def create
@@ -15,7 +15,11 @@ class InvitesController < ApplicationController
 
   InviteCreator = Struct.new(:organization, :invite_params) do
     def call
-      organization.invites.create(invite_params)
+      org_member = organization.organization_memberships.where(email: invite_params.fetch(:email)).first_or_create!(invite_params)
+
+      if org_member.user.blank?
+        org_member.invites.create!
+      end
     end
   end
 end

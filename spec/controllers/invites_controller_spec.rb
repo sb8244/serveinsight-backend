@@ -12,8 +12,8 @@ RSpec.describe InvitesController, type: :controller do
   }
 
   describe "GET index" do
-    let!(:invite1) { organization.invites.create!(email: "test@test.com", name: "test") }
-    let!(:invite2) { organization2.invites.create!(email: "test@test.com", name: "test") }
+    let!(:invite1) { Invite.create!(organization_membership: organization.organization_memberships.create!(email: "test@test.com", name: "test")) }
+    let!(:invite2) { Invite.create!(organization_membership: organization2.organization_memberships.create!(email: "test@test.com", name: "test")) }
 
     it "lists invites" do
       get :index

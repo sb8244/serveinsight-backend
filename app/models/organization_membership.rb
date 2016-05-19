@@ -1,8 +1,9 @@
 class OrganizationMembership < ActiveRecord::Base
   belongs_to :organization
   belongs_to :user
-
   belongs_to :reviewer, foreign_key: "reviewer_id", class_name: "User"
+
+  has_many :invites
 
   validate :reviewer_id, :reviewer_is_not_user
 
@@ -14,7 +15,7 @@ class OrganizationMembership < ActiveRecord::Base
   private
 
   def reviewer_is_not_user
-    if reviewer_id == user_id
+    if user_id.present? && reviewer_id == user_id
       errors.add(:reviewer, "cannot be self")
     end
   end
