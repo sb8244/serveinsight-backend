@@ -12,8 +12,8 @@ RSpec.describe InvitesController, type: :controller do
   }
 
   describe "GET index" do
-    let!(:invite1) { organization.invites.create!(email: "test@test.com") }
-    let!(:invite2) { organization2.invites.create!(email: "test@test.com") }
+    let!(:invite1) { organization.invites.create!(email: "test@test.com", name: "test") }
+    let!(:invite2) { organization2.invites.create!(email: "test@test.com", name: "test") }
 
     it "lists invites" do
       get :index
@@ -25,7 +25,7 @@ RSpec.describe InvitesController, type: :controller do
   describe "POST create" do
     it "creates an invite" do
       expect {
-        post :create, admin: false, email: "test@test.com"
+        post :create, admin: false, email: "test@test.com", name: "test"
         expect(response).to be_success
       }.to change{ organization.invites.count }.by(1)
     end
