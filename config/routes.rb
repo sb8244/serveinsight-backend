@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   resource :organization, only: [:show, :create]
   resources :invites, only: [:create, :index]
 
+  resources :survey_templates, except: [:destroy]
+
   post '/auth/:provider/callback', to: 'auth#callback'
 end

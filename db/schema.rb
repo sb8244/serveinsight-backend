@@ -49,15 +49,15 @@ ActiveRecord::Schema.define(version: 20160527001612) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.text     "question",            null: false
-    t.integer  "organization_id",     null: false
-    t.integer  "survey_templates_id", null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.text     "question",           null: false
+    t.integer  "organization_id",    null: false
+    t.integer  "survey_template_id", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
   add_index "questions", ["organization_id"], name: "index_questions_on_organization_id", using: :btree
-  add_index "questions", ["survey_templates_id"], name: "index_questions_on_survey_templates_id", using: :btree
+  add_index "questions", ["survey_template_id"], name: "index_questions_on_survey_template_id", using: :btree
 
   create_table "survey_templates", force: :cascade do |t|
     t.integer  "organization_id",                null: false
