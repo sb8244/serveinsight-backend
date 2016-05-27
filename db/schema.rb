@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160519040541) do
+ActiveRecord::Schema.define(version: 20160527001612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,30 @@ ActiveRecord::Schema.define(version: 20160519040541) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "questions", force: :cascade do |t|
+    t.text     "question",            null: false
+    t.integer  "organization_id",     null: false
+    t.integer  "survey_templates_id", null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "questions", ["organization_id"], name: "index_questions_on_organization_id", using: :btree
+  add_index "questions", ["survey_templates_id"], name: "index_questions_on_survey_templates_id", using: :btree
+
+  create_table "survey_templates", force: :cascade do |t|
+    t.integer  "organization_id",                null: false
+    t.integer  "creator_id",                     null: false
+    t.string   "name",                           null: false
+    t.boolean  "active",          default: true, null: false
+    t.boolean  "recurring",       default: true, null: false
+    t.boolean  "goals_section",   default: true, null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "survey_templates", ["organization_id"], name: "index_survey_templates_on_organization_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.text     "email",      null: false
