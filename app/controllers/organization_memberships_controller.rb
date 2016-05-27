@@ -7,6 +7,12 @@ class OrganizationMembershipsController < ApplicationController
     respond_with current_organization_membership
   end
 
+  def destroy
+    organization_memberships.find(params[:id]).destroy
+
+    head :no_content
+  end
+
   def bulk_update
     return head :forbidden unless current_organization_membership.admin?
 

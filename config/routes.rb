@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resource :user, only: [:show]
   resource :organization_membership, only: [:show]
-  resources :organization_memberships, only: [:index] do
+  resources :organization_memberships, only: [:index, :destroy] do
     collection do
       put :bulk_update
     end

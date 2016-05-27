@@ -144,4 +144,22 @@ RSpec.describe OrganizationMembershipsController, type: :controller do
       end
     end
   end
+
+  describe "DELETE destroy" do
+    context "when not authenticated" do
+      let!(:user) {}
+
+      it "is unauthorized" do
+        delete :destroy, id: organization_membership.id
+        expect(response.status).to eq(401)
+      end
+    end
+
+    it "removes the organization_membership" do
+      expect {
+        delete :destroy, id: organization_membership.id
+        expect(response).to be_success
+      }.to change { OrganizationMembership.count }.by(-1)
+    end
+  end
 end
