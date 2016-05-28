@@ -4,7 +4,7 @@ class SurveyTemplatesController < ApplicationController
   end
 
   def show
-
+    respond_with survey_templates.find(params.fetch(:id))
   end
 
   def update
