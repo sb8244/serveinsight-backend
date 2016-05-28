@@ -23,6 +23,15 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(response_json.first[:questions].count).to eq(template.questions.count)
       expect(response_json.first[:questions].first.keys).to match_array(QUESTION_KEYS)
     end
+
+    it "orders the questions" do
+      template.questions.reverse.each_with_index do |question, i|
+        question.update!(order: i)
+      end
+
+      get :index
+      expect(response_json.first[:questions].map { |h| h[:id] }).to eq(template.questions.order(order: :asc).pluck(:id))
+    end
   end
 
   describe "GET show" do
@@ -34,6 +43,15 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(response_json.keys).to match_array(SURVEY_KEYS)
       expect(response_json[:questions].count).to eq(template.questions.count)
       expect(response_json[:questions].first.keys).to match_array(QUESTION_KEYS)
+    end
+
+    it "orders the questions" do
+      template.questions.reverse.each_with_index do |question, i|
+        question.update!(order: i)
+      end
+
+      get :show, id: template.id
+      expect(response_json[:questions].map { |h| h[:id] }).to eq(template.questions.order(order: :asc).pluck(:id))
     end
   end
 

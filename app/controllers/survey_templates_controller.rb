@@ -18,7 +18,7 @@ class SurveyTemplatesController < ApplicationController
   private
 
   def survey_templates
-    current_organization.survey_templates
+    current_organization.survey_templates.includes(:questions)
   end
 
   def created_template
