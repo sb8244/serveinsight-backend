@@ -36,4 +36,43 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(response_json[:questions].first.keys).to match_array(QUESTION_KEYS)
     end
   end
+
+  describe "POST create" do
+    let(:params) do
+      {
+        name: "Test",
+        goals_section: true,
+        questions: [
+          {
+            question: "A"
+          },
+          {
+            question: "B"
+          }
+        ]
+      }
+    end
+
+    it "creates a SurveyTemplate" do
+      expect {
+        post :create, params
+        expect(response).to be_success
+      }.to change { organization.survey_templates.count }.by(1)
+
+      survey = organization.survey_templates.last
+      expect(survey.creator).to eq(membership)
+      expect(survey.name).to eq("Test")
+      expect(survey.goals_section).to eq(true)
+      expect(survey.recurring).to eq(true)
+    end
+
+    it "creates questions for the SurveyTemplate" do
+      expect {
+        post :create, params
+      }.to change { Question.count }.by(2)
+
+      expect(Question.first.question).to eq("A")
+      expect(Question.second.question).to eq("B")
+    end
+  end
 end

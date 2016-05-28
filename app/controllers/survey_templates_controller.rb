@@ -7,11 +7,11 @@ class SurveyTemplatesController < ApplicationController
     respond_with survey_templates.find(params.fetch(:id))
   end
 
-  def update
-
+  def create
+    respond_with created_template
   end
 
-  def create
+  def update
 
   end
 
@@ -19,5 +19,21 @@ class SurveyTemplatesController < ApplicationController
 
   def survey_templates
     current_organization.survey_templates
+  end
+
+  def created_template
+    survey_templates.create(template_params.merge(creator: current_organization_membership)).tap do |template|
+      question_params.fetch(:questions, []).each do |question_param|
+        template.questions.create(question_param.merge(organization: current_organization))
+      end
+    end
+  end
+
+  def template_params
+    params.permit(:name, :goals_section)
+  end
+
+  def question_params
+    params.permit(questions: [:question])
   end
 end
