@@ -23,8 +23,8 @@ class SurveyTemplatesController < ApplicationController
 
   def created_template
     survey_templates.create(template_params.merge(creator: current_organization_membership)).tap do |template|
-      question_params.fetch(:questions, []).each do |question_param|
-        template.questions.create(question_param.merge(organization: current_organization))
+      question_params.fetch(:questions, []).each_with_index do |question_param, index|
+        template.questions.create(question_param.merge(organization: current_organization, order: index))
       end
     end
   end

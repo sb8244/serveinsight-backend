@@ -71,8 +71,8 @@ RSpec.describe SurveyTemplatesController, type: :controller do
         post :create, params
       }.to change { Question.count }.by(2)
 
-      expect(Question.first.question).to eq("A")
-      expect(Question.second.question).to eq("B")
+      expect(Question.first.attributes).to include("question" => "A", "order" => 0)
+      expect(Question.second.attributes).to include("question" => "B", "order" => 1)
     end
   end
 end
