@@ -27,5 +27,5 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'omniauth-google-oauth2', branch: 'master' # master fixes redirect issues with satellize
 gem 'dotenv-rails'
 gem 'jwt'
-gem 'active_model_serializers'
+gem 'active_model_serializers', '< 0.9'
 gem 'responders', '~> 2.0'
