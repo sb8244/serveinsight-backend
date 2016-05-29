@@ -8,7 +8,7 @@ class SurveyTemplateSerializer < Plain::SurveyTemplateSerializer
   end
 
   def users_in_scope
-    42
+    options.fetch(:users_in_scope)
   end
 
   def response_count

@@ -1,22 +1,26 @@
 class SurveyTemplatesController < ApplicationController
   def index
-    respond_with survey_templates
+    respond_with survey_templates, users_in_scope: users_in_scope
   end
 
   def show
-    respond_with survey_template
+    respond_with survey_template, users_in_scope: users_in_scope
   end
 
   def create
-    respond_with created_template
+    respond_with created_template, users_in_scope: users_in_scope
   end
 
   def update
     update_template!
-    respond_with survey_template
+    respond_with survey_template, users_in_scope: users_in_scope
   end
 
   private
+
+  def users_in_scope
+    current_organization.organization_memberships.count
+  end
 
   def survey_templates
     current_organization.survey_templates.includes(:questions)
