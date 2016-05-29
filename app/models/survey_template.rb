@@ -4,6 +4,6 @@ class SurveyTemplate < ActiveRecord::Base
   belongs_to :creator, class_name: "OrganizationMembership"
 
   def ordered_questions
-    questions.sort_by(&:order)
+    questions.select(&:current?).sort_by(&:order)
   end
 end

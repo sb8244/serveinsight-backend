@@ -93,4 +93,50 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(Question.second.attributes).to include("question" => "B", "order" => 1)
     end
   end
+
+  describe "PUT update" do
+    let!(:template) { FactoryGirl.create(:survey_template_with_questions, organization: organization) }
+
+    it "can change template attributes" do
+      expect {
+        put :update, id: template.id, name: "new"
+      }.to change { template.reload.name }.to("new")
+    end
+
+    it "removes questions not in the question array" do
+      expect {
+        put :update, id: template.id, questions: [{
+          id: template.questions.first.id,
+          question: template.questions.first.question
+        }]
+      }.to change { Question.current.count }.by(-2)
+    end
+
+    it "updates questions in the question array" do
+      question = template.questions.first
+      expect {
+        put :update, id: template.id, questions: [{
+          id: question.id,
+          question: "edit"
+        }]
+      }.to change { question.reload.question }.to("edit")
+    end
+
+    it "adds questions based on the question array" do
+      question = template.questions.first
+      expect {
+        put :update, id: template.id, questions: [{
+          question: "first"
+        }, {
+          id: question.id,
+          question: "edit"
+        }, {
+          id: nil,
+          question: "new"
+        }]
+      }.to change { Question.count }.by(2)
+
+      expect(template.reload.ordered_questions.map(&:question)).to eq(["first", "edit", "new"])
+    end
+  end
 end
