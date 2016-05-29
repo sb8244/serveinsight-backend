@@ -136,6 +136,7 @@ RSpec.describe SurveyTemplatesController, type: :controller do
         }]
       }.to change { Question.count }.by(2)
 
+      expect(template.reload.ordered_questions.map(&:order)).to eq([0, 1, 2])
       expect(template.reload.ordered_questions.map(&:question)).to eq(["first", "edit", "new"])
     end
   end
