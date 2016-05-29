@@ -12,7 +12,7 @@ class SurveyTemplatesController < ApplicationController
   end
 
   def update
-    update_template
+    update_template!
     respond_with survey_template
   end
 
@@ -34,22 +34,12 @@ class SurveyTemplatesController < ApplicationController
     end
   end
 
-  def update_template
-    survey_template.update(template_params) if template_params.any?
+  def update_template!
+    survey_template.update!(template_params) if template_params.any?
+    return unless update_question_params.any?
 
-    if update_question_params.any?
-      keep_ids = update_question_params.map { |h| h[:id] }.compact
-      survey_template.questions.where.not(id: keep_ids).update_all(deleted: true)
-      update_question_params.each_with_index do |question_param, order|
-        existing_question = survey_template.questions.find_by(id: question_param[:id])
-
-        if existing_question
-          existing_question.update!(question_param.merge(order: order))
-        else
-          survey_template.questions.create!(question_param.merge(order: order, organization: current_organization))
-        end
-      end
-    end
+    delete_questions_not_in_update!
+    update_questions_in_update!
   end
 
   def template_params
@@ -62,5 +52,22 @@ class SurveyTemplatesController < ApplicationController
 
   def update_question_params
     @update_question_params ||= question_params.fetch(:questions, {})
+  end
+
+  def delete_questions_not_in_update!
+    keep_ids = update_question_params.map { |h| h[:id] }.compact
+    survey_template.questions.where.not(id: keep_ids).update_all(deleted: true)
+  end
+
+  def update_questions_in_update!
+    update_question_params.each_with_index do |question_param, order|
+      existing_question = survey_template.questions.find_by(id: question_param[:id])
+
+      if existing_question
+        existing_question.update!(question_param.merge(order: order))
+      else
+        survey_template.questions.create!(question_param.merge(order: order, organization: current_organization))
+      end
+    end
   end
 end
