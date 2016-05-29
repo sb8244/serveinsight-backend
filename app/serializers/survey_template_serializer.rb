@@ -1,5 +1,5 @@
 class SurveyTemplateSerializer < Plain::SurveyTemplateSerializer
-  attributes :response_count, :users_in_scope
+  attributes :response_count, :users_in_scope, :creator
 
   has_many :questions, serializer: Plain::QuestionSerializer
 
@@ -13,5 +13,9 @@ class SurveyTemplateSerializer < Plain::SurveyTemplateSerializer
 
   def response_count
     42
+  end
+
+  def creator
+    object.creator.try!(:name) || "N/A"
   end
 end

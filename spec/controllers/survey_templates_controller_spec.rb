@@ -10,7 +10,7 @@ RSpec.describe SurveyTemplatesController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
-  SURVEY_KEYS = [:id, :name, :created_at, :updated_at, :active, :recurring, :goals_section, :users_in_scope, :response_count, :questions]
+  SURVEY_KEYS = [:id, :name, :created_at, :updated_at, :active, :recurring, :goals_section, :users_in_scope, :response_count, :creator, :questions]
   QUESTION_KEYS = [:id, :question, :created_at, :updated_at]
 
   describe "GET index" do
