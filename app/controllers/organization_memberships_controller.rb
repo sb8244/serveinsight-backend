@@ -1,6 +1,6 @@
 class OrganizationMembershipsController < ApplicationController
   def index
-    respond_with organization_memberships
+    respond_with organization_memberships.order(id: :asc)
   end
 
   def show
