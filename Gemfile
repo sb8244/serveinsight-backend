@@ -6,6 +6,7 @@ ruby '2.2.2'
 gem 'rails', '4.2.5'
 
 gem 'pg'
+gem 'sidekiq'
 
 group :development, :test do
   gem 'byebug'
