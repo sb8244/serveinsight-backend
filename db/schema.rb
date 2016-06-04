@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160529005144) do
+ActiveRecord::Schema.define(version: 20160604210721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,17 @@ ActiveRecord::Schema.define(version: 20160529005144) do
   add_index "questions", ["organization_id"], name: "index_questions_on_organization_id", using: :btree
   add_index "questions", ["survey_template_id"], name: "index_questions_on_survey_template_id", using: :btree
 
+  create_table "survey_instances", force: :cascade do |t|
+    t.integer  "organization_membership_id", null: false
+    t.integer  "survey_template_id",         null: false
+    t.integer  "iteration",                  null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "survey_instances", ["organization_membership_id"], name: "index_survey_instances_on_organization_membership_id", using: :btree
+  add_index "survey_instances", ["survey_template_id"], name: "index_survey_instances_on_survey_template_id", using: :btree
+
   create_table "survey_templates", force: :cascade do |t|
     t.integer  "organization_id",                null: false
     t.integer  "creator_id",                     null: false
@@ -70,6 +81,7 @@ ActiveRecord::Schema.define(version: 20160529005144) do
     t.boolean  "goals_section",   default: true, null: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.integer  "iteration",       default: 0,    null: false
   end
 
   add_index "survey_templates", ["organization_id"], name: "index_survey_templates_on_organization_id", using: :btree
