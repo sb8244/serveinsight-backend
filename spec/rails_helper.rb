@@ -53,4 +53,8 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   OmniAuth.config.test_mode = true
+
+  config.after(:each) do
+    ActiveJob::Base.queue_adapter.enqueued_jobs.clear
+  end
 end

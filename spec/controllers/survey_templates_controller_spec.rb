@@ -109,6 +109,12 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       }.to change { template.reload.name }.to("new")
     end
 
+    it "doesn't create a CreateSurveyInstancesJob" do
+      expect {
+        put :update, id: template.id, name: "new"
+      }.not_to change { job_count(CreateSurveyInstancesJob) }.from(0)
+    end
+
     it "removes questions not in the question array" do
       expect {
         put :update, id: template.id, questions: [{
