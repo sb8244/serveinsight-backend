@@ -35,6 +35,7 @@ class SurveyTemplatesController < ApplicationController
       question_params.fetch(:questions, []).each_with_index do |question_param, index|
         template.questions.create(question_param.merge(organization: current_organization, order: index))
       end
+      CreateSurveyInstancesJob.perform_later(template)
     end
   end
 

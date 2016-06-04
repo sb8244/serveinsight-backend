@@ -92,6 +92,12 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(Question.first.attributes).to include("question" => "A", "order" => 0)
       expect(Question.second.attributes).to include("question" => "B", "order" => 1)
     end
+
+    it "creates a CreateSurveyInstancesJob" do
+      expect {
+        post :create, params
+      }.to change { job_count(CreateSurveyInstancesJob) }.by(1)
+    end
   end
 
   describe "PUT update" do

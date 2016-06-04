@@ -3,6 +3,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
+ActiveJob::Base.queue_adapter = :test
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -30,8 +31,23 @@ module JsonHelpers
   end
 end
 
+module ActiveJobMatcher
+  def jobs_should_include(klass, count: nil)
+    if count
+      expect(job_count(klass)).to eq(count)
+    else
+      expect(job_count(klass)).not_to eq(0)
+    end
+  end
+
+  def job_count(klass)
+    ActiveJob::Base.queue_adapter.enqueued_jobs.select{ |h| h[:job] = klass }.count
+  end
+end
+
 RSpec.configure do |config|
   config.include JsonHelpers, type: :controller
+  config.include ActiveJobMatcher
 
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
