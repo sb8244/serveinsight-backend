@@ -7,6 +7,8 @@ gem 'rails', '4.2.5'
 
 gem 'pg'
 gem 'sidekiq'
+gem 'foreman'
+gem 'puma'
 
 group :development, :test do
   gem 'byebug'
