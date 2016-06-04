@@ -24,10 +24,12 @@ RSpec.describe InvitesController, type: :controller do
 
   describe "POST create" do
     let(:request!) { post :create, admin: false, email: "test@test.com", name: "test" }
+
     it "creates an invite" do
       expect {
         request!
         expect(response).to be_success
+        expect(response_json).to include(:organization_membership)
       }.to change { organization.invites.count }.by(1)
     end
 
@@ -35,6 +37,50 @@ RSpec.describe InvitesController, type: :controller do
       expect {
         request!
       }.to change { organization.organization_memberships.count }.by(1)
+    end
+
+    context "when a user already exists" do
+      let!(:member) { FactoryGirl.create(:organization_membership, organization: organization, email: "test@test.com") }
+
+      it "doesn't create an invite or membership" do
+        expect {
+          expect {
+            request!
+            expect(response).to be_success
+            expect(response_json).to include(:organization_membership)
+          }.not_to change { organization.invites.count }
+        }.not_to change { organization.organization_memberships.count }
+      end
+    end
+
+    context "when a member already exists" do
+      let!(:member) { FactoryGirl.create(:organization_membership, organization: organization, email: "test@test.com", user: nil) }
+
+      it "doesn't create a membership" do
+        expect {
+          request!
+          expect(response).to be_success
+          expect(response_json).to include(:organization_membership)
+        }.not_to change { organization.organization_memberships.count }
+      end
+
+      it "does create an invite" do
+        expect {
+          request!
+        }.to change { organization.invites.count }.by(1)
+      end
+
+      context "with an invite" do
+        let!(:invite) { member.invites.create! }
+
+        it "doesn't create an invite" do
+          expect {
+            request!
+            expect(response).to be_success
+            expect(response_json).to include(:organization_membership)
+          }.not_to change { organization.invites.count }
+        end
+      end
     end
 
     context "with survey templates" do

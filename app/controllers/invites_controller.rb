@@ -16,6 +16,8 @@ class InvitesController < ApplicationController
   InviteCreator = Struct.new(:organization, :invite_params) do
     def call
       org_member = organization.organization_memberships.where(email: invite_params.fetch(:email)).first_or_create!(invite_params)
+      return org_member.user if org_member.user
+
       create_survey_instances
       create_invite!(org_member)
     end
@@ -23,7 +25,7 @@ class InvitesController < ApplicationController
     private
 
     def create_invite!(org_member)
-      org_member.invites.create!
+      org_member.invites.first_or_create!
     end
 
     def create_survey_instances
