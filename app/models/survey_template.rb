@@ -7,4 +7,8 @@ class SurveyTemplate < ActiveRecord::Base
   def ordered_questions
     questions.select(&:current?).sort_by(&:order)
   end
+
+  def members_in_scope
+    organization.organization_memberships
+  end
 end

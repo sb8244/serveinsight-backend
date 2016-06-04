@@ -18,7 +18,7 @@ class Survey::Instances
   end
 
   def members_in_scope
-    organization.organization_memberships
+    @members_in_scope ||= survey_template.members_in_scope
   end
 
   def instance_for_member!(member, iteration)
