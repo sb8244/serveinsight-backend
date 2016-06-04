@@ -7,6 +7,7 @@ class OrganizationMembership < ActiveRecord::Base
   belongs_to :reviewer, foreign_key: "reviewer_id", class_name: "OrganizationMembership"
 
   has_many :invites
+  has_many :survey_instances
 
   validate :reviewer_id, :reviewer_is_not_user
 

@@ -1,5 +1,6 @@
 class SurveyTemplate < ActiveRecord::Base
   has_many :questions
+  has_many :survey_instances
   belongs_to :organization
   belongs_to :creator, class_name: "OrganizationMembership"
 
