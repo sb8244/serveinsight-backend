@@ -13,6 +13,10 @@ class SurveyInstancesController < ApplicationController
     respond_with survey_instance
   end
 
+  def top_due
+    respond_with top_due_survey_instance
+  end
+
   private
 
   def survey_instance
@@ -26,5 +30,9 @@ class SurveyInstancesController < ApplicationController
 
   def due_instances
     current_organization_membership.survey_instances.due.order(due_at: :asc)
+  end
+
+  def top_due_survey_instance
+    due_instances.first || (raise ActiveRecord::RecordNotFound)
   end
 end

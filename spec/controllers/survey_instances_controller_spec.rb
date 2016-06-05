@@ -51,7 +51,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     let!(:question3) { FactoryGirl.create(:question, organization: organization, survey_template: survey_template, question: "Third'!", order: 3) }
     let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: 5.minutes.ago) }
 
-    it "shows the basic template attributes" do
+    it "shows the template attributes" do
       get :show, id: instance.id
       expect(response).to be_success
       expect(response_json.keys).to match_array([:id, :due_at, :title, :completed, :locked, :previous_goals, :questions])
@@ -65,6 +65,28 @@ RSpec.describe SurveyInstancesController, type: :controller do
     it "includes answers for the questions" do
       get :show, id: instance.id
       expect(response_json[:questions].first[:answers]).to eq([])
+    end
+  end
+
+  describe "GET top_due" do
+    let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
+    let!(:survey_template2) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
+    let!(:instance1) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: 1.minutes.from_now) }
+    let!(:instance2) { membership.survey_instances.create!(survey_template: survey_template2, iteration: 1, due_at: Time.now) }
+    let!(:complete_instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 0, completed_at: 1.days.ago, due_at: 5.minutes.ago) }
+
+    it "shows the template attributes" do
+      get :top_due
+      expect(response).to be_success
+      expect(response_json.keys).to match_array([:id, :due_at, :title, :completed, :locked, :previous_goals, :questions])
+      expect(response_json[:id]).to eq(instance2.id)
+    end
+
+    it "is 404 without a due survey" do
+      SurveyInstance.update_all(completed_at: Time.now)
+      expect {
+        get :top_due
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
