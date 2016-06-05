@@ -14,8 +14,7 @@ RSpec.describe CycleSurveysJob, type: :job do
   let!(:due1_instance1) { member1.survey_instances.create!(survey_template: due1, iteration: 1, due_at: due1.next_due_at) }
   let!(:due2_instance1) { member2.survey_instances.create!(survey_template: due2, iteration: 2, due_at: due2.next_due_at) }
 
-  let(:job) { described_class.perform_later }
-  subject { perform_enqueued_jobs { job } }
+  subject { CycleSurveysJob.new.perform }
 
   it "doesn't touch not due survey_templates" do
     expect { subject }.not_to change { not_due.reload.attributes }
@@ -35,5 +34,11 @@ RSpec.describe CycleSurveysJob, type: :job do
         subject
       }.to change { due2.reload.next_due_at }.from(due2_due).to(due2_due + 2.weeks)
     }.to change { due1.reload.next_due_at }.from(due1_due).to(due1_due + 1.weeks)
+  end
+
+  it "creates CreateSurveyInstanceJob for due templates" do
+    expect {
+      subject
+    }.to change { job_count(CreateSurveyInstancesJob) }.by(2)
   end
 end

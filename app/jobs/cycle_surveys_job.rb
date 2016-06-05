@@ -6,6 +6,7 @@ class CycleSurveysJob < ActiveJob::Base
     due_scope.where(id: update_ids).update_all("iteration = iteration + 1")
     due_scope.where(id: update_ids).find_each do |survey_template|
       survey_template.update!(next_due_at: survey_template.next_due_at + survey_template.weeks_between_due.weeks)
+      CreateSurveyInstancesJob.perform_later(survey_template)
     end
   end
 
