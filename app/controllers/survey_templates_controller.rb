@@ -48,7 +48,9 @@ class SurveyTemplatesController < ApplicationController
   end
 
   def template_params
-    params.permit(:name, :goals_section)
+    params.permit(:name, :goals_section, :weeks_between_due).tap do |p|
+      p[:next_due_at] = DateTime.strptime(params.fetch(:first_due_at), "%m/%d/%Y %H:%M %p") if params.key?(:first_due_at)
+    end
   end
 
   def question_params
