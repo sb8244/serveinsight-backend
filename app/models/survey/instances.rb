@@ -22,6 +22,7 @@ class Survey::Instances
   end
 
   def instance_for_member!(member, iteration)
-    member.survey_instances.where(survey_template: survey_template, iteration: iteration).first_or_create!
+    due_at = survey_template.next_due_at
+    member.survey_instances.where(survey_template: survey_template, iteration: iteration).first_or_create!(due_at: due_at)
   end
 end

@@ -17,7 +17,7 @@ RSpec.describe Survey::Instances do
     end
 
     context "with existing surveys in this iteration" do
-      let!(:instance) { member1.survey_instances.create!(survey_template: survey_template, iteration: 2) }
+      let!(:instance) { member1.survey_instances.create!(survey_template: survey_template, iteration: 2, due_at: Time.now) }
 
       it "doesn't create an instance for that member" do
         expect {
@@ -28,8 +28,8 @@ RSpec.describe Survey::Instances do
     end
 
     context "with surveys in another iteration" do
-      let!(:instance1) { member1.survey_instances.create!(survey_template: survey_template, iteration: 1) }
-      let!(:instance2) { member2.survey_instances.create!(survey_template: survey_template, iteration: 1) }
+      let!(:instance1) { member1.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: Time.now) }
+      let!(:instance2) { member2.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: Time.now) }
 
       it "doesn't create an instance for that member" do
         expect {
