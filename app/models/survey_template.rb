@@ -4,6 +4,10 @@ class SurveyTemplate < ActiveRecord::Base
   belongs_to :organization
   belongs_to :creator, class_name: "OrganizationMembership"
 
+  def self.due
+    where("next_due_at < now()")
+  end
+
   def ordered_questions
     questions.select(&:current?).sort_by(&:order)
   end
