@@ -87,9 +87,6 @@ ActiveRecord::Schema.define(version: 20160605015614) do
     t.datetime "updated_at",                       null: false
     t.integer  "iteration",         default: 0,    null: false
     t.datetime "next_due_at",                      null: false
-    t.string   "due_day",                          null: false
-    t.string   "due_time",                         null: false
-    t.string   "due_timezone",                     null: false
     t.integer  "weeks_between_due",                null: false
   end
 

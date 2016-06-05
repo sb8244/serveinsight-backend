@@ -67,7 +67,11 @@ RSpec.describe SurveyTemplatesController, type: :controller do
           {
             question: "B"
           }
-        ]
+        ],
+        due_day: "monday",
+        due_time: "8pm",
+        due_timezone: "EST",
+        weeks_between_due: 2
       }
     end
 
