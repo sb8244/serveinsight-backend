@@ -15,4 +15,8 @@ class SurveyTemplate < ActiveRecord::Base
   def members_in_scope
     organization.organization_memberships
   end
+
+  def update_instances_due!
+    survey_instances.where(iteration: iteration).update_all(due_at: next_due_at)
+  end
 end

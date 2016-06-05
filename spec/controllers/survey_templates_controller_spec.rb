@@ -160,5 +160,22 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(template.reload.ordered_questions.map(&:order)).to eq([0, 1, 2])
       expect(template.reload.ordered_questions.map(&:question)).to eq(["first", "edit", "new"])
     end
+
+    context "with survey instances in this iteration" do
+      let!(:previous_instance) { membership.survey_instances.create!(survey_template: template, iteration: template.iteration - 1, due_at: 10.days.ago) }
+      let!(:current_instance) { membership.survey_instances.create!(survey_template: template, iteration: template.iteration, due_at: template.next_due_at) }
+
+      it "updates the current instance due_at" do
+        expect {
+          put :update, id: template.id, first_due_at: "08/01/2016 20:00 -0500"
+        }.to change { current_instance.reload.due_at }.to(Time.parse("2016-08-02 01:00:00 UTC"))
+      end
+
+      it "doesn't change the previous instance" do
+        expect {
+          put :update, id: template.id, first_due_at: "08/01/2016 20:00 -0500"
+        }.not_to change { previous_instance.reload.attributes }
+      end
+    end
   end
 end
