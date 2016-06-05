@@ -14,6 +14,7 @@ RSpec.describe Survey::Instances do
         subject.ensure_instances_exist!
       }.to change { survey_template.survey_instances.count }.by(2)
       expect(survey_template.survey_instances.where(iteration: 2).count).to eq(2)
+      expect(survey_template.survey_instances.first.due_at).to eq(survey_template.next_due_at)
     end
 
     context "with existing surveys in this iteration" do
