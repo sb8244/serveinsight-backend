@@ -44,6 +44,8 @@ RSpec.describe SurveyInstancesController, type: :controller do
     end
   end
 
+  DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :goals_section, :previous_goals, :questions]
+
   describe "GET show" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
     let!(:question1) { FactoryGirl.create(:question, organization: organization, survey_template: survey_template, question: "First", order: 1) }
@@ -54,7 +56,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     it "shows the template attributes" do
       get :show, id: instance.id
       expect(response).to be_success
-      expect(response_json.keys).to match_array([:id, :due_at, :title, :completed, :locked, :previous_goals, :questions])
+      expect(response_json.keys).to match_array(DETAILED_KEYS)
     end
 
     it "lists out the questions in the right order" do
@@ -78,7 +80,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     it "shows the template attributes" do
       get :top_due
       expect(response).to be_success
-      expect(response_json.keys).to match_array([:id, :due_at, :title, :completed, :locked, :previous_goals, :questions])
+      expect(response_json.keys).to match_array(DETAILED_KEYS)
       expect(response_json[:id]).to eq(instance2.id)
     end
 
