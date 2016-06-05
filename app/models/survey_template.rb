@@ -5,7 +5,7 @@ class SurveyTemplate < ActiveRecord::Base
   belongs_to :creator, class_name: "OrganizationMembership"
 
   def self.due
-    where("next_due_at < now()")
+    where("next_due_at < ?", Time.now)
   end
 
   def ordered_questions
