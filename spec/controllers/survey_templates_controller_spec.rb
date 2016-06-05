@@ -68,7 +68,7 @@ RSpec.describe SurveyTemplatesController, type: :controller do
             question: "B"
           }
         ],
-        first_due_at: "1465084800",
+        first_due_at: "08/01/2016 20:00 -0500",
         weeks_between_due: 2
       }
     end
@@ -84,6 +84,12 @@ RSpec.describe SurveyTemplatesController, type: :controller do
       expect(survey.name).to eq("Test")
       expect(survey.goals_section).to eq(true)
       expect(survey.recurring).to eq(true)
+    end
+
+    it "stores in UTC offset by the zone provided" do
+      post :create, params
+      survey = organization.survey_templates.last
+      expect(survey.next_due_at).to eq(Time.parse("2016-08-02 01:00:00 UTC"))
     end
 
     it "creates questions for the SurveyTemplate" do
