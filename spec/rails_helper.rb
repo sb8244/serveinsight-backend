@@ -48,6 +48,7 @@ end
 RSpec.configure do |config|
   config.include JsonHelpers, type: :controller
   config.include ActiveJobMatcher
+  config.include ActiveJob::TestHelper, type: :job
 
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!

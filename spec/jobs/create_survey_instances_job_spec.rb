@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe CreateSurveyInstancesJob, type: :job do
-  include ActiveJob::TestHelper
   let!(:survey_template) { FactoryGirl.create(:survey_template_with_questions, iteration: 2) }
   let!(:organization) { survey_template.organization }
   let!(:member1) { FactoryGirl.create(:organization_membership, organization: organization) }
