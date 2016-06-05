@@ -11,10 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160605015614) do
+ActiveRecord::Schema.define(version: 20160605235806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "answers", force: :cascade do |t|
+    t.integer  "survey_instance_id", null: false
+    t.integer  "organization_id",    null: false
+    t.integer  "question_id",        null: false
+    t.text     "question_content",   null: false
+    t.integer  "question_order",     null: false
+    t.text     "content",            null: false
+    t.integer  "order",              null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "answers", ["organization_id"], name: "index_answers_on_organization_id", using: :btree
+  add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
+  add_index "answers", ["survey_instance_id"], name: "index_answers_on_survey_instance_id", using: :btree
 
   create_table "invites", force: :cascade do |t|
     t.boolean  "accepted",                   default: false, null: false
