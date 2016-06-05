@@ -13,4 +13,7 @@ Rails.application.routes.draw do
   resources :survey_templates, except: [:destroy]
 
   post '/auth/:provider/callback', to: 'auth#callback'
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end

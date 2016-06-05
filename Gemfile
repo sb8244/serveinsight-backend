@@ -7,6 +7,7 @@ gem 'rails', '4.2.5'
 
 gem 'pg'
 gem 'sidekiq'
+gem 'sinatra', :require => nil
 gem 'foreman'
 gem 'puma'
 
