@@ -68,7 +68,7 @@ RSpec.describe SurveyTemplatesController, type: :controller do
             question: "B"
           }
         ],
-        first_due_at: "08/01/2016 20:00",
+        first_due_at: "1465084800",
         weeks_between_due: 2
       }
     end

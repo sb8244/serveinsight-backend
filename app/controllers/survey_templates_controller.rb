@@ -49,7 +49,7 @@ class SurveyTemplatesController < ApplicationController
 
   def template_params
     params.permit(:name, :goals_section, :weeks_between_due).tap do |p|
-      p[:next_due_at] = DateTime.strptime(params.fetch(:first_due_at), "%m/%d/%Y %H:%M") if params.key?(:first_due_at)
+      p[:next_due_at] = Time.at(Integer(params.fetch(:first_due_at))) if params.key?(:first_due_at)
     end
   end
 
