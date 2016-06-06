@@ -14,7 +14,7 @@ class SurveyInstance < ActiveRecord::Base
   end
 
   def previous_instance
-    survey_template.survey_instances.
+    @previous_instance ||= survey_template.survey_instances.
       where(organization_membership: organization_membership).
       where("iteration < ?", iteration).
       completed.

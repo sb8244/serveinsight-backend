@@ -132,5 +132,36 @@ RSpec.describe CompletedSurveysController, type: :controller do
         )
       end
     end
+
+    context "with previous goals" do
+      let!(:prev_instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: -1, due_at: 5.minutes.ago, completed_at: Time.now) }
+      let!(:skipped_instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 0, due_at: 5.minutes.ago) }
+      let!(:goal2) { prev_instance.goals.create!(content: "two", order: 1, organization: organization) }
+      let!(:goal1) { prev_instance.goals.create!(content: "one", order: 0, organization: organization) }
+
+      let(:goal_statuses) {{
+        goal2.id => "complete",
+        goal1.id => "miss"
+      }}
+
+      it "is a 422 without submitting goal status" do
+        post :create, survey_instance_id: instance.id, answers: full_answers
+        expect(response.status).to eq(422)
+        expect(response_json).to eq(errors: ["All previous goals must be updated"])
+      end
+
+      it "updates previous goals" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers, goal_statuses: goal_statuses
+          expect(response).to be_success
+        }.to change { goal1.reload.status }.to("miss")
+      end
+
+      it "doesn't allow non-status" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers, goal_statuses: goal_statuses.merge(goal2.id => "fail")
+        }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
   end
 end
