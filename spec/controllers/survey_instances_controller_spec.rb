@@ -65,6 +65,11 @@ RSpec.describe SurveyInstancesController, type: :controller do
       expect(response_json[:questions].map { |h| h[:id] }).to eq([question2.id, question1.id, question3.id])
     end
 
+    it "doesn't have answers" do
+      get :show, id: instance.id
+      expect(response_json[:questions].first[:answers]).to eq([])
+    end
+
     context "with answers" do
       let!(:answer2) do
         instance.answers.create!(
