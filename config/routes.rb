@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       get :top_due
     end
   end
+  resources :completed_surveys, only: [:create]
 
   post '/auth/:provider/callback', to: 'auth#callback'
 
