@@ -33,13 +33,13 @@ ActiveRecord::Schema.define(version: 20160606033246) do
   add_index "answers", ["survey_instance_id"], name: "index_answers_on_survey_instance_id", using: :btree
 
   create_table "goals", force: :cascade do |t|
-    t.integer  "survey_instance_id",                  null: false
-    t.integer  "organization_id",                     null: false
-    t.text     "content",                             null: false
-    t.integer  "order",                               null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.string   "status",             default: "miss", null: false
+    t.integer  "survey_instance_id", null: false
+    t.integer  "organization_id",    null: false
+    t.text     "content",            null: false
+    t.integer  "order",              null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "status"
   end
 
   add_index "goals", ["organization_id"], name: "index_goals_on_organization_id", using: :btree
