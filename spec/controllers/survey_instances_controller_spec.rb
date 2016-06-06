@@ -10,6 +10,9 @@ RSpec.describe SurveyInstancesController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
+  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at]
+  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :questions]
+
   describe "GET index" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
     let!(:survey_template2) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
@@ -31,7 +34,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
 
       it "only includes simple keys" do
         get :index, survey_template_id: survey_template.id
-        expect(response_json.first.keys).to match_array([ :id, :due_at, :title, :completed, :locked ])
+        expect(response_json.first.keys).to match_array(SIMPLE_KEYS)
       end
     end
 
@@ -43,8 +46,6 @@ RSpec.describe SurveyInstancesController, type: :controller do
       end
     end
   end
-
-  DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :goals_section, :previous_goals, :questions]
 
   describe "GET show" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
