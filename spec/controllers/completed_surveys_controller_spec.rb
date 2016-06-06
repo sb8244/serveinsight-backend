@@ -11,7 +11,7 @@ RSpec.describe CompletedSurveysController, type: :controller do
   }
 
   describe "POST create" do
-    let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
+    let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization, goals_section: false) }
     let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: 1.minutes.from_now) }
     let!(:question1) { FactoryGirl.create(:question, survey_template: survey_template, question: "First", organization: organization, order: 0) }
     let!(:question2) { FactoryGirl.create(:question, survey_template: survey_template, question: "Second", organization: organization, order: 2) }
@@ -67,6 +67,41 @@ RSpec.describe CompletedSurveysController, type: :controller do
         post :create, survey_instance_id: instance.id, answers: incomplete_answers
         expect(response.status).to eq(422)
         expect(response_json[:errors]).to eq(["All questions must have answers"])
+      end
+    end
+
+    context "with a goals section" do
+      before { survey_template.update!(goals_section: true) }
+
+      let(:full_goals) {[
+        {
+          content: "First",
+        },
+        {
+          content: "Second"
+        }
+      ]}
+
+      it "is a 422 without a goal answer" do
+        post :create, survey_instance_id: instance.id, answers: full_answers
+        expect(response.status).to eq(422)
+        expect(response_json[:errors]).to eq(["This survey requires goals"])
+      end
+
+      it "creates the goals" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers, goals: full_goals
+          expect(response).to be_success
+        }.to change { Goal.count }.by(2)
+
+        expect(Goal.first.attributes).to include(
+          "content" => "First",
+          "order" => 0
+        )
+        expect(Goal.second.attributes).to include(
+          "content" => "Second",
+          "order" => 1
+        )
       end
     end
   end
