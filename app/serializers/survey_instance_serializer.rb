@@ -1,22 +1,22 @@
 class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
   class QuestionSerializer < Plain::QuestionSerializer
-    attributes :answers
+    has_many :answers, serializer: Plain::AnswerSerializer
 
     def answers
-      []
+      options.fetch(:survey_instance).answers.where(question_id: object.id).order(order: :asc)
     end
   end
 
   attributes :previous_goals, :questions, :goals_section?
-
-  has_many :questions, serializer: QuestionSerializer
 
   def previous_goals
     []
   end
 
   def questions
-    object.survey_template.ordered_questions
+    object.survey_template.ordered_questions.map do |question|
+      QuestionSerializer.new(question, survey_instance: object)
+    end
   end
 
   def goals_section?

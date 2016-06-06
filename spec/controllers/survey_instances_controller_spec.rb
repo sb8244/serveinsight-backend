@@ -65,9 +65,52 @@ RSpec.describe SurveyInstancesController, type: :controller do
       expect(response_json[:questions].map { |h| h[:id] }).to eq([question2.id, question1.id, question3.id])
     end
 
-    it "includes answers for the questions" do
-      get :show, id: instance.id
-      expect(response_json[:questions].first[:answers]).to eq([])
+    context "with answers" do
+      let!(:answer2) do
+        instance.answers.create!(
+          organization: organization,
+          question_id: question1.id,
+          question_content: question1.question,
+          question_order: question1.order,
+          content: "Test Answer 2",
+          order: 1
+        )
+      end
+      let!(:answer1) do
+        instance.answers.create!(
+          organization: organization,
+          question_id: question1.id,
+          question_content: question1.question,
+          question_order: question1.order,
+          content: "Test Answer",
+          order: 0
+        )
+      end
+      let!(:answer3) do
+        instance.answers.create!(
+          organization: organization,
+          question_id: question2.id,
+          question_content: question2.question,
+          question_order: question2.order,
+          content: "Test Answer",
+          order: 0
+        )
+      end
+
+      it "includes answers for the questions" do
+        get :show, id: instance.id
+        expect(response_json[:questions].first[:answers]).to eq([
+          {
+            id: answer3.id,
+            question_id: question2.id,
+            question_content: question2.question,
+            question_order: question2.order,
+            content: "Test Answer",
+            order: 0
+          }
+        ])
+        expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
+      end
     end
   end
 
