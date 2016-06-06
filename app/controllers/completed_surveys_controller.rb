@@ -88,7 +88,7 @@ class CompletedSurveysController < ApplicationController
     return true unless survey_instance.previous_instance.present? && survey_instance.previous_instance.goals.exists?
 
     previous_goal_ids = survey_instance.previous_instance.goals.pluck(:id)
-    (previous_goal_ids - params.fetch(:goal_statuses, {}).keys).empty?
+    (previous_goal_ids - params.fetch(:goal_statuses, {}).keys.map(&:to_i)).empty?
   end
 
   def update_previous_goals!

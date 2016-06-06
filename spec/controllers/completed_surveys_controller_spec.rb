@@ -140,7 +140,7 @@ RSpec.describe CompletedSurveysController, type: :controller do
       let!(:goal1) { prev_instance.goals.create!(content: "one", order: 0, organization: organization) }
 
       let(:goal_statuses) {{
-        goal2.id => "complete",
+        goal2.id.to_s => "complete",
         goal1.id => "miss"
       }}
 
