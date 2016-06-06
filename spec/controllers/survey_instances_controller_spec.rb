@@ -11,7 +11,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
   }
 
   SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at]
-  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :questions]
+  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions]
 
   describe "GET index" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
@@ -68,6 +68,32 @@ RSpec.describe SurveyInstancesController, type: :controller do
     it "doesn't have answers" do
       get :show, id: instance.id
       expect(response_json[:questions].first[:answers]).to eq([])
+    end
+
+    it "doesn't have goals" do
+      get :show, id: instance.id
+      expect(response_json[:goals]).to eq([])
+    end
+
+    context "with goals" do
+      let!(:goal2) { instance.goals.create!(content: "two", order: 1, organization: organization) }
+      let!(:goal1) { instance.goals.create!(content: "one", order: 0, organization: organization) }
+
+      it "renders the goals" do
+        get :show, id: instance.id
+        expect(response_json[:goals]).to eq([
+          {
+            id: goal1.id,
+            content: "one",
+            order: 0
+          },
+          {
+            id: goal2.id,
+            content: "two",
+            order: 1
+          }
+        ])
+      end
     end
 
     context "with answers" do
