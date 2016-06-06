@@ -10,6 +10,32 @@ RSpec.describe CompletedSurveysController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
+  describe "GET index" do
+    let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 3, organization: organization, goals_section: false) }
+    let!(:survey_template2) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization, goals_section: false) }
+    let!(:survey_template3) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization, goals_section: false) }
+    let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: 24.hours.ago, completed_at: 5.minutes.ago) }
+    let!(:instance2) { membership.survey_instances.create!(survey_template: survey_template, iteration: 2, due_at: Time.now, completed_at: 4.minutes.ago) }
+    let!(:instance3) { membership.survey_instances.create!(survey_template: survey_template2, iteration: 1, due_at: Time.now, completed_at: 3.minutes.ago) }
+    let!(:instance4) { membership.survey_instances.create!(survey_template: survey_template3, iteration: 1, due_at: Time.now, completed_at: nil) }
+
+    EXPECTED_KEYS = [:active, :created_at, :goals_section, :id, :name, :next_due_at, :recurring, :updated_at, :weeks_between_due, :survey_instances]
+
+    it "returns the survey templates that have completed instances with recent templates first" do
+      get :index
+      expect(response).to be_success
+      expect(response_json.map { |h| h[:id] }).to eq([ survey_template2.id, survey_template.id ])
+      expect(response_json.first.keys).to match_array(EXPECTED_KEYS)
+    end
+
+    it "returns information for the survey instances" do
+      get :index
+      expect(response_json[0][:survey_instances].map { |h| h[:id] }).to eq([instance3.id])
+      expect(response_json[1][:survey_instances].map { |h| h[:id] }).to eq([instance2.id, instance.id])
+      expect(response_json[0][:survey_instances][0].keys).not_to include(:answers)
+    end
+  end
+
   describe "POST create" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization, goals_section: false) }
     let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: 1.minutes.from_now) }

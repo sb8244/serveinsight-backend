@@ -1,4 +1,8 @@
 class CompletedSurveysController < ApplicationController
+  def index
+    respond_with survey_templates_with_completed_instances, each_serializer: CompletedSurveyTemplatesSerializer
+  end
+
   def create
     return need_answers_response unless all_questions_have_answers?
     return need_goals_response if survey_template.goals_section? && !goals_present?
@@ -12,6 +16,14 @@ class CompletedSurveysController < ApplicationController
   end
 
   private
+
+  def survey_templates_with_completed_instances
+    current_organization.survey_templates.
+      includes(:survey_instances).
+      where(survey_instances: { organization_membership_id: current_organization_membership.id }).
+      merge(SurveyInstance.completed.order(completed_at: :desc)).
+      distinct
+  end
 
   def need_answers_response
     render json: { errors: ["All questions must have answers"] }, status: :unprocessable_entity

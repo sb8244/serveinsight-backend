@@ -8,4 +8,8 @@ class SurveyInstance < ActiveRecord::Base
   def self.due
     where(completed_at: nil)
   end
+
+  def self.completed
+    where.not(completed_at: nil)
+  end
 end
