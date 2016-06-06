@@ -2,6 +2,9 @@ class SurveyInstance < ActiveRecord::Base
   belongs_to :organization_membership
   belongs_to :survey_template
 
+  has_many :answers
+  has_many :goals
+
   def self.due
     where(completed_at: nil)
   end
