@@ -12,4 +12,13 @@ class SurveyInstance < ActiveRecord::Base
   def self.completed
     where.not(completed_at: nil)
   end
+
+  def previous_instance
+    survey_template.survey_instances.
+      where(organization_membership: organization_membership).
+      where("iteration < ?", iteration).
+      completed.
+      order(due_at: :desc).
+      first
+  end
 end

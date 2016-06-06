@@ -7,12 +7,14 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
     end
   end
 
-  attributes :previous_goals, :questions, :goals_section?
+  attributes :questions, :goals_section?
 
   has_many :goals, serializer: Plain::GoalSerializer
+  has_many :previous_goals, serializer: Plain::GoalSerializer
 
   def previous_goals
-    []
+    return [] unless object.previous_instance
+    object.previous_instance.goals.order(order: :asc)
   end
 
   def goals

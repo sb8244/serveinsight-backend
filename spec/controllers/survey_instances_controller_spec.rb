@@ -75,6 +75,11 @@ RSpec.describe SurveyInstancesController, type: :controller do
       expect(response_json[:goals]).to eq([])
     end
 
+    it "doesn't have previous_goals" do
+      get :show, id: instance.id
+      expect(response_json[:previous_goals]).to eq([])
+    end
+
     context "with goals" do
       let!(:goal2) { instance.goals.create!(content: "two", order: 1, organization: organization) }
       let!(:goal1) { instance.goals.create!(content: "one", order: 0, organization: organization) }
@@ -141,6 +146,29 @@ RSpec.describe SurveyInstancesController, type: :controller do
           }
         ])
         expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
+      end
+    end
+
+    context "with a previous iteration" do
+      let!(:prev_instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: -1, due_at: 5.minutes.ago, completed_at: Time.now) }
+      let!(:skipped_instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 0, due_at: 5.minutes.ago) }
+      let!(:goal2) { prev_instance.goals.create!(content: "two", order: 1, organization: organization) }
+      let!(:goal1) { prev_instance.goals.create!(content: "one", order: 0, organization: organization) }
+
+      it "renders the previous_goals" do
+        get :show, id: instance.id
+        expect(response_json[:previous_goals]).to eq([
+          {
+            id: goal1.id,
+            content: "one",
+            order: 0
+          },
+          {
+            id: goal2.id,
+            content: "two",
+            order: 1
+          }
+        ])
       end
     end
   end
