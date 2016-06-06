@@ -15,6 +15,8 @@ RSpec.describe CompletedSurveysController, type: :controller do
     let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: 1.minutes.from_now) }
     let!(:question1) { FactoryGirl.create(:question, survey_template: survey_template, question: "First", organization: organization, order: 0) }
     let!(:question2) { FactoryGirl.create(:question, survey_template: survey_template, question: "Second", organization: organization, order: 2) }
+    let!(:deleted_question) { FactoryGirl.create(:question, deleted: true, survey_template: survey_template, question: "Old Second", organization: organization, order: 2) }
+
     let(:full_answers) {[
       {
         question_id: question1.id,

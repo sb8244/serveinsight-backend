@@ -73,7 +73,7 @@ class CompletedSurveysController < ApplicationController
   end
 
   def survey_question_ids
-    survey_template.questions.pluck(:id)
+    survey_template.questions.current.pluck(:id)
   end
 
   def content_answers
