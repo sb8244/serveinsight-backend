@@ -1,3 +1,3 @@
 class Plain::GoalSerializer < ActiveModel::Serializer
-  attributes :id, :content, :order
+  attributes :id, :content, :order, :status
 end

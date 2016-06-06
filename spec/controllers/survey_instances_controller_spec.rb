@@ -90,12 +90,14 @@ RSpec.describe SurveyInstancesController, type: :controller do
           {
             id: goal1.id,
             content: "one",
-            order: 0
+            order: 0,
+            status: nil
           },
           {
             id: goal2.id,
             content: "two",
-            order: 1
+            order: 1,
+            status: nil
           }
         ])
       end
@@ -161,12 +163,14 @@ RSpec.describe SurveyInstancesController, type: :controller do
           {
             id: goal1.id,
             content: "one",
-            order: 0
+            order: 0,
+            status: nil
           },
           {
             id: goal2.id,
             content: "two",
-            order: 1
+            order: 1,
+            status: nil
           }
         ])
       end
