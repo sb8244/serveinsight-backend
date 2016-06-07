@@ -1,11 +1,6 @@
 class ReviewableSurveysController < ApplicationController
-  class TemplatedSurveyInstanceSerializer < SurveyInstanceSerializer
-    has_one :survey_template, serializer: Plain::SurveyTemplateSerializer
-    has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
-  end
-
   def index
-    respond_with reviewable_surveys, each_serializer: TemplatedSurveyInstanceSerializer
+    respond_with reviewable_surveys
   end
 
   private

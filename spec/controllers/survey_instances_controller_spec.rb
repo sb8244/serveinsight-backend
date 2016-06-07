@@ -11,7 +11,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
   }
 
   SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at]
-  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions]
+  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership]
 
   describe "GET index" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }

@@ -11,6 +11,7 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
 
   has_many :goals, serializer: Plain::GoalSerializer
   has_many :previous_goals, serializer: Plain::GoalSerializer
+  has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
 
   def previous_goals
     return [] unless object.previous_instance
