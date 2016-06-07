@@ -20,7 +20,9 @@ class SurveyInstancesController < ApplicationController
   private
 
   def survey_instance
-    current_organization_membership.survey_instances.find(params[:id])
+    current_organization.survey_instances.find(params[:id]).tap do |instance|
+      raise ActiveRecord::RecordNotFound unless instance.organization_membership.managed_by?(current_organization_membership)
+    end
   end
 
   def survey_template_instances

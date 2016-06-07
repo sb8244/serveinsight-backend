@@ -15,6 +15,15 @@ class OrganizationMembership < ActiveRecord::Base
     organization.organization_memberships.where(reviewer_id: id)
   end
 
+  def managed_by?(membership)
+    current = self
+    while current
+      return true if current == membership
+      current = current.reviewer
+    end
+    false
+  end
+
   private
 
   def reviewer_is_not_user

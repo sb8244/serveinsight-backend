@@ -80,6 +80,32 @@ RSpec.describe SurveyInstancesController, type: :controller do
       expect(response_json[:previous_goals]).to eq([])
     end
 
+    context "with direct reports" do
+      let!(:direct_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: membership) }
+      let!(:sub_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: direct_report) }
+      let!(:top_manager) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: nil) }
+
+      let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: Time.now) }
+      let!(:manager_survey) { FactoryGirl.create(:survey_instance, organization_membership: top_manager, reviewed_at: nil, completed_at: Time.now) }
+      let!(:sub_survey) { FactoryGirl.create(:survey_instance, organization_membership: sub_report, reviewed_at: nil, completed_at: Time.now) }
+
+      it "allows access to direct reports" do
+        get :show, id: direct_survey.id
+        expect(response).to be_success
+      end
+
+      it "allows access to sub-direct reports" do
+        get :show, id: sub_survey.id
+        expect(response).to be_success
+      end
+
+      it "doesn't allow access to manager reports" do
+        expect {
+          get :show, id: manager_survey.id
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
     context "with goals" do
       let!(:goal2) { instance.goals.create!(content: "two", order: 1, organization: organization) }
       let!(:goal1) { instance.goals.create!(content: "one", order: 0, organization: organization) }
