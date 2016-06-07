@@ -4,6 +4,7 @@ class CompletedSurveysController < ApplicationController
   end
 
   def create
+    return already_completed_response if survey_instance.completed_at.present?
     return need_answers_response unless all_questions_have_answers?
     return need_goals_response if survey_template.goals_section? && !goals_present?
     return needs_previous_goals_response if !all_previous_goals_updated?
@@ -25,6 +26,10 @@ class CompletedSurveysController < ApplicationController
       where(survey_instances: { organization_membership_id: current_organization_membership.id }).
       merge(SurveyInstance.completed.order(completed_at: :desc)).
       distinct
+  end
+
+  def already_completed_response
+    render json: { errors: ["This survey cannot be submitted twice"] }, status: :unprocessable_entity
   end
 
   def need_answers_response

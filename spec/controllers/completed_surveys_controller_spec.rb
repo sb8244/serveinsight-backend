@@ -85,6 +85,16 @@ RSpec.describe CompletedSurveysController, type: :controller do
       )
     end
 
+    context "with a completed survey" do
+      before { instance.update!(completed_at: Time.now) }
+
+      it "is a 422" do
+        post :create, survey_instance_id: instance.id, answers: full_answers
+        expect(response.status).to eq(422)
+        expect(response_json[:errors]).to eq(["This survey cannot be submitted twice"])
+      end
+    end
+
     context "without answers for all questions" do
       let(:incomplete_answers) do
         full_answers[1][:content] = " "
