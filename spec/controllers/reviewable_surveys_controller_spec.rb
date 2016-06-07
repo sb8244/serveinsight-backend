@@ -18,10 +18,11 @@ RSpec.describe ReviewableSurveysController, type: :controller do
   DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions]
 
   describe "GET index" do
-    let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil) }
-    let!(:manager_survey) { FactoryGirl.create(:survey_instance, organization_membership: top_manager, reviewed_at: nil) }
-    let!(:sub_survey) { FactoryGirl.create(:survey_instance, organization_membership: sub_report, reviewed_at: nil) }
-    let!(:direct_complete_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: Time.now) }
+    let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: Time.now) }
+    let!(:direct_incomplete) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: nil) }
+    let!(:manager_survey) { FactoryGirl.create(:survey_instance, organization_membership: top_manager, reviewed_at: nil, completed_at: Time.now) }
+    let!(:sub_survey) { FactoryGirl.create(:survey_instance, organization_membership: sub_report, reviewed_at: nil, completed_at: Time.now) }
+    let!(:direct_complete_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: Time.now, completed_at: Time.now) }
 
     it "lists unreviewed surveys" do
       get :index
