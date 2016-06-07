@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     end
   end
   resources :completed_surveys, only: [:index, :create]
+  resources :reviewable_surveys, only: [:index]
 
   post '/auth/:provider/callback', to: 'auth#callback'
 

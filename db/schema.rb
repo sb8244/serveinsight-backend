@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160606033246) do
+ActiveRecord::Schema.define(version: 20160607013836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20160606033246) do
     t.datetime "updated_at",                 null: false
     t.datetime "completed_at"
     t.datetime "due_at",                     null: false
+    t.datetime "reviewed_at"
   end
 
   add_index "survey_instances", ["iteration", "organization_membership_id", "survey_template_id"], name: "survey_instances_unique_members", unique: true, using: :btree
