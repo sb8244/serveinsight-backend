@@ -14,8 +14,8 @@ RSpec.describe ReviewableSurveysController, type: :controller do
     membership.update!(reviewer: top_manager)
   end
 
-  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at]
-  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions]
+  REVIEWABLE_DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :goals_section,
+                              :previous_goals, :goals, :questions, :survey_template, :organization_membership]
 
   describe "GET index" do
     let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: Time.now) }
@@ -29,7 +29,7 @@ RSpec.describe ReviewableSurveysController, type: :controller do
       expect(response).to be_success
       expect(response_json.count).to eq(1)
       expect(response_json[0][:id]).to eq(direct_survey.id)
-      expect(response_json[0].keys).to match_array(DETAILED_KEYS)
+      expect(response_json[0].keys).to match_array(REVIEWABLE_DETAILED_KEYS)
     end
   end
 end
