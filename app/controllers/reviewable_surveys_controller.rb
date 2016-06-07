@@ -10,6 +10,6 @@ class ReviewableSurveysController < ApplicationController
       completed.
       where(organization_membership: current_organization_membership.direct_reports).
       where(reviewed_at: nil).
-      order(completed_at: :asc)
+      order(completed_at: :desc)
   end
 end
