@@ -17,16 +17,16 @@ RSpec.describe Tree::Reviewer do
 
   subject { Tree::Reviewer.new(target) }
 
-  describe ".all_parents" do
+  describe ".all_reviewers" do
     it "provides a list of parents" do
-      expect(subject.all_parents).to eq([root_child, root])
+      expect(subject.all_reviewers).to eq([root_child, root])
     end
 
     context "with a rooted tree" do
       let(:target) { root }
 
       it "is an empty array" do
-        expect(subject.all_parents).to eq([])
+        expect(subject.all_reviewers).to eq([])
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe Tree::Reviewer do
       let(:target) { separate_root }
 
       it "is an empty array" do
-        expect(subject.all_parents).to eq([])
+        expect(subject.all_reviewers).to eq([])
       end
     end
   end

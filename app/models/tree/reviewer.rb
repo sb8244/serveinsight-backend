@@ -6,7 +6,7 @@ module Tree
       @memberships = organization.organization_memberships.includes(:reviewer)
     end
 
-    def all_parents
+    def all_reviewers
       built_tree.parents.map(&:membership)
     end
 
