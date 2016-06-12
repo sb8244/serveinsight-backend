@@ -3,6 +3,11 @@ class ReviewableSurveysController < ApplicationController
     respond_with reviewable_surveys
   end
 
+  def reports
+    relevant_reports = Tree::Reviewer.new(current_organization_membership).indirect_reports
+    respond_with reviewable_surveys(member_scope: relevant_reports), include_reviewer: true
+  end
+
   def mark_reviewed
     reviewable_survey.update!(reviewed_at: Time.now)
     head :no_content
@@ -10,12 +15,20 @@ class ReviewableSurveysController < ApplicationController
 
   private
 
-  def reviewable_surveys
+  def reviewable_surveys(member_scope: current_organization_membership.direct_reports)
     SurveyInstance.
       completed.
-      where(organization_membership: current_organization_membership.direct_reports).
+      where(organization_membership: member_scope).
       where(reviewed_at: nil).
-      order(completed_at: :desc)
+      order(completed_at: :desc).
+      includes(
+        organization_membership: [:reviewer],
+        survey_template: [
+          {
+            questions: [:answers]
+          }
+        ]
+      )
   end
 
   def reviewable_survey

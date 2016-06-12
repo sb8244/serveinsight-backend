@@ -33,6 +33,33 @@ RSpec.describe ReviewableSurveysController, type: :controller do
     end
   end
 
+  describe "GET reports" do
+    let!(:sub_survey2) { FactoryGirl.create(:survey_instance, organization_membership: sub_report, iteration: 1, reviewed_at: nil, completed_at: Time.now) }
+    let!(:sub_survey3) { FactoryGirl.create(:survey_instance, organization_membership: sub_report, iteration: 2, reviewed_at: nil, completed_at: Time.now) }
+
+    it "returns an array containing all managers reporting" do
+      get :reports
+      expect(response).to be_success
+      expect(response_json.map { |h| h[:reviewer][:id] }).to match_array([ direct_report.id, direct_report.id, direct_report.id ])
+    end
+
+    it "returns all reports for sub surveys" do
+      get :reports
+      expect(response_json.map { |h| h[:id] }).to match_array([ sub_survey.id, sub_survey2.id, sub_survey3.id ])
+    end
+
+    it "doesn't include direct reports because that is another request" do
+      get :reports
+      expect(response_json.map { |h| h[:id] }).not_to include(direct_survey.id)
+    end
+
+    it "is performant" do
+      expect {
+        get :reports
+      }.to make_database_queries(count: 17) # 2 queries per added sub survey isn't the best
+    end
+  end
+
   describe "POST mark_reviewed" do
     it "sets reviewed_at for direct reports" do
       expect {

@@ -12,6 +12,7 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
   has_many :goals, serializer: Plain::GoalSerializer
   has_many :previous_goals, serializer: Plain::GoalSerializer
   has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
+  has_one :reviewer, serializer: Plain::OrganizationMembershipSerializer
 
   def previous_goals
     return [] unless object.previous_instance
@@ -30,5 +31,13 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
 
   def goals_section?
     object.survey_template.goals_section?
+  end
+
+  def reviewer
+    object.organization_membership.reviewer
+  end
+
+  def include_reviewer?
+    options[:include_reviewer]
   end
 end

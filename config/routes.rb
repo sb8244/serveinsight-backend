@@ -18,6 +18,10 @@ Rails.application.routes.draw do
   end
   resources :completed_surveys, only: [:index, :create]
   resources :reviewable_surveys, only: [:index] do
+    collection do
+      get :reports
+    end
+
     member do
       post :mark_reviewed
     end
