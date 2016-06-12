@@ -45,6 +45,10 @@ module ActiveJobMatcher
   end
 end
 
+DBQueryMatchers.configure do |config|
+  config.schemaless = true
+end
+
 RSpec.configure do |config|
   config.include JsonHelpers, type: :controller
   config.include ActiveJobMatcher
