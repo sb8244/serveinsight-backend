@@ -23,11 +23,7 @@ class ReviewableSurveysController < ApplicationController
       order(completed_at: :desc).
       includes(
         organization_membership: [:reviewer],
-        survey_template: [
-          {
-            questions: [:answers]
-          }
-        ]
+        survey_template: :questions,
       )
   end
 
