@@ -25,6 +25,7 @@ end
 
 group :test do
   gem 'rspec-rails'
+  gem 'db-query-matchers'
 end
 
 gem 'rack-cors', :require => 'rack/cors'

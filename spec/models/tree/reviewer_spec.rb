@@ -67,6 +67,12 @@ RSpec.describe Tree::Reviewer do
       expect(subject.all_reports).to eq([child1, child2, child1_child, child2_child, child1_child_child, child1_child_child_child])
     end
 
+    it "is performant" do
+      expect {
+        subject.all_reports
+      }.to make_database_queries(count: 2)
+    end
+
     context "with a rooted tree" do
       let(:target) { root }
 
