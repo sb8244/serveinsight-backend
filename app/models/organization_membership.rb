@@ -16,12 +16,7 @@ class OrganizationMembership < ActiveRecord::Base
   end
 
   def managed_by?(membership)
-    current = self
-    while current
-      return true if current == membership
-      current = current.reviewer
-    end
-    false
+    Tree::Reviewer.new(self).all_reviewers.map(&:id).include?(membership.id)
   end
 
   private
