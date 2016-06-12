@@ -67,7 +67,7 @@ RSpec.describe ReviewableSurveysController, type: :controller do
       }.to change { direct_survey.reload.reviewed_at }.from(nil).to be_within(1).of(Time.now)
     end
 
-    it "sets reviewed_at for sub direct reports" do
+    it "sets reviewed_at for indirect reports" do
       expect {
         post :mark_reviewed, id: sub_survey.id
       }.to change { sub_survey.reload.reviewed_at }.from(nil).to be_within(1).of(Time.now)
