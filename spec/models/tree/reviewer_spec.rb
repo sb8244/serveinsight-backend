@@ -91,10 +91,10 @@ RSpec.describe Tree::Reviewer do
     end
   end
 
-  describe "all_reports_with_reports" do
-    it "provides a list of non-terminal children" do
-      expect(subject.all_reports_with_reports.count).to eq(4)
-      expect(subject.all_reports_with_reports).to eq([child1, child2, child1_child, child1_child_child])
+  describe "indirect_reports" do
+    it "provides a list of indirect reports" do
+      expect(subject.indirect_reports.count).to eq(4)
+      expect(subject.indirect_reports).to eq([child1_child, child2_child, child1_child_child, child1_child_child_child])
     end
   end
 end

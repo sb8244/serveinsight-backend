@@ -18,8 +18,8 @@ module Tree
       built_tree.children.map(&:membership)
     end
 
-    def all_reports_with_reports
-      built_tree.all_children.select { |node| node.children.any? }.map(&:membership)
+    def indirect_reports
+      all_reports - direct_reports
     end
 
     private
