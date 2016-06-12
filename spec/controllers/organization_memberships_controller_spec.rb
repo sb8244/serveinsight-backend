@@ -70,7 +70,7 @@ RSpec.describe OrganizationMembershipsController, type: :controller do
                                  id: organization_membership.id,
                                  name: organization_membership.name,
                                  email: organization_membership.email,
-                                 role: "manager",
+                                 role: "",
                                  admin: false,
                                  direct_reports: [],
                                  reviewer: nil,
@@ -80,6 +80,15 @@ RSpec.describe OrganizationMembershipsController, type: :controller do
                                    name: org.name
                                  }
                                )
+    end
+
+    context "with direct reports" do
+      let!(:report) { FactoryGirl.create(:organization_membership, organization: org, reviewer: organization_membership) }
+
+      it "is a manager" do
+        get :show
+        expect(response_json[:role]).to eq("manager")
+      end
     end
   end
 
