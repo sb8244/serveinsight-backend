@@ -33,4 +33,6 @@ class ApplicationController < ActionController::Base
   def unauthorized!
     head :unauthorized
   end
+
+  serialization_scope :current_organization_membership
 end
