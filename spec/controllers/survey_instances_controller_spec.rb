@@ -4,6 +4,8 @@ RSpec.describe SurveyInstancesController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:membership) { user.add_to_organization!(organization, admin: true) }
+  let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization) }
+  let!(:teammate2) { FactoryGirl.create(:organization_membership, organization: organization) }
 
   before(:each) {
     request.headers['Authorization'] = "Bearer #{user.auth_token}" if user
@@ -170,10 +172,47 @@ RSpec.describe SurveyInstancesController, type: :controller do
             question_content: question2.question,
             question_order: question2.order,
             content: "Test Answer",
-            order: 0
+            order: 0,
+            comments: []
           }
         ])
         expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
+      end
+
+      context "with comments" do
+        let!(:comment1) { FactoryGirl.create(:comment, commentable: answer1, organization_membership: membership) }
+        let!(:comment2) { FactoryGirl.create(:comment, commentable: answer1, organization_membership: membership, created_at: 5.minutes.ago) }
+        let!(:other_comment) { FactoryGirl.create(:comment, commentable: answer3, organization_membership: membership) }
+
+        it "shows comments" do
+          get :show, id: instance.id
+          rendered_answer = response_json[:questions].second[:answers].first
+          expect(rendered_answer[:id]).to eq(answer1.id)
+          expect(rendered_answer).to include(:comments)
+          expect(rendered_answer[:comments].count).to eq(2)
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
+        end
+
+        it "shows private comments to the person they are to" do
+          comment1.update!(private_organization_membership_id: membership.id, organization_membership: teammate)
+          get :show, id: instance.id
+          rendered_answer = response_json[:questions].second[:answers].first
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
+        end
+
+        it "shows private comments to the person that authored them" do
+          comment1.update!(private_organization_membership_id: teammate.id, organization_membership: membership)
+          get :show, id: instance.id
+          rendered_answer = response_json[:questions].second[:answers].first
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
+        end
+
+        it "doesn't show private comments otherwhise" do
+          comment1.update!(private_organization_membership_id: teammate.id, organization_membership: teammate2)
+          get :show, id: instance.id
+          rendered_answer = response_json[:questions].second[:answers].first
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id])
+        end
       end
     end
 

@@ -1,9 +1,25 @@
 class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
+  class AnswerSerializer < Plain::AnswerSerializer
+    has_many :comments, serializer: Plain::CommentSerializer
+
+    def comments
+      object.comments.sort_by(&:created_at).reject do |comment|
+        comment.private_organization_membership_id &&
+        comment.private_organization_membership_id != scope.id &&
+        comment.organization_membership != scope
+      end
+    end
+  end
+
   class QuestionSerializer < Plain::QuestionSerializer
-    has_many :answers, serializer: Plain::AnswerSerializer
+    has_many :answers, serializer: AnswerSerializer
 
     def answers
-      options.fetch(:survey_instance).answers.where(question_id: object.id).order(order: :asc)
+      options.fetch(:survey_instance).
+        answers.
+        where(question_id: object.id).
+        order(order: :asc).
+        includes(:comments)
     end
   end
 
@@ -25,7 +41,7 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
 
   def questions
     object.survey_template.ordered_questions.map do |question|
-      QuestionSerializer.new(question, survey_instance: object)
+      QuestionSerializer.new(question, survey_instance: object, scope: scope)
     end
   end
 
