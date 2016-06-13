@@ -8,6 +8,7 @@ class OrganizationMembership < ActiveRecord::Base
 
   has_many :invites
   has_many :survey_instances
+  has_many :comments
 
   validate :reviewer_id, :reviewer_is_not_user
 

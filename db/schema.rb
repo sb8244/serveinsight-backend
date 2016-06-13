@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160607013836) do
+ActiveRecord::Schema.define(version: 20160613000716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,20 @@ ActiveRecord::Schema.define(version: 20160607013836) do
   add_index "answers", ["organization_id"], name: "index_answers_on_organization_id", using: :btree
   add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
   add_index "answers", ["survey_instance_id"], name: "index_answers_on_survey_instance_id", using: :btree
+
+  create_table "comments", force: :cascade do |t|
+    t.text     "comment"
+    t.string   "role",                       default: "comments"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.integer  "organization_membership_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["commentable_id"], name: "index_comments_on_commentable_id", using: :btree
+  add_index "comments", ["commentable_type"], name: "index_comments_on_commentable_type", using: :btree
+  add_index "comments", ["organization_membership_id"], name: "index_comments_on_organization_membership_id", using: :btree
 
   create_table "goals", force: :cascade do |t|
     t.integer  "survey_instance_id", null: false
