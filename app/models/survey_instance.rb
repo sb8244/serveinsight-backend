@@ -5,6 +5,8 @@ class SurveyInstance < ActiveRecord::Base
   has_many :answers
   has_many :goals
 
+  acts_as_commentable
+
   def self.due
     where(completed_at: nil)
   end
