@@ -3,4 +3,12 @@ class Comment < ActiveRecord::Base
 
   belongs_to :commentable, polymorphic: true
   belongs_to :organization_membership
+
+  before_create :set_author_name
+
+  private
+
+  def set_author_name
+    self.author_name = organization_membership.name
+  end
 end
