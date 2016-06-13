@@ -14,6 +14,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
 
   SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at]
   DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership]
+  COMMENT_ATTRIBUTES = [:id, :created_at, :comment, :author_name, :private]
 
   describe "GET index" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
@@ -189,6 +190,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           rendered_answer = response_json[:questions].second[:answers].first
           expect(rendered_answer[:id]).to eq(answer1.id)
           expect(rendered_answer).to include(:comments)
+          expect(rendered_answer[:comments][0].keys).to match_array(COMMENT_ATTRIBUTES)
           expect(rendered_answer[:comments].count).to eq(2)
           expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
         end
