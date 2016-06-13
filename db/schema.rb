@@ -33,11 +33,11 @@ ActiveRecord::Schema.define(version: 20160613000716) do
   add_index "answers", ["survey_instance_id"], name: "index_answers_on_survey_instance_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
-    t.text     "comment"
+    t.text     "comment",                                         null: false
     t.string   "role",                       default: "comments"
-    t.integer  "commentable_id"
-    t.string   "commentable_type"
-    t.integer  "organization_membership_id"
+    t.integer  "commentable_id",                                  null: false
+    t.string   "commentable_type",                                null: false
+    t.integer  "organization_membership_id",                      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
