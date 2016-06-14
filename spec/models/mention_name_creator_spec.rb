@@ -30,5 +30,11 @@ RSpec.describe MentionNameCreator do
     it "gives the next sequence available" do
       expect(MentionNameCreator.new("test", organization: organization).mention_name).to eq("test3")
     end
+
+    context "the name belongs to the current membership" do
+      it "uses the mention name belonging to the member" do
+        expect(MentionNameCreator.new("test", organization: organization, organization_membership: duplicate2).mention_name).to eq("test2")
+      end
+    end
   end
 end
