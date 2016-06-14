@@ -12,7 +12,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
-  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at]
+  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :comment_grant]
   DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership]
   COMMENT_ATTRIBUTES = [:id, :created_at, :comment, :author_name, :private]
 
@@ -120,13 +120,15 @@ RSpec.describe SurveyInstancesController, type: :controller do
             id: goal1.id,
             content: "one",
             order: 0,
-            status: nil
+            status: nil,
+            comment_grant: CommentGrant.encode(goal1)
           },
           {
             id: goal2.id,
             content: "two",
             order: 1,
-            status: nil
+            status: nil,
+            comment_grant: CommentGrant.encode(goal2)
           }
         ])
       end
@@ -174,6 +176,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             question_order: question2.order,
             content: "Test Answer",
             order: 0,
+            comment_grant: CommentGrant.encode(answer3),
             comments: []
           }
         ])
@@ -231,13 +234,15 @@ RSpec.describe SurveyInstancesController, type: :controller do
             id: goal1.id,
             content: "one",
             order: 0,
-            status: nil
+            status: nil,
+            comment_grant: CommentGrant.encode(goal1)
           },
           {
             id: goal2.id,
             content: "two",
             order: 1,
-            status: nil
+            status: nil,
+            comment_grant: CommentGrant.encode(goal2)
           }
         ])
       end
