@@ -29,7 +29,7 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "POST create" do
-    let!(:params) {{ name: "test", domain: "test.com" }}
+    let!(:params) {{ name: "Steve Test", domain: "test.com" }}
 
     context "without an existing organization" do
       let!(:membership) {}
@@ -48,6 +48,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
         expect(OrganizationMembership.last.email).to eq(user.email)
         expect(OrganizationMembership.last.name).to eq(user.name)
+        expect(OrganizationMembership.last.mention_name).to eq(MentionNameCreator.new(user.name, organization: organization).mention_name)
       end
 
       it "adds the user to the organization as an admin" do

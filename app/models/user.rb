@@ -11,7 +11,11 @@ class User < ActiveRecord::Base
   end
 
   def add_to_organization!(org, admin: false)
-    organization_memberships.where(organization: org).first_or_create!(admin: admin, name: name, email: email)
+    mention_name = MentionNameCreator.new(name, organization: org).mention_name
+
+    organization_memberships.
+      where(organization: org).
+      first_or_create!(admin: admin, name: name, email: email, mention_name: mention_name)
   end
 
   def auth_token
