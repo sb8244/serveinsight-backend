@@ -12,8 +12,8 @@ RSpec.describe InvitesController, type: :controller do
   }
 
   describe "GET index" do
-    let!(:invite1) { Invite.create!(organization_membership: organization.organization_memberships.create!(email: "test@test.com", name: "test")) }
-    let!(:invite2) { Invite.create!(organization_membership: organization2.organization_memberships.create!(email: "test@test.com", name: "test")) }
+    let!(:invite1) { Invite.create!(organization_membership: FactoryGirl.create(:organization_membership, organization: organization, email: "test@test.com", name: "test")) }
+    let!(:invite2) { Invite.create!(organization_membership: FactoryGirl.create(:organization_membership, organization: organization2, email: "test@test.com", name: "test")) }
 
     it "lists invites" do
       get :index
@@ -37,6 +37,11 @@ RSpec.describe InvitesController, type: :controller do
       expect {
         request!
       }.to change { organization.organization_memberships.count }.by(1)
+    end
+
+    it "sets the mention name" do
+      request!
+      expect(OrganizationMembership.last.mention_name).to eq("test")
     end
 
     context "when a user already exists" do

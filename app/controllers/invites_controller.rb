@@ -10,7 +10,9 @@ class InvitesController < ApplicationController
   private
 
   def invite_params
-    params.permit(:email, :admin, :name)
+    params.permit(:email, :admin, :name).tap do |p|
+      p[:mention_name] = MentionNameCreator.new(p[:name], organization: current_organization).mention_name
+    end
   end
 
   InviteCreator = Struct.new(:organization, :invite_params) do
