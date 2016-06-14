@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe OrganizationsController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
-  let!(:membership) { user.add_to_organization!(organization) }
+  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: false) }
 
   before(:each) {
     request.headers['Authorization'] = "Bearer #{user.auth_token}" if user

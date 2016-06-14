@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ReviewableSurveysController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
-  let!(:membership) { user.add_to_organization!(organization, admin: true) }
+  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true) }
   let!(:direct_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: membership) }
   let!(:sub_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: direct_report) }
   let!(:top_manager) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: nil) }

@@ -4,5 +4,9 @@ FactoryGirl.define do
     user
     name { Faker::Name.name }
     email { Faker::Internet.email }
+
+    before(:create) do |m|
+      m.mention_name = m.name.delete(" ") if m.mention_name.nil?
+    end
   end
 end
