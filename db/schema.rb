@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613004852) do
+ActiveRecord::Schema.define(version: 20160614040013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,9 +80,11 @@ ActiveRecord::Schema.define(version: 20160613004852) do
     t.integer  "reviewer_id"
     t.string   "name",                            null: false
     t.string   "email",                           null: false
+    t.string   "mention_name",                    null: false
   end
 
   add_index "organization_memberships", ["email", "organization_id"], name: "index_organization_memberships_on_email_and_organization_id", unique: true, using: :btree
+  add_index "organization_memberships", ["mention_name"], name: "index_organization_memberships_on_mention_name", unique: true, using: :btree
   add_index "organization_memberships", ["organization_id", "user_id"], name: "index_organization_memberships_on_organization_id_and_user_id", unique: true, using: :btree
   add_index "organization_memberships", ["organization_id"], name: "index_organization_memberships_on_organization_id", using: :btree
   add_index "organization_memberships", ["reviewer_id"], name: "index_organization_memberships_on_reviewer_id", using: :btree
