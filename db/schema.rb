@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 20160614040013) do
   end
 
   add_index "organization_memberships", ["email", "organization_id"], name: "index_organization_memberships_on_email_and_organization_id", unique: true, using: :btree
-  add_index "organization_memberships", ["mention_name"], name: "index_organization_memberships_on_mention_name", unique: true, using: :btree
+  add_index "organization_memberships", ["mention_name", "organization_id"], name: "unique_mention_name_on_memberships", unique: true, using: :btree
   add_index "organization_memberships", ["organization_id", "user_id"], name: "index_organization_memberships_on_organization_id_and_user_id", unique: true, using: :btree
   add_index "organization_memberships", ["organization_id"], name: "index_organization_memberships_on_organization_id", using: :btree
   add_index "organization_memberships", ["reviewer_id"], name: "index_organization_memberships_on_reviewer_id", using: :btree
