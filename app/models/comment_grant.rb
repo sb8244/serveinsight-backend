@@ -16,7 +16,7 @@ class CommentGrant
     commentable_id.presence && commentable_type.presence && Time.now < Time.at(@payload[:exp].to_i)
   end
 
-  def self.encode(obj, duration: 4.hours)
+  def self.encode(obj, duration: 12.hours)
     payload = { commentable_id: obj.id, commentable_type: obj.class.name, exp: (duration.from_now).to_i }
     JWT.encode(payload, JWT_SECRET, JWT_ALGORITHM)
   end

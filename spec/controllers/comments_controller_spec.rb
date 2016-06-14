@@ -28,15 +28,17 @@ RSpec.describe CommentsController, type: :controller do
   }
 
   describe "POST create" do
-    it "doesn't accept invalid commentable types" do
-      post :create, comment: "Test", commentable_id: answer.id, commentable_type: "X"
+    it "doesn't accept invalid comment grants" do
+      post :create, comment: "Test", comment_grant: "xx"
       expect(response.status).to eq(422)
     end
 
     context "for an answer" do
+      let(:request!) { post :create, comment: "Test", comment_grant: CommentGrant.encode(answer) }
+
       it "creates a new comment" do
         expect {
-          post :create, comment: "Test", commentable_id: answer.id, commentable_type: "answer"
+          request!
           expect(response).to be_success
         }.to change { Comment.count }.by(1)
       end
@@ -45,21 +47,32 @@ RSpec.describe CommentsController, type: :controller do
         answer.update!(organization_id: -1)
         expect {
           expect {
-            post :create, comment: "Test", commentable_id: answer.id, commentable_type: "answer"
+            request!
           }.to raise_error(ActiveRecord::RecordNotFound)
         }.not_to change { Comment.count }
       end
 
       it "serializes the new comment" do
-        post :create, comment: "Test", commentable_id: answer.id, commentable_type: "answer"
+        request!
         expect(response_json.keys).to match_array([:id, :created_at, :comment, :author_name, :private])
+      end
+
+      context "with an old JWT token" do
+        it "creates a new comment" do
+          expect {
+            post :create, comment: "Test", comment_grant: CommentGrant.encode(answer, duration: -1.minutes)
+            expect(response.status).to eq(422)
+          }.not_to change { Comment.count }
+        end
       end
     end
 
     context "for a goal" do
+      let(:request!) { post :create, comment: "Test", comment_grant: CommentGrant.encode(goal) }
+
       it "creates a new comment" do
         expect {
-          post :create, comment: "Test", commentable_id: goal.id, commentable_type: "goal"
+          request!
           expect(response).to be_success
         }.to change { Comment.count }.by(1)
       end
@@ -68,21 +81,23 @@ RSpec.describe CommentsController, type: :controller do
         goal.update!(organization_id: -1)
         expect {
           expect {
-            post :create, comment: "Test", commentable_id: goal.id, commentable_type: "goal"
+            request!
           }.to raise_error(ActiveRecord::RecordNotFound)
         }.not_to change { Comment.count }
       end
 
       it "serializes the new comment" do
-        post :create, comment: "Test", commentable_id: goal.id, commentable_type: "goal"
+        request!
         expect(response_json.keys).to match_array([:id, :created_at, :comment, :author_name, :private])
       end
     end
 
     context "for a survey instance" do
+      let(:request!) { post :create, comment: "Test", comment_grant: CommentGrant.encode(instance) }
+
       it "creates a new comment" do
         expect {
-          post :create, comment: "Test", commentable_id: instance.id, commentable_type: "survey"
+          request!
           expect(response).to be_success
         }.to change { Comment.count }.by(1)
       end
@@ -91,13 +106,13 @@ RSpec.describe CommentsController, type: :controller do
         instance.update!(organization_membership_id: -1)
         expect {
           expect {
-            post :create, comment: "Test", commentable_id: instance.id, commentable_type: "survey"
+            request!
           }.to raise_error(ActiveRecord::RecordNotFound)
         }.not_to change { Comment.count }
       end
 
       it "serializes the new comment" do
-        post :create, comment: "Test", commentable_id: instance.id, commentable_type: "survey"
+        request!
         expect(response_json.keys).to match_array([:id, :created_at, :comment, :author_name, :private])
       end
     end

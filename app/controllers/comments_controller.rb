@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   }
 
   def create
-    return invalid_commentable_type! unless comment_params[:commentable_type]
+    return invalid_comment_grant! unless comment_grant.valid?
     respond_with created_comment, location: nil, serializer: Plain::CommentSerializer
   end
 
@@ -16,9 +16,14 @@ class CommentsController < ApplicationController
     commentable.comments.create(comment_params)
   end
 
+  def comment_grant
+    @comment_grant = CommentGrant.new(params.fetch(:comment_grant))
+  end
+
   def comment_params
-    @comment_params ||= params.permit(:comment, :commentable_id).tap do |p|
-      p[:commentable_type] = COMMENTABLE_TYPES[params.fetch(:commentable_type).to_s]
+    @comment_params ||= params.permit(:comment).tap do |p|
+      p[:commentable_id] = comment_grant.commentable_id
+      p[:commentable_type] = comment_grant.commentable_type
       p[:organization_membership] = current_organization_membership
     end
   end
@@ -34,7 +39,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  def invalid_commentable_type!
-    render json: { errors: ["This comment type isn't valid"] }, status: :unprocessable_entity
+  def invalid_comment_grant!
+    render json: { errors: ["Comment grant is invalid. Refresh and resubmit your comment."] }, status: :unprocessable_entity
   end
 end
