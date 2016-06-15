@@ -38,6 +38,12 @@ RSpec.describe Mention::Creator do
       )
     end
 
+    it "doesn't need other content" do
+      expect {
+        subject.call("@Person2")
+      }.to change { Mention.count }.by(1)
+    end
+
     it "doesn't mention the author" do
       expect {
         subject.call("Hi @Person1")
