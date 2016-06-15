@@ -13,7 +13,11 @@ class CommentsController < ApplicationController
   private
 
   def created_comment
-    commentable.comments.create(comment_params)
+    commentable.comments.create(comment_params).tap do |comment|
+      if comment.persisted?
+        Mention::Creator.new(comment, comment.comment, current_organization_membership).call
+      end
+    end
   end
 
   def comment_grant

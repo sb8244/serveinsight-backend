@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe CommentsController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
-  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true) }
-  let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization) }
-  let!(:teammate2) { FactoryGirl.create(:organization_membership, organization: organization) }
+  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true, mention_name: "Person1") }
+  let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "Person2") }
+  let!(:teammate2) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "Person3") }
 
   let!(:survey_template) { FactoryGirl.create(:survey_template, organization: organization) }
   let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: Time.now) }
@@ -63,6 +63,21 @@ RSpec.describe CommentsController, type: :controller do
             post :create, comment: "Test", comment_grant: CommentGrant.encode(answer, duration: -1.minutes)
             expect(response.status).to eq(422)
           }.not_to change { Comment.count }
+        end
+      end
+
+      context "with mentions" do
+        it "creates mentions for the @names that aren't the current user" do
+          expect {
+            post :create, comment: "Hi @Person2, how is it going? From @Person1 but not @Person4", comment_grant: CommentGrant.encode(answer)
+          }.to change { Mention.count }.by(1)
+
+          expect(Mention.last.attributes).to include(
+            "organization_membership_id" => teammate.id,
+            "mentioned_by_id" => membership.id,
+            "mentionable_id" => Comment.last.id,
+            "mentionable_type" => "Comment"
+          )
         end
       end
     end
