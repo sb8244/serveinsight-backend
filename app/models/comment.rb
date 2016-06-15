@@ -4,6 +4,8 @@ class Comment < ActiveRecord::Base
   belongs_to :commentable, polymorphic: true
   belongs_to :organization_membership
 
+  has_many :mentions, as: :mentionable
+
   before_create :set_author_name
 
   private

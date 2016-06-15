@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160614040013) do
+ActiveRecord::Schema.define(version: 20160615024915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,18 @@ ActiveRecord::Schema.define(version: 20160614040013) do
   end
 
   add_index "invites", ["organization_membership_id"], name: "index_invites_on_organization_membership_id", using: :btree
+
+  create_table "mentions", force: :cascade do |t|
+    t.integer  "mentionable_id",             null: false
+    t.string   "mentionable_type",           null: false
+    t.integer  "organization_membership_id", null: false
+    t.integer  "mentioned_by_id",            null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "mentions", ["mentioned_by_id"], name: "index_mentions_on_mentioned_by_id", using: :btree
+  add_index "mentions", ["organization_membership_id"], name: "index_mentions_on_organization_membership_id", using: :btree
 
   create_table "organization_memberships", force: :cascade do |t|
     t.integer  "organization_id",                 null: false
