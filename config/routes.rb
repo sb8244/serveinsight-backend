@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       put :bulk_update
     end
   end
+  resources :mention_names, only: [:index]
 
   resource :organization, only: [:show, :create]
   resources :invites, only: [:create, :index]
