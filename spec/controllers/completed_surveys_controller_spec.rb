@@ -4,6 +4,7 @@ RSpec.describe CompletedSurveysController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true) }
+  let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "Test") }
 
   before(:each) {
     request.headers['Authorization'] = "Bearer #{user.auth_token}" if user
@@ -46,11 +47,11 @@ RSpec.describe CompletedSurveysController, type: :controller do
     let(:full_answers) {[
       {
         question_id: question1.id,
-        content: "Answer"
+        content: "Answer for @Test"
       },
       {
         question_id: question2.id,
-        content: "Q2 Answer"
+        content: "Q2 Answer @Test"
       },
       {
         question_id: question2.id,
@@ -73,16 +74,22 @@ RSpec.describe CompletedSurveysController, type: :controller do
         "question_id" => question1.id,
         "question_content" => "First",
         "question_order" => 0,
-        "content" => "Answer",
+        "content" => "Answer for @Test",
         "order" => 0
       )
       expect(Answer.second.attributes).to include(
         "question_id" => question2.id,
         "question_content" => "Second",
         "question_order" => 2,
-        "content" => "Q2 Answer",
+        "content" => "Q2 Answer @Test",
         "order" => 1
       )
+    end
+
+    it "mentions for answers with @" do
+      expect {
+        post :create, survey_instance_id: instance.id, answers: full_answers
+      }.to change { Mention.count }.by(2)
     end
 
     context "with a completed survey" do
@@ -113,10 +120,10 @@ RSpec.describe CompletedSurveysController, type: :controller do
 
       let(:full_goals) {[
         {
-          content: "First",
+          content: "@Test First",
         },
         {
-          content: "Second"
+          content: "Second @Test"
         }
       ]}
 
@@ -133,13 +140,20 @@ RSpec.describe CompletedSurveysController, type: :controller do
         }.to change { Goal.count }.by(2)
 
         expect(Goal.first.attributes).to include(
-          "content" => "First",
+          "content" => "@Test First",
           "order" => 0
         )
         expect(Goal.second.attributes).to include(
-          "content" => "Second",
+          "content" => "Second @Test",
           "order" => 1
         )
+      end
+
+      it "mentions for goals with @" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers, goals: full_goals
+        }.to change { Mention.count }.by(4)
+        expect(Mention.group(:mentionable_type).count).to include("Answer" => 2, "Goal" => 2)
       end
     end
 

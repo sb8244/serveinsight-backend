@@ -59,7 +59,7 @@ class CompletedSurveysController < ApplicationController
   def add_answers!
     content_answers.each_with_index do |answer, i|
       question = question_by_id(answer[:question_id])
-      survey_instance.answers.create!(
+      answer = survey_instance.answers.create!(
         organization: current_organization,
         question_id: question.id,
         question_content: question.question,
@@ -67,17 +67,19 @@ class CompletedSurveysController < ApplicationController
         content: answer[:content],
         order: i
       )
+      Mention::Creator.new(answer, current_organization_membership).call(answer.content)
     end
   end
 
   def add_goals!
     return unless survey_template.goals_section?
     goal_answers.each_with_index do |goal, i|
-      survey_instance.goals.create!(
+      goal = survey_instance.goals.create!(
         organization: current_organization,
         content: goal[:content],
         order: i
       )
+      Mention::Creator.new(goal, current_organization_membership).call(goal.content)
     end
   end
 
