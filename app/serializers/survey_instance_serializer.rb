@@ -11,6 +11,18 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
     end
   end
 
+  class GoalSerializer < Plain::GoalSerializer
+    has_many :comments, serializer: Plain::CommentSerializer
+
+    def comments
+      object.comments.sort_by(&:created_at).reject do |comment|
+        comment.private_organization_membership_id &&
+        comment.private_organization_membership_id != scope.id &&
+        comment.organization_membership != scope
+      end
+    end
+  end
+
   class QuestionSerializer < Plain::QuestionSerializer
     has_many :answers, serializer: AnswerSerializer
 
@@ -25,18 +37,18 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
 
   attributes :questions, :goals_section?
 
-  has_many :goals, serializer: Plain::GoalSerializer
-  has_many :previous_goals, serializer: Plain::GoalSerializer
+  has_many :goals, serializer: GoalSerializer
+  has_many :previous_goals, serializer: GoalSerializer
   has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
   has_one :reviewer, serializer: Plain::OrganizationMembershipSerializer
 
   def previous_goals
     return [] unless object.previous_instance
-    object.previous_instance.goals.order(order: :asc)
+    object.previous_instance.goals.order(order: :asc).includes(:comments)
   end
 
   def goals
-    object.goals.order(order: :asc)
+    object.goals.order(order: :asc).includes(:comments)
   end
 
   def questions

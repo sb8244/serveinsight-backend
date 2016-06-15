@@ -121,16 +121,55 @@ RSpec.describe SurveyInstancesController, type: :controller do
             content: "one",
             order: 0,
             status: nil,
-            comment_grant: CommentGrant.encode(goal1)
+            comment_grant: CommentGrant.encode(goal1),
+            comments: []
           },
           {
             id: goal2.id,
             content: "two",
             order: 1,
             status: nil,
-            comment_grant: CommentGrant.encode(goal2)
+            comment_grant: CommentGrant.encode(goal2),
+            comments: []
           }
         ])
+      end
+
+      context "with comments" do
+        let!(:comment1) { FactoryGirl.create(:comment, commentable: goal1, organization_membership: membership) }
+        let!(:comment2) { FactoryGirl.create(:comment, commentable: goal1, organization_membership: membership, created_at: 5.minutes.ago) }
+        let!(:other_comment) { FactoryGirl.create(:comment, commentable: goal2, organization_membership: membership) }
+
+        it "shows comments" do
+          get :show, id: instance.id
+          rendered_answer = response_json[:goals].first
+          expect(rendered_answer[:id]).to eq(goal1.id)
+          expect(rendered_answer).to include(:comments)
+          expect(rendered_answer[:comments][0].keys).to match_array(COMMENT_ATTRIBUTES)
+          expect(rendered_answer[:comments].count).to eq(2)
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
+        end
+
+        it "shows private comments to the person they are to" do
+          comment1.update!(private_organization_membership_id: membership.id, organization_membership: teammate)
+          get :show, id: instance.id
+          rendered_answer = response_json[:goals].first
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
+        end
+
+        it "shows private comments to the person that authored them" do
+          comment1.update!(private_organization_membership_id: teammate.id, organization_membership: membership)
+          get :show, id: instance.id
+          rendered_answer = response_json[:goals].first
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
+        end
+
+        it "doesn't show private comments otherwhise" do
+          comment1.update!(private_organization_membership_id: teammate.id, organization_membership: teammate2)
+          get :show, id: instance.id
+          rendered_answer = response_json[:goals].first
+          expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id])
+        end
       end
     end
 
@@ -235,14 +274,16 @@ RSpec.describe SurveyInstancesController, type: :controller do
             content: "one",
             order: 0,
             status: nil,
-            comment_grant: CommentGrant.encode(goal1)
+            comment_grant: CommentGrant.encode(goal1),
+            comments: []
           },
           {
             id: goal2.id,
             content: "two",
             order: 1,
             status: nil,
-            comment_grant: CommentGrant.encode(goal2)
+            comment_grant: CommentGrant.encode(goal2),
+            comments: []
           }
         ])
       end
