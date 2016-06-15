@@ -78,5 +78,18 @@ RSpec.describe ReviewableSurveysController, type: :controller do
         post :mark_reviewed, id: manager_survey.id
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "can take an optional comment" do
+      expect {
+        post :mark_reviewed, id: direct_survey.id, reviewer_comment: "Great job!"
+      }.to change { direct_survey.comments.count }.by(1)
+
+      expect(Comment.last.attributes).to include(
+        "comment" => "Great job!",
+        "commentable_id" => direct_survey.id,
+        "commentable_type" => "SurveyInstance",
+        "organization_membership_id" => membership.id
+      )
+    end
   end
 end
