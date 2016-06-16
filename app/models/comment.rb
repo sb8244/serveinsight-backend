@@ -9,7 +9,7 @@ class Comment < ActiveRecord::Base
   before_create :set_author_name
 
   def visible_to?(organization_membership)
-    return true unless self.private_organization_membership_id
+    return true if self.private_organization_membership_id.nil?
     return true if self.private_organization_membership_id == organization_membership.id
     return true if self.organization_membership == organization_membership
     false
