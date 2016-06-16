@@ -15,7 +15,7 @@ RSpec.describe ReviewableSurveysController, type: :controller do
   end
 
   REVIEWABLE_DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :goals_section,
-                              :previous_goals, :goals, :questions, :organization_membership, :comment_grant]
+                              :previous_goals, :goals, :questions, :organization_membership, :comment_grant, :iteration]
 
   let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: Time.now) }
   let!(:direct_incomplete) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: nil) }

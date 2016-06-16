@@ -12,7 +12,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
-  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :comment_grant]
+  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :comment_grant, :iteration]
   DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership]
   COMMENT_ATTRIBUTES = [:id, :created_at, :comment, :author_name, :private]
 
