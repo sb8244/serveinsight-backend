@@ -91,6 +91,34 @@ RSpec.describe SurveyInstancesController, type: :controller do
       expect(response_json[:previous_goals]).to eq([])
     end
 
+    context "with comments" do
+      let!(:comment1) { FactoryGirl.create(:comment, commentable: instance, organization_membership: membership) }
+      let!(:comment2) { FactoryGirl.create(:comment, commentable: instance, organization_membership: membership) }
+
+      it "has all comments" do
+        get :show, id: instance.id
+        expect(response_json[:comments].count).to eq(2)
+      end
+
+      it "shows private comments to the person they are to" do
+        comment1.update!(private_organization_membership_id: membership.id, organization_membership: teammate)
+        get :show, id: instance.id
+        expect(response_json[:comments].count).to eq(2)
+      end
+
+      it "shows private comments to the person that authored them" do
+        comment1.update!(private_organization_membership_id: teammate.id, organization_membership: membership)
+        get :show, id: instance.id
+        expect(response_json[:comments].count).to eq(2)
+      end
+
+      it "doesn't show private comments otherwhise" do
+        comment1.update!(private_organization_membership_id: teammate.id, organization_membership: teammate2)
+        get :show, id: instance.id
+        expect(response_json[:comments].count).to eq(1)
+      end
+    end
+
     context "with direct reports" do
       let!(:direct_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: membership) }
       let!(:sub_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: direct_report) }

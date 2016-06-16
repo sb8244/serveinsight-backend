@@ -3,10 +3,8 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
     has_many :comments, serializer: Plain::CommentSerializer
 
     def comments
-      object.comments.sort_by(&:created_at).reject do |comment|
-        comment.private_organization_membership_id &&
-        comment.private_organization_membership_id != scope.id &&
-        comment.organization_membership != scope
+      object.comments.sort_by(&:created_at).select do |comment|
+        comment.visible_to?(scope)
       end
     end
   end
@@ -15,10 +13,8 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
     has_many :comments, serializer: Plain::CommentSerializer
 
     def comments
-      object.comments.sort_by(&:created_at).reject do |comment|
-        comment.private_organization_membership_id &&
-        comment.private_organization_membership_id != scope.id &&
-        comment.organization_membership != scope
+      object.comments.sort_by(&:created_at).select do |comment|
+        comment.visible_to?(scope)
       end
     end
   end
@@ -55,6 +51,12 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
   def questions
     object.survey_template.ordered_questions.map do |question|
       QuestionSerializer.new(question, survey_instance: object, scope: scope)
+    end
+  end
+
+  def comments
+    object.comments.sort_by(&:created_at).select do |comment|
+      comment.visible_to?(scope)
     end
   end
 
