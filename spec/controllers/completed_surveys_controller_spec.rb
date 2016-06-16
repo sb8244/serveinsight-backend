@@ -43,7 +43,7 @@ RSpec.describe CompletedSurveysController, type: :controller do
 
     context "with direct_reports=true" do
       it "returns information for the survey instances" do
-        get :index, direct_reports: true
+        get :index, all_reports: true
         expect(response_json[0][:survey_instances].map { |h| h[:id] }).to eq([sub_report_instance.id])
         expect(response_json[1][:survey_instances].map { |h| h[:id] }).to eq([direct_report_instance.id])
         expect(response_json[0][:survey_instances][0].keys).not_to include(:answers)
