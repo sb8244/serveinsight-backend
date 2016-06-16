@@ -27,7 +27,7 @@ class CompletedSurveysController < ApplicationController
 
   def survey_templates_with_completed_instances(ids: [current_organization_membership.id])
     current_organization.survey_templates.
-      includes(:survey_instances).
+      includes(survey_instances: [:organization_membership]).
       where(survey_instances: { organization_membership_id: ids }).
       merge(SurveyInstance.completed.order(completed_at: :desc)).
       distinct

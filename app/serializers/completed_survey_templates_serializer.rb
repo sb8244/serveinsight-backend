@@ -1,5 +1,9 @@
 class CompletedSurveyTemplatesSerializer < Plain::SurveyTemplateSerializer
-  has_many :survey_instances, serializer: Plain::SurveyInstanceSerializer
+  class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
+    has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
+  end
+
+  has_many :survey_instances, serializer: SurveyInstanceSerializer
 
   def survey_instances
     if object.association(:survey_instances).loaded?
