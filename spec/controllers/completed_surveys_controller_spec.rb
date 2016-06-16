@@ -5,6 +5,8 @@ RSpec.describe CompletedSurveysController, type: :controller do
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true) }
   let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "Test") }
+  let!(:direct_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: membership) }
+  let!(:sub_report) { FactoryGirl.create(:organization_membership, organization: organization, reviewer: direct_report) }
 
   before(:each) {
     request.headers['Authorization'] = "Bearer #{user.auth_token}" if user
@@ -20,6 +22,9 @@ RSpec.describe CompletedSurveysController, type: :controller do
     let!(:instance3) { membership.survey_instances.create!(survey_template: survey_template2, iteration: 1, due_at: Time.now, completed_at: 3.minutes.ago) }
     let!(:instance4) { membership.survey_instances.create!(survey_template: survey_template3, iteration: 1, due_at: Time.now, completed_at: nil) }
 
+    let!(:direct_report_instance) { direct_report.survey_instances.create!(survey_template: survey_template2, iteration: 1, due_at: Time.now, completed_at: 3.minutes.ago) }
+    let!(:sub_report_instance) { sub_report.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: Time.now, completed_at: 2.minutes.ago) }
+
     EXPECTED_KEYS = [:active, :created_at, :goals_section, :id, :name, :next_due_at, :recurring, :updated_at, :weeks_between_due, :survey_instances]
 
     it "returns the survey templates that have completed instances with recent templates first" do
@@ -34,6 +39,15 @@ RSpec.describe CompletedSurveysController, type: :controller do
       expect(response_json[0][:survey_instances].map { |h| h[:id] }).to eq([instance3.id])
       expect(response_json[1][:survey_instances].map { |h| h[:id] }).to eq([instance2.id, instance.id])
       expect(response_json[0][:survey_instances][0].keys).not_to include(:answers)
+    end
+
+    context "with direct_reports=true" do
+      it "returns information for the survey instances" do
+        get :index, direct_reports: true
+        expect(response_json[0][:survey_instances].map { |h| h[:id] }).to eq([sub_report_instance.id])
+        expect(response_json[1][:survey_instances].map { |h| h[:id] }).to eq([direct_report_instance.id])
+        expect(response_json[0][:survey_instances][0].keys).not_to include(:answers)
+      end
     end
   end
 

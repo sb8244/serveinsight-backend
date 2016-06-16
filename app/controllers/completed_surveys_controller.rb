@@ -1,6 +1,11 @@
 class CompletedSurveysController < ApplicationController
   def index
-    respond_with survey_templates_with_completed_instances, each_serializer: CompletedSurveyTemplatesSerializer
+    if params[:direct_reports]
+      all_report_ids = Tree::Reviewer.new(current_organization_membership).all_reports.map(&:id)
+      respond_with survey_templates_with_completed_instances(ids: all_report_ids), each_serializer: CompletedSurveyTemplatesSerializer
+    else
+      respond_with survey_templates_with_completed_instances, each_serializer: CompletedSurveyTemplatesSerializer
+    end
   end
 
   def create
@@ -20,10 +25,10 @@ class CompletedSurveysController < ApplicationController
 
   private
 
-  def survey_templates_with_completed_instances
+  def survey_templates_with_completed_instances(ids: [current_organization_membership.id])
     current_organization.survey_templates.
       includes(:survey_instances).
-      where(survey_instances: { organization_membership_id: current_organization_membership.id }).
+      where(survey_instances: { organization_membership_id: ids }).
       merge(SurveyInstance.completed.order(completed_at: :desc)).
       distinct
   end
