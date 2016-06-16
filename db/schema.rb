@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615024915) do
+ActiveRecord::Schema.define(version: 20160616021912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,14 +122,15 @@ ActiveRecord::Schema.define(version: 20160615024915) do
   add_index "questions", ["survey_template_id"], name: "index_questions_on_survey_template_id", using: :btree
 
   create_table "survey_instances", force: :cascade do |t|
-    t.integer  "organization_membership_id", null: false
-    t.integer  "survey_template_id",         null: false
-    t.integer  "iteration",                  null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.integer  "organization_membership_id",                 null: false
+    t.integer  "survey_template_id",                         null: false
+    t.integer  "iteration",                                  null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.datetime "completed_at"
-    t.datetime "due_at",                     null: false
+    t.datetime "due_at",                                     null: false
     t.datetime "reviewed_at"
+    t.boolean  "missed",                     default: false
   end
 
   add_index "survey_instances", ["iteration", "organization_membership_id", "survey_template_id"], name: "survey_instances_unique_members", unique: true, using: :btree
