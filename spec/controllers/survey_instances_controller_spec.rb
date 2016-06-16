@@ -13,7 +13,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
   }
 
   SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :comment_grant, :iteration]
-  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership]
+  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership, :comments]
   COMMENT_ATTRIBUTES = [:id, :created_at, :comment, :author_name, :private]
 
   describe "GET index" do

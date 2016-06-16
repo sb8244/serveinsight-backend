@@ -39,6 +39,7 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
 
   has_many :goals, serializer: GoalSerializer
   has_many :previous_goals, serializer: GoalSerializer
+  has_many :comments, serializer: Plain::CommentSerializer
   has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
   has_one :reviewer, serializer: Plain::OrganizationMembershipSerializer
 

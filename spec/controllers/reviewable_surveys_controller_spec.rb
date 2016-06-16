@@ -15,7 +15,7 @@ RSpec.describe ReviewableSurveysController, type: :controller do
   end
 
   REVIEWABLE_DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :goals_section,
-                              :previous_goals, :goals, :questions, :organization_membership, :comment_grant, :iteration]
+                              :previous_goals, :goals, :questions, :organization_membership, :comment_grant, :iteration, :comments]
 
   let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: Time.now) }
   let!(:direct_incomplete) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: nil) }
@@ -56,7 +56,7 @@ RSpec.describe ReviewableSurveysController, type: :controller do
     it "is performant" do
       expect {
         get :reports
-      }.to make_database_queries(count: 17) # 2 queries per added sub survey isn't the best
+      }.to make_database_queries(count: 18) # 2 queries per added sub survey isn't the best
     end
   end
 

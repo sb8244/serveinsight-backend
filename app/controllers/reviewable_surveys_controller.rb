@@ -28,6 +28,7 @@ class ReviewableSurveysController < ApplicationController
       includes(
         organization_membership: [:reviewer],
         survey_template: :questions,
+        comments: []
       )
   end
 
