@@ -36,6 +36,19 @@ RSpec.describe CycleSurveysJob, type: :job do
     }.to change { due1.reload.next_due_at }.from(due1_due).to(due1_due + 1.weeks)
   end
 
+  it "doesn't set missed on complete survey instances" do
+    due1_instance1.update!(completed_at: Time.now)
+    expect {
+      subject
+    }.not_to change { due1_instance1.reload.missed? }.from(false)
+  end
+
+  it "sets missed on due survey instances" do
+    expect {
+      subject
+    }.to change { due1_instance1.reload.missed? }.from(false).to(true)
+  end
+
   it "creates CreateSurveyInstanceJob for due templates" do
     expect {
       subject
