@@ -47,6 +47,14 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response).to be_success
         expect(response_json.map { |h| h[:id] }).to eq([instance2.id, instance1.id])
       end
+
+      it "doesn't return missed surveys" do
+        instance2.update!(missed: true)
+        instance3 = membership.survey_instances.create!(survey_template: survey_template2, iteration: 2, due_at: 5.minutes.from_now)
+        get :index, due: true
+        expect(response).to be_success
+        expect(response_json.map { |h| h[:id] }).to eq([instance1.id, instance3.id])
+      end
     end
   end
 

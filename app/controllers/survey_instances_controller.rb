@@ -3,7 +3,7 @@ class SurveyInstancesController < ApplicationController
     if params[:survey_template_id]
       respond_with survey_template_instances, each_serializer: Plain::SurveyInstanceSerializer
     elsif params[:due]
-      respond_with due_instances, each_serializer: Plain::SurveyInstanceSerializer
+      respond_with due_instances.not_missed, each_serializer: Plain::SurveyInstanceSerializer
     else
       head :unprocessable_entity
     end
