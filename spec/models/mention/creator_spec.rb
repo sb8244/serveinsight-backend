@@ -25,6 +25,12 @@ RSpec.describe Mention::Creator do
   context "for a comment" do
     let!(:mentionable) { FactoryGirl.create(:comment, organization_membership: organization_membership1, commentable: answer) }
 
+    it "handles nil" do
+      expect {
+        subject.call(nil)
+      }.not_to change { Mention.count }
+    end
+
     it "handles a simple mention" do
       expect {
         subject.call("Hi @Person2")
