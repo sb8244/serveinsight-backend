@@ -55,7 +55,7 @@ class SurveyTemplatesController < ApplicationController
   end
 
   def question_params
-    params.permit(questions: [:id, :question])
+    params.permit(questions: [:id, :question, :question_type])
   end
 
   def update_question_params

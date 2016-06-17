@@ -98,8 +98,25 @@ RSpec.describe SurveyTemplatesController, type: :controller do
         post :create, params
       }.to change { Question.count }.by(2)
 
-      expect(Question.first.attributes).to include("question" => "A", "order" => 0)
-      expect(Question.second.attributes).to include("question" => "B", "order" => 1)
+      expect(Question.first.attributes).to include("question" => "A", "order" => 0, "question_type" => "string")
+      expect(Question.second.attributes).to include("question" => "B", "order" => 1, "question_type" => "string")
+    end
+
+    it "sets the question_type if given" do
+      params[:questions][0][:question_type] = "num5"
+      params[:questions][1][:question_type] = "num10"
+      post :create, params
+      expect(Question.first.attributes).to include("question_type" => "num5")
+      expect(Question.second.attributes).to include("question_type" => "num10")
+    end
+
+    it "defaults bad question types to string" do
+      params[:questions][0][:question_type] = "XX"
+      expect {
+        post :create, params
+        expect(response).to be_success
+      }.to change { Question.count }.by(2)
+      expect(Question.first.attributes).to include("question_type" => "string")
     end
 
     it "creates a CreateSurveyInstancesJob" do
