@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616021912) do
+ActiveRecord::Schema.define(version: 20160617004230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,13 +109,14 @@ ActiveRecord::Schema.define(version: 20160616021912) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.text     "question",                           null: false
-    t.integer  "organization_id",                    null: false
-    t.integer  "survey_template_id",                 null: false
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.integer  "order",                              null: false
+    t.text     "question",                              null: false
+    t.integer  "organization_id",                       null: false
+    t.integer  "survey_template_id",                    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "order",                                 null: false
     t.boolean  "deleted",            default: false
+    t.string   "question_type",      default: "string", null: false
   end
 
   add_index "questions", ["organization_id"], name: "index_questions_on_organization_id", using: :btree
