@@ -12,7 +12,7 @@ RSpec.describe SurveyTemplatesController, type: :controller do
 
   SURVEY_KEYS = [:id, :name, :created_at, :updated_at, :active, :recurring, :goals_section,
                  :users_in_scope, :response_count, :creator, :questions, :next_due_at, :weeks_between_due]
-  QUESTION_KEYS = [:id, :question, :created_at, :updated_at]
+  QUESTION_KEYS = [:id, :question, :created_at, :updated_at, :question_type]
 
   describe "GET index" do
     let!(:template) { FactoryGirl.create(:survey_template_with_questions, organization: organization) }
