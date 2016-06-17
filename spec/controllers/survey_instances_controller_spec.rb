@@ -250,6 +250,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             question_content: question2.question,
             question_order: question2.order,
             content: "Test Answer",
+            number: nil,
             order: 0,
             comment_grant: CommentGrant.encode(answer3),
             comments: []
