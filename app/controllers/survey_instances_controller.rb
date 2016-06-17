@@ -3,7 +3,7 @@ class SurveyInstancesController < ApplicationController
     if params[:survey_template_id]
       respond_with survey_template_instances, each_serializer: Plain::SurveyInstanceSerializer
     elsif params[:due]
-      respond_with due_instances.not_missed, each_serializer: Plain::SurveyInstanceSerializer
+      respond_with due_instances, each_serializer: Plain::SurveyInstanceSerializer
     else
       head :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class SurveyInstancesController < ApplicationController
   end
 
   def due_instances
-    current_organization_membership.survey_instances.due.order(due_at: :asc)
+    current_organization_membership.survey_instances.not_missed.due.order(due_at: :asc)
   end
 
   def top_due_survey_instance

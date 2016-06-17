@@ -347,5 +347,12 @@ RSpec.describe SurveyInstancesController, type: :controller do
         get :top_due
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "doesn't include missed instances" do
+      instance2.update!(missed: true)
+      get :top_due
+      expect(response).to be_success
+      expect(response_json[:id]).to eq(instance1.id)
+    end
   end
 end
