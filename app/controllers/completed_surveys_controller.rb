@@ -70,9 +70,11 @@ class CompletedSurveysController < ApplicationController
         question_content: question.question,
         question_order: question.order,
         content: answer[:content],
+        number: answer[:number],
         order: i
       )
-      Mention::Creator.new(answer, current_organization_membership).call(answer.content)
+
+      Mention::Creator.new(answer, current_organization_membership).call(answer.content) if answer.content
     end
   end
 
@@ -121,7 +123,14 @@ class CompletedSurveysController < ApplicationController
 
   def content_answers
     @content_answers ||= params.fetch(:answers, []).select do |answer|
-      answer[:question_id] && answer[:content].present?
+      question = survey_template.questions.find_by(id: answer[:question_id])
+      valid = if question.try!(:question_type) === "string"
+        answer[:content].present?
+      elsif question.try!(:question_type) === "num5"
+        answer[:number].present? && answer[:number].to_i >= 1 && answer[:number].to_i <= 5
+      end
+
+      question && valid
     end
   end
 

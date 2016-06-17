@@ -201,5 +201,42 @@ RSpec.describe CompletedSurveysController, type: :controller do
         }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
+
+    context "with a num5 question" do
+      before { question1.update!(question_type: :num5) }
+
+      let(:num_answers) {
+        answers = full_answers.dup
+        answers[0].delete(:content)
+        answers[0][:number] = 3
+        answers
+      }
+
+      it "requires the number field" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers
+          expect(response.status).to eq(422)
+          expect(response_json).to eq({ errors: ["All questions must have answers"] })
+        }.not_to change { Answer.count }
+      end
+
+      it "allows number fields" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: num_answers
+          expect(response).to be_success
+        }.to change { Answer.count }.by(2)
+
+        expect(Answer.first.attributes).to include("content" => nil, "number" => 3)
+      end
+
+      it "bounds number fields" do
+        num_answers[0][:number] = 6
+        expect {
+          post :create, survey_instance_id: instance.id, answers: num_answers
+          expect(response.status).to eq(422)
+          expect(response_json).to eq({ errors: ["All questions must have answers"] })
+        }.not_to change { Answer.count }
+      end
+    end
   end
 end
