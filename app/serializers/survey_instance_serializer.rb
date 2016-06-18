@@ -1,40 +1,8 @@
 class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
-  class AnswerSerializer < Plain::AnswerSerializer
-    has_many :comments, serializer: Plain::CommentSerializer
-
-    def comments
-      object.comments.sort_by(&:created_at).select do |comment|
-        comment.visible_to?(scope)
-      end
-    end
-  end
-
-  class GoalSerializer < Plain::GoalSerializer
-    has_many :comments, serializer: Plain::CommentSerializer
-
-    def comments
-      object.comments.sort_by(&:created_at).select do |comment|
-        comment.visible_to?(scope)
-      end
-    end
-  end
-
-  class QuestionSerializer < Plain::QuestionSerializer
-    has_many :answers, serializer: AnswerSerializer
-
-    def answers
-      options.fetch(:survey_instance).
-        answers.
-        where(question_id: object.id).
-        order(order: :asc).
-        includes(:comments)
-    end
-  end
-
   attributes :questions, :goals_section?
 
-  has_many :goals, serializer: GoalSerializer
-  has_many :previous_goals, serializer: GoalSerializer
+  has_many :goals, serializer: SurveyInstance::GoalSerializer
+  has_many :previous_goals, serializer: SurveyInstance::GoalSerializer
   has_many :comments, serializer: Plain::CommentSerializer
   has_one :organization_membership, serializer: Plain::OrganizationMembershipSerializer
   has_one :reviewer, serializer: Plain::OrganizationMembershipSerializer
@@ -50,7 +18,7 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
 
   def questions
     object.survey_template.ordered_questions.map do |question|
-      QuestionSerializer.new(question, survey_instance: object, scope: scope)
+      SurveyInstance::QuestionSerializer.new(question, survey_instance: object, scope: scope)
     end
   end
 

@@ -17,6 +17,7 @@ RSpec.describe CommentsController, type: :controller do
       question_id: question.id,
       question_content: question.question,
       question_order: question.order,
+      question_type: question.question_type,
       content: "Test Answer",
       order: 0
     )

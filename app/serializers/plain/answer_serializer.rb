@@ -1,5 +1,6 @@
 class Plain::AnswerSerializer < ActiveModel::Serializer
-  attributes :id, :organization_membership_id, :question_id, :question_content, :question_order, :content, :number, :order, :comment_grant, :passup_grant
+  attributes :id, :created_at, :organization_membership_id, :question_id, :question_content, :question_order, :question_type,
+             :content, :number, :order, :comment_grant, :passup_grant
 
   def comment_grant
     CommentGrant.encode(object)

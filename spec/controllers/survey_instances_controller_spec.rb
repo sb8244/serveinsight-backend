@@ -154,6 +154,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response_json[:goals]).to eq([
           {
             id: goal1.id,
+            created_at: Time.now.utc.as_json,
             organization_membership_id: membership.id,
             content: "one",
             order: 0,
@@ -164,6 +165,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           },
           {
             id: goal2.id,
+            created_at: Time.now.utc.as_json,
             organization_membership_id: membership.id,
             content: "two",
             order: 1,
@@ -220,6 +222,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           question_id: question1.id,
           question_content: question1.question,
           question_order: question1.order,
+          question_type: question1.question_type,
           content: "Test Answer 2",
           order: 1
         )
@@ -230,6 +233,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           question_id: question1.id,
           question_content: question1.question,
           question_order: question1.order,
+          question_type: question1.question_type,
           content: "Test Answer",
           order: 0
         )
@@ -240,6 +244,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           question_id: question2.id,
           question_content: question2.question,
           question_order: question2.order,
+          question_type: question2.question_type,
           content: "Test Answer",
           order: 0
         )
@@ -250,10 +255,12 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response_json[:questions].first[:answers]).to eq([
           {
             id: answer3.id,
+            created_at: Time.now.utc.as_json,
             organization_membership_id: membership.id,
             question_id: question2.id,
             question_content: question2.question,
             question_order: question2.order,
+            question_type: question2.question_type,
             content: "Test Answer",
             number: nil,
             order: 0,
@@ -314,6 +321,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response_json[:previous_goals]).to eq([
           {
             id: goal1.id,
+            created_at: Time.now.utc.as_json,
             organization_membership_id: membership.id,
             content: "one",
             order: 0,
@@ -324,6 +332,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           },
           {
             id: goal2.id,
+            created_at: Time.now.utc.as_json,
             organization_membership_id: membership.id,
             content: "two",
             order: 1,

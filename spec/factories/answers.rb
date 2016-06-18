@@ -6,6 +6,7 @@ FactoryGirl.define do
     before(:create) do |answer|
       answer.question_content = answer.question.question
       answer.question_order = answer.question.order
+      answer.question_type = answer.question.question_type
     end
   end
 end
