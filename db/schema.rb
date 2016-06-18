@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160618064730) do
+ActiveRecord::Schema.define(version: 20160618172414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,19 +111,19 @@ ActiveRecord::Schema.define(version: 20160618064730) do
 
   create_table "passups", force: :cascade do |t|
     t.integer  "organization_id",                     null: false
-    t.integer  "answer_id",                           null: false
     t.integer  "passed_up_by_id",                     null: false
     t.integer  "passed_up_to_id",                     null: false
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "status",          default: "pending", null: false
+    t.integer  "passupable_id",                       null: false
+    t.string   "passupable_type",                     null: false
   end
 
-  add_index "passups", ["answer_id", "passed_up_to_id", "passed_up_by_id"], name: "unique_passup_per_answer_user", unique: true, using: :btree
-  add_index "passups", ["answer_id"], name: "index_passups_on_answer_id", using: :btree
   add_index "passups", ["organization_id"], name: "index_passups_on_organization_id", using: :btree
   add_index "passups", ["passed_up_by_id"], name: "index_passups_on_passed_up_by_id", using: :btree
   add_index "passups", ["passed_up_to_id"], name: "index_passups_on_passed_up_to_id", using: :btree
+  add_index "passups", ["passupable_id", "passupable_type", "passed_up_to_id", "passed_up_by_id"], name: "unique_passup_per_type_user", unique: true, using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.text     "question",                              null: false

@@ -4,7 +4,7 @@ class Answer < ActiveRecord::Base
   belongs_to :question
 
   has_many :mentions, as: :mentionable
-  has_many :passups
+  has_many :passups, as: :passupable
 
   acts_as_commentable
 end
