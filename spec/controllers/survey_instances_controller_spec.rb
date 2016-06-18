@@ -146,6 +146,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     end
 
     context "with goals" do
+      before { instance.update!(completed_at: Time.now) }
       let!(:goal2) { instance.goals.create!(content: "two", order: 1, organization: organization) }
       let!(:goal1) { instance.goals.create!(content: "one", order: 0, organization: organization) }
 
@@ -216,6 +217,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
     end
 
     context "with answers" do
+      before { instance.update!(completed_at: Time.now) }
       let!(:answer2) do
         instance.answers.create!(
           organization: organization,
@@ -270,6 +272,15 @@ RSpec.describe SurveyInstancesController, type: :controller do
           }
         ])
         expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
+      end
+
+      context "when the answer question has changed" do
+        before { answer3.update!(question_content: "Changed", question_type: "num5") }
+
+        it "shows the question from when the answer was recorded" do
+          get :show, id: instance.id
+          expect(response_json[:questions][0]).to include(question: "Changed", question_type: "num5")
+        end
       end
 
       context "with comments" do

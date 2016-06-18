@@ -19,8 +19,18 @@ class SurveyInstancesController < ApplicationController
 
   private
 
+  def eager_loaded_instances
+    current_organization.survey_instances.includes(
+      organization_membership: [:reviewer],
+      survey_template: :questions,
+      comments: [],
+      answers: [:comments],
+      goals: [:comments]
+    )
+  end
+
   def survey_instance
-    current_organization.survey_instances.find(params[:id]).tap do |instance|
+    eager_loaded_instances.find(params[:id]).tap do |instance|
       instance_owner = instance.organization_membership
       owner_or_managed = instance_owner == current_organization_membership || instance_owner.managed_by?(current_organization_membership)
       raise ActiveRecord::RecordNotFound unless owner_or_managed

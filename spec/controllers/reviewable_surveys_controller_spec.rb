@@ -56,7 +56,7 @@ RSpec.describe ReviewableSurveysController, type: :controller do
     it "is performant" do
       expect {
         get :reports
-      }.to make_database_queries(count: 18) # 2 queries per added sub survey isn't the best
+      }.to make_database_queries(count: 17) # 2 queries per added sub survey isn't the best
     end
   end
 

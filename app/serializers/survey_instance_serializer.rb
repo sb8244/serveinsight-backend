@@ -13,12 +13,21 @@ class SurveyInstanceSerializer < Plain::SurveyInstanceSerializer
   end
 
   def goals
-    object.goals.order(order: :asc).includes(:comments)
+    object.goals.sort_by(&:order)
   end
 
   def questions
-    object.survey_template.ordered_questions.map do |question|
-      SurveyInstance::QuestionSerializer.new(question, survey_instance: object, scope: scope)
+    if object.completed_at.nil?
+      object.survey_template.ordered_questions.map do |question|
+        SurveyInstance::QuestionSerializer.new(question, survey_instance: object, scope: scope)
+      end
+    else
+      raise unless object.association(:answers).loaded?
+      grouped_answers = object.answers.sort_by(&:question_order).group_by(&:question_id)
+      grouped_answers.map do |question_id, answers|
+        fake_question = Question::FakeQuestion.new(question_id, answers[0].question_content, answers[0].question_type)
+        SurveyInstance::QuestionSerializer.new(fake_question, survey_instance: object, answers: answers, scope: scope)
+      end
     end
   end
 

@@ -20,4 +20,18 @@ class Question < ActiveRecord::Base
     return if QUESTION_TYPES.include?(self.question_type.try!(:to_s))
     self.question_type = "string"
   end
+
+  # Used to build up old questions from certain bits of data
+  class FakeQuestion
+    include ActiveModel::Serialization
+    attr_reader :id, :question, :question_type, :created_at, :updated_at
+
+    def initialize(id, question, question_type)
+      @id = id
+      @question = question
+      @question_type = question_type
+      @created_at = nil
+      @updated_at = nil
+    end
+  end
 end
