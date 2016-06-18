@@ -158,6 +158,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             order: 0,
             status: nil,
             comment_grant: CommentGrant.encode(goal1),
+            passup_grant: PassupGrant.encode(goal1),
             comments: []
           },
           {
@@ -166,6 +167,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             order: 1,
             status: nil,
             comment_grant: CommentGrant.encode(goal2),
+            passup_grant: PassupGrant.encode(goal2),
             comments: []
           }
         ])
@@ -253,6 +255,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             number: nil,
             order: 0,
             comment_grant: CommentGrant.encode(answer3),
+            passup_grant: PassupGrant.encode(answer3),
             comments: []
           }
         ])
@@ -312,6 +315,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             order: 0,
             status: nil,
             comment_grant: CommentGrant.encode(goal1),
+            passup_grant: PassupGrant.encode(goal1),
             comments: []
           },
           {
@@ -320,6 +324,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             order: 1,
             status: nil,
             comment_grant: CommentGrant.encode(goal2),
+            passup_grant: PassupGrant.encode(goal2),
             comments: []
           }
         ])
