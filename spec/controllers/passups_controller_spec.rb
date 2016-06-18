@@ -36,6 +36,11 @@ RSpec.describe PassupsController, type: :controller do
       expect(response_json.map { |h| h[:id] }).to eq([passup2.id, passup.id])
     end
 
+    it "includes the right keys" do
+      get :index
+      expect(response_json[0].keys).to match_array([:id, :passed_up_by_id, :passed_up_to_id, :created_at, :status, :passupable_type])
+    end
+
     it "doesn't show complete passups" do
       passup.update!(status: "complete")
       get :index

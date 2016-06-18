@@ -1,6 +1,6 @@
 class PassupsController < ApplicationController
   def index
-    respond_with current_organization_membership.passups.pending.order(id: :desc)
+    respond_with current_organization_membership.passups.pending.order(id: :desc), each_serializer: Plain::PassupSerializer
   end
 
   def create
