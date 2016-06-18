@@ -4,6 +4,7 @@ require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 ActiveJob::Base.queue_adapter = :test
+Timecop.safe_mode = true
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -61,5 +62,11 @@ RSpec.configure do |config|
 
   config.after(:each) do
     ActiveJob::Base.queue_adapter.enqueued_jobs.clear
+  end
+
+  config.around(:each) do |example|
+    Timecop.freeze do
+      example.run
+    end
   end
 end
