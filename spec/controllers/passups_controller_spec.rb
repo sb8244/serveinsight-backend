@@ -38,7 +38,8 @@ RSpec.describe PassupsController, type: :controller do
 
     it "includes the right keys" do
       get :index
-      expect(response_json[0].keys).to match_array([:id, :passed_up_by_id, :passed_up_to_id, :created_at, :status, :passupable_type, :passup_grant])
+      expect(response_json[0].keys).to match_array([:id, :passed_up_by_id, :passed_up_to_id, :created_at, :status,
+                                                    :passupable_type, :passup_grant, :passupable, :passed_up_by])
     end
 
     it "encodes the passup_grant for the original object" do
