@@ -26,7 +26,7 @@ RSpec.describe PassupsController, type: :controller do
   end
 
   describe "GET index" do
-    let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: answer) }
+    let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: goal) }
     let!(:passup2) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: answer2) }
 
     it "lists out passups with the newest first" do
@@ -38,7 +38,13 @@ RSpec.describe PassupsController, type: :controller do
 
     it "includes the right keys" do
       get :index
-      expect(response_json[0].keys).to match_array([:id, :passed_up_by_id, :passed_up_to_id, :created_at, :status, :passupable_type])
+      expect(response_json[0].keys).to match_array([:id, :passed_up_by_id, :passed_up_to_id, :created_at, :status, :passupable_type, :passup_grant])
+    end
+
+    it "encodes the passup_grant for the original object" do
+      get :index
+      expect(response_json[0][:passup_grant]).to eq(PassupGrant.encode(answer2))
+      expect(response_json[1][:passup_grant]).to eq(PassupGrant.encode(goal))
     end
 
     it "doesn't show complete passups" do
