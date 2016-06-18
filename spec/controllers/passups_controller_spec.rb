@@ -16,6 +16,7 @@ RSpec.describe PassupsController, type: :controller do
   let!(:survey_template) { FactoryGirl.create(:survey_template, organization: organization) }
   let!(:instance) { membership.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: Time.now) }
   let!(:question) { FactoryGirl.create(:question, organization: organization, survey_template: survey_template, question: "First") }
+  let!(:goal) { instance.goals.create!(content: "one", order: 0, organization: organization) }
   let!(:answer) do
     FactoryGirl.create(:answer, survey_instance: instance, organization: organization, question: question)
   end
@@ -46,12 +47,22 @@ RSpec.describe PassupsController, type: :controller do
 
   describe "POST create" do
     let(:request!) { post :create, passup_grant: PassupGrant.encode(answer) }
+    let(:goal_request!) { post :create, passup_grant: PassupGrant.encode(goal) }
 
     it "creates a passup for the answer" do
       expect {
         request!
         expect(response).to be_success
       }.to change { boss.passups.count }.by(1)
+      expect(Passup.last.passupable).to eq(answer)
+    end
+
+    it "creates a passup for the goal" do
+      expect {
+        goal_request!
+        expect(response).to be_success
+      }.to change { boss.passups.count }.by(1)
+      expect(Passup.last.passupable).to eq(goal)
     end
 
     context "with an expired grant" do
