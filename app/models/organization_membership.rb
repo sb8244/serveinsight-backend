@@ -10,7 +10,7 @@ class OrganizationMembership < ActiveRecord::Base
   has_many :survey_instances
   has_many :comments
 
-  validate :reviewer_id, :reviewer_is_not_use
+  validate :reviewer_id, :reviewer_is_not_user
 
   has_many :passups, foreign_key: "passed_up_to_id"
 

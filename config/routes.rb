@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   resource :organization, only: [:show, :create]
   resources :invites, only: [:create, :index]
   resources :comments, only: [:create]
+  resources :passups, only: [:index, :create] do
+    member do
+      post :complete
+    end
+  end
 
   resources :survey_templates, except: [:destroy]
   resources :survey_instances, only: [:index, :show] do
