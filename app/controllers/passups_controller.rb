@@ -12,6 +12,11 @@ class PassupsController < ApplicationController
     duplicate_passup_response
   end
 
+  def complete
+    passup.complete!
+    respond_with passup, location: nil
+  end
+
   private
 
   def no_reviewer_response
@@ -37,5 +42,9 @@ class PassupsController < ApplicationController
       passed_up_by: current_organization_membership,
       organization: current_organization
     )
+  end
+
+  def passup
+    current_organization_membership.passups.find(params[:id])
   end
 end

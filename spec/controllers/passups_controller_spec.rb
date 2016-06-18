@@ -102,5 +102,20 @@ RSpec.describe PassupsController, type: :controller do
     end
   end
 
-  describe "POST complete"
+  describe "POST complete" do
+    let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: answer) }
+    let!(:boss_passup) { Passup.create!(organization: organization, passed_up_by: membership, passed_up_to: boss, passupable: answer) }
+
+    it "marks the passup as complete" do
+      expect {
+        post :complete, id: passup.id
+      }.to change { passup.reload.status }.from("pending").to("complete")
+    end
+
+    it "404s when using another person's passup" do
+      expect {
+        post :complete, id: boss_passup.id
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end
