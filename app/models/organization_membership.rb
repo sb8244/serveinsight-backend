@@ -10,7 +10,9 @@ class OrganizationMembership < ActiveRecord::Base
   has_many :survey_instances
   has_many :comments
 
-  validate :reviewer_id, :reviewer_is_not_user
+  validate :reviewer_id, :reviewer_is_not_use
+
+  has_many :passups, foreign_key: "passed_up_to_id"
 
   def direct_reports
     organization.organization_memberships.where(reviewer_id: id)
