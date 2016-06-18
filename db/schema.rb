@@ -11,22 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160618172414) do
+ActiveRecord::Schema.define(version: 20160618181551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "answers", force: :cascade do |t|
-    t.integer  "survey_instance_id", null: false
-    t.integer  "organization_id",    null: false
-    t.integer  "question_id",        null: false
-    t.text     "question_content",   null: false
-    t.integer  "question_order",     null: false
+    t.integer  "survey_instance_id",         null: false
+    t.integer  "organization_id",            null: false
+    t.integer  "question_id",                null: false
+    t.text     "question_content",           null: false
+    t.integer  "question_order",             null: false
     t.string   "content"
-    t.integer  "order",              null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.integer  "order",                      null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "number"
+    t.integer  "organization_membership_id", null: false
   end
 
   add_index "answers", ["organization_id"], name: "index_answers_on_organization_id", using: :btree
@@ -50,13 +51,14 @@ ActiveRecord::Schema.define(version: 20160618172414) do
   add_index "comments", ["organization_membership_id"], name: "index_comments_on_organization_membership_id", using: :btree
 
   create_table "goals", force: :cascade do |t|
-    t.integer  "survey_instance_id", null: false
-    t.integer  "organization_id",    null: false
-    t.text     "content",            null: false
-    t.integer  "order",              null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.integer  "survey_instance_id",         null: false
+    t.integer  "organization_id",            null: false
+    t.text     "content",                    null: false
+    t.integer  "order",                      null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "status"
+    t.integer  "organization_membership_id", null: false
   end
 
   add_index "goals", ["organization_id"], name: "index_goals_on_organization_id", using: :btree
