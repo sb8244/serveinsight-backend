@@ -54,7 +54,7 @@ RSpec.describe CommentsController, type: :controller do
 
       it "serializes the new comment" do
         request!
-        expect(response_json.keys).to match_array([:id, :created_at, :comment, :author_name, :private])
+        expect(response_json.keys).to match_array([:id, :organization_membership_id, :created_at, :comment, :author_name, :private])
       end
 
       context "with an old JWT token" do
@@ -103,7 +103,7 @@ RSpec.describe CommentsController, type: :controller do
 
       it "serializes the new comment" do
         request!
-        expect(response_json.keys).to match_array([:id, :created_at, :comment, :author_name, :private])
+        expect(response_json.keys).to match_array([:id, :organization_membership_id, :created_at, :comment, :author_name, :private])
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe CommentsController, type: :controller do
 
       it "serializes the new comment" do
         request!
-        expect(response_json.keys).to match_array([:id, :created_at, :comment, :author_name, :private])
+        expect(response_json.keys).to match_array([:id, :organization_membership_id, :created_at, :comment, :author_name, :private])
       end
     end
   end

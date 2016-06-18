@@ -14,7 +14,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
 
   SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :comment_grant, :iteration]
   DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership, :comments]
-  COMMENT_ATTRIBUTES = [:id, :created_at, :comment, :author_name, :private]
+  COMMENT_ATTRIBUTES = [:id, :organization_membership_id, :created_at, :comment, :author_name, :private]
 
   describe "GET index" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
@@ -154,6 +154,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response_json[:goals]).to eq([
           {
             id: goal1.id,
+            organization_membership_id: membership.id,
             content: "one",
             order: 0,
             status: nil,
@@ -163,6 +164,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           },
           {
             id: goal2.id,
+            organization_membership_id: membership.id,
             content: "two",
             order: 1,
             status: nil,
@@ -248,6 +250,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response_json[:questions].first[:answers]).to eq([
           {
             id: answer3.id,
+            organization_membership_id: membership.id,
             question_id: question2.id,
             question_content: question2.question,
             question_order: question2.order,
@@ -311,6 +314,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
         expect(response_json[:previous_goals]).to eq([
           {
             id: goal1.id,
+            organization_membership_id: membership.id,
             content: "one",
             order: 0,
             status: nil,
@@ -320,6 +324,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
           },
           {
             id: goal2.id,
+            organization_membership_id: membership.id,
             content: "two",
             order: 1,
             status: nil,

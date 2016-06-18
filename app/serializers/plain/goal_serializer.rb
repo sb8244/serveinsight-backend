@@ -1,5 +1,5 @@
 class Plain::GoalSerializer < ActiveModel::Serializer
-  attributes :id, :content, :order, :status, :comment_grant, :passup_grant
+  attributes :id, :organization_membership_id, :content, :order, :status, :comment_grant, :passup_grant
 
   def comment_grant
     CommentGrant.encode(object)
