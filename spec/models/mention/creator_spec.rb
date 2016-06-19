@@ -28,13 +28,13 @@ RSpec.describe Mention::Creator do
 
     it "handles nil" do
       expect {
-        subject.call(nil)
+        expect(subject.call(nil)).to eq([])
       }.not_to change { Mention.count }
     end
 
     it "handles a simple mention" do
       expect {
-        subject.call("Hi @Person2")
+        expect(subject.call("Hi @Person2")).to eq([organization_membership2])
       }.to change { Mention.count }.by(1)
 
       expect(Mention.last.attributes).to include(
@@ -65,13 +65,13 @@ RSpec.describe Mention::Creator do
 
     it "handles multiple mentions to the same person" do
       expect {
-        subject.call("Hi @personsteve4 @PersonSteve4")
-      }.to change { Mention.count }.by(2)
+        expect(subject.call("Hi @personsteve4 @PersonSteve4")).to eq([organization_membership3])
+      }.to change { Mention.count }.by(1)
     end
 
     it "handles multiple mentions to different people" do
       expect {
-        subject.call("Hi @Person2 @PersonSteve4")
+        expect(subject.call("Hi @Person2 @PersonSteve4")).to eq([organization_membership2, organization_membership3])
       }.to change { Mention.count }.by(2)
     end
   end
