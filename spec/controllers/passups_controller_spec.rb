@@ -77,6 +77,12 @@ RSpec.describe PassupsController, type: :controller do
       expect(Passup.last.passupable).to eq(goal)
     end
 
+    it "creates a Notification" do
+      expect {
+        request!
+      }.to change { boss.notifications.count }.by(1)
+    end
+
     context "with an expired grant" do
       let(:request!) { post :create, passup_grant: PassupGrant.encode(answer, duration: -1.minutes) }
 

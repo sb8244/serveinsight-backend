@@ -41,10 +41,24 @@ class PassupsController < ApplicationController
       passupable_type: passup_grant.passupable_type,
       passed_up_by: current_organization_membership,
       organization: current_organization
-    )
+    ).tap do |passup|
+      create_notification(passup)
+    end
   end
 
   def passup
     current_organization_membership.passups.find(params[:id])
+  end
+
+  def create_notification(passup)
+    return unless passup.persisted?
+
+    current_organization_membership.reviewer.notifications.create(
+      notification_type: "passup",
+      notification_details: {
+        passup_id: passup.id,
+        passupable_type: passup.passupable_type
+      }
+    )
   end
 end
