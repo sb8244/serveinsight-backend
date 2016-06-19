@@ -107,6 +107,29 @@ RSpec.describe CompletedSurveysController, type: :controller do
       expect(Mention.pluck(:organization_membership_id)).to eq([teammate.id, teammate.id])
     end
 
+    it "creates notification for the mentions" do
+      expect {
+        post :create, survey_instance_id: instance.id, answers: full_answers
+      }.to change { teammate.notifications.count }.by(2)
+
+      expect(teammate.notifications.first.attributes.deep_symbolize_keys).to include(
+        notification_type: "mention",
+        notification_details: {
+          mentionable_id: Answer.first.id,
+          mentionable_type: "Answer",
+          author_name: membership.name
+        }
+      )
+      expect(teammate.notifications.last.attributes.deep_symbolize_keys).to include(
+        notification_type: "mention",
+        notification_details: {
+          mentionable_id: Answer.last.id,
+          mentionable_type: "Answer",
+          author_name: membership.name
+        }
+      )
+    end
+
     context "with a completed survey" do
       before { instance.update!(completed_at: Time.now) }
 
@@ -169,6 +192,29 @@ RSpec.describe CompletedSurveysController, type: :controller do
           post :create, survey_instance_id: instance.id, answers: full_answers, goals: full_goals
         }.to change { Mention.count }.by(4)
         expect(Mention.group(:mentionable_type).count).to include("Answer" => 2, "Goal" => 2)
+      end
+
+      it "creates notification for the mentions" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers, goals: full_goals
+        }.to change { teammate.notifications.count }.by(4)
+
+        expect(teammate.notifications.third.attributes.deep_symbolize_keys).to include(
+          notification_type: "mention",
+          notification_details: {
+            mentionable_id: Goal.first.id,
+            mentionable_type: "Goal",
+            author_name: membership.name
+          }
+        )
+        expect(teammate.notifications.fourth.attributes.deep_symbolize_keys).to include(
+          notification_type: "mention",
+          notification_details: {
+            mentionable_id: Goal.last.id,
+            mentionable_type: "Goal",
+            author_name: membership.name
+          }
+        )
       end
     end
 

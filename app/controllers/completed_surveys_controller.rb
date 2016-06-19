@@ -75,7 +75,23 @@ class CompletedSurveysController < ApplicationController
         order: i
       )
 
-      Mention::Creator.new(answer, current_organization_membership).call(answer.content) if answer.content
+      if answer.content
+        mentioned = Mention::Creator.new(answer, current_organization_membership).call(answer.content)
+        create_mention_notifications!(mentioned, mentionable: answer)
+      end
+    end
+  end
+
+  def create_mention_notifications!(mentioned, mentionable:)
+    mentioned.each do |member|
+      member.notifications.create!(
+        notification_type: "mention",
+        notification_details: {
+          mentionable_id: mentionable.id,
+          mentionable_type: mentionable.class.name,
+          author_name: current_organization_membership.name
+        }
+      )
     end
   end
 
@@ -87,7 +103,8 @@ class CompletedSurveysController < ApplicationController
         content: goal[:content],
         order: i
       )
-      Mention::Creator.new(goal, current_organization_membership).call(goal.content)
+      mentioned = Mention::Creator.new(goal, current_organization_membership).call(goal.content)
+      create_mention_notifications!(mentioned, mentionable: goal)
     end
   end
 
