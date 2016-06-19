@@ -130,6 +130,35 @@ RSpec.describe CompletedSurveysController, type: :controller do
       )
     end
 
+    context "without a reviewer" do
+      before { membership.update!(reviewer: nil) }
+
+      it "doesn't notify" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers
+        }.not_to change { Notification.where(notification_type: "review").count }
+      end
+    end
+
+    context "with a reviewer" do
+      let!(:boss) { FactoryGirl.create(:organization_membership, organization: organization) }
+      before { membership.update!(reviewer: boss) }
+
+      it "notifies the reviewer" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers
+        }.to change { Notification.where(notification_type: "review").count }.by(1)
+        expect(boss.notifications.last.attributes.deep_symbolize_keys).to include(
+          notification_type: "review",
+          notification_details: {
+            survey_instance_id: instance.id,
+            submitter_name: membership.name,
+            survey_title: survey_template.name
+          }
+        )
+      end
+    end
+
     context "with a completed survey" do
       before { instance.update!(completed_at: Time.now) }
 

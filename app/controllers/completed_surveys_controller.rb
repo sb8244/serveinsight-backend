@@ -19,6 +19,7 @@ class CompletedSurveysController < ApplicationController
       add_answers!
       add_goals!
       update_previous_goals!
+      notify_reviewer!
       head :no_content
     end
   end
@@ -106,6 +107,18 @@ class CompletedSurveysController < ApplicationController
         }
       )
     end
+  end
+
+  def notify_reviewer!
+    return unless current_organization_membership.reviewer.present?
+    current_organization_membership.reviewer.notifications.create!(
+      notification_type: "review",
+      notification_details: {
+        survey_instance_id: survey_instance.id,
+        submitter_name: current_organization_membership.name,
+        survey_title: survey_instance.survey_template.name
+      }
+    )
   end
 
   def all_questions_have_answers?
