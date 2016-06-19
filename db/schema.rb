@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160618202118) do
+ActiveRecord::Schema.define(version: 20160619024717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,17 @@ ActiveRecord::Schema.define(version: 20160618202118) do
 
   add_index "mentions", ["mentioned_by_id"], name: "index_mentions_on_mentioned_by_id", using: :btree
   add_index "mentions", ["organization_membership_id"], name: "index_mentions_on_organization_membership_id", using: :btree
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "organization_membership_id",                     null: false
+    t.string   "notification_type",                              null: false
+    t.json     "notification_details",                           null: false
+    t.string   "status",                     default: "pending", null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+  end
+
+  add_index "notifications", ["organization_membership_id"], name: "index_notifications_on_organization_membership_id", using: :btree
 
   create_table "organization_memberships", force: :cascade do |t|
     t.integer  "organization_id",                 null: false
