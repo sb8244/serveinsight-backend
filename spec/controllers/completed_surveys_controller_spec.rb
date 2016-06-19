@@ -104,6 +104,7 @@ RSpec.describe CompletedSurveysController, type: :controller do
       expect {
         post :create, survey_instance_id: instance.id, answers: full_answers
       }.to change { Mention.count }.by(2)
+      expect(Mention.pluck(:organization_membership_id)).to eq([teammate.id, teammate.id])
     end
 
     context "with a completed survey" do
