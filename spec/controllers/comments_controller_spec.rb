@@ -96,7 +96,7 @@ RSpec.describe CommentsController, type: :controller do
         let!(:comment3) { FactoryGirl.create(:comment, commentable: answer, organization_membership: membership) }
         before { answer.update!(organization_membership: teammate) }
 
-        let(:request!) { post :create, comment: "Hi @Person2", comment_grant: CommentGrant.encode(answer) }
+        let(:request!) { post :create, comment: "Hi @Person2, from @Person1", comment_grant: CommentGrant.encode(answer) }
 
         it "doesn't create a notification for the author" do
           expect {
