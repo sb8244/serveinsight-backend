@@ -23,6 +23,6 @@ class PassupSerializer < Plain::PassupSerializer
 
   def passupable
     serializer = PASSUPABLE_SERIALIZERS[object.passupable_type]
-    serializer.new(object.passupable)
+    serializer.new(object.passupable, scope: scope)
   end
 end

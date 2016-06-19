@@ -162,6 +162,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             status: nil,
             comment_grant: CommentGrant.encode(goal1),
             passup_grant: PassupGrant.encode(goal1),
+            passed_up: false,
             comments: []
           },
           {
@@ -173,9 +174,28 @@ RSpec.describe SurveyInstancesController, type: :controller do
             status: nil,
             comment_grant: CommentGrant.encode(goal2),
             passup_grant: PassupGrant.encode(goal2),
+            passed_up: false,
             comments: []
           }
         ])
+      end
+
+      context "with a passup by the member" do
+        let!(:passup) { Passup.create!(organization: organization, passed_up_by: membership, passed_up_to: teammate, passupable: goal1) }
+
+        it "includes passed_up=true" do
+          get :show, id: instance.id
+          expect(response_json[:goals][0]).to include(id: goal1.id, passed_up: true)
+        end
+      end
+
+      context "with a passup by another member" do
+        let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: goal1) }
+
+        it "includes passed_up=true" do
+          get :show, id: instance.id
+          expect(response_json[:goals][0]).to include(id: goal1.id, passed_up: false)
+        end
       end
 
       context "with comments" do
@@ -268,10 +288,29 @@ RSpec.describe SurveyInstancesController, type: :controller do
             order: 0,
             comment_grant: CommentGrant.encode(answer3),
             passup_grant: PassupGrant.encode(answer3),
+            passed_up: false,
             comments: []
           }
         ])
         expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
+      end
+
+      context "with a passup by the member" do
+        let!(:passup) { Passup.create!(organization: organization, passed_up_by: membership, passed_up_to: teammate, passupable: answer3) }
+
+        it "includes passed_up=true" do
+          get :show, id: instance.id
+          expect(response_json[:questions].first[:answers][0]).to include(id: answer3.id, passed_up: true)
+        end
+      end
+
+      context "with a passup by another member" do
+        let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: answer3) }
+
+        it "includes passed_up=true" do
+          get :show, id: instance.id
+          expect(response_json[:questions].first[:answers][0]).to include(id: answer3.id, passed_up: false)
+        end
       end
 
       context "when the answer question has changed" do
@@ -339,6 +378,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             status: nil,
             comment_grant: CommentGrant.encode(goal1),
             passup_grant: PassupGrant.encode(goal1),
+            passed_up: false,
             comments: []
           },
           {
@@ -350,6 +390,7 @@ RSpec.describe SurveyInstancesController, type: :controller do
             status: nil,
             comment_grant: CommentGrant.encode(goal2),
             passup_grant: PassupGrant.encode(goal2),
+            passed_up: false,
             comments: []
           }
         ])
