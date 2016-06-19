@@ -11,7 +11,6 @@ class ReviewableSurveysController < ApplicationController
   def mark_reviewed
     SurveyInstance.transaction do
       reviewable_survey.update!(reviewed_at: Time.now)
-      add_comment!(reviewable_survey) if params[:reviewer_comment]
     end
 
     head :no_content
@@ -38,13 +37,5 @@ class ReviewableSurveysController < ApplicationController
     current_organization.survey_instances.find(params[:id]).tap do |instance|
       raise ActiveRecord::RecordNotFound unless instance.organization_membership.managed_by?(current_organization_membership)
     end
-  end
-
-  def add_comment!(survey_instance)
-    survey_instance.comments.create!(
-      comment: params[:reviewer_comment],
-      commentable: survey_instance,
-      organization_membership: current_organization_membership
-    )
   end
 end
