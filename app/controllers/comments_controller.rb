@@ -15,24 +15,66 @@ class CommentsController < ApplicationController
   def created_comment
     commentable.comments.create(comment_params).tap do |comment|
       if comment.persisted?
-        Mention::Creator.new(comment, current_organization_membership).call(comment.comment)
-        create_comment_notification(comment)
+        mentioned_memberships = Mention::Creator.new(comment, current_organization_membership).call(comment.comment)
+        notified = notify_previous_commenters!(comment, mentioned: mentioned_memberships)
+        mention_notified = create_mention_notifications!(comment, mentioned: mentioned_memberships, already_notified: notified)
+        create_comment_notification!(comment, already_notified: notified + mention_notified)
       end
     end
   end
 
-  def create_comment_notification(comment)
+  def create_comment_notification!(comment, already_notified:)
     return if commentable.organization_membership == current_organization_membership
+    return if already_notified.include?(commentable.organization_membership)
 
-    commentable.organization_membership.notifications.create(
+    commentable.organization_membership.notifications.create!(
       notification_type: "comment",
       notification_details: {
         comment_id: comment.id,
         commentable_type: comment.commentable_type,
         author_name: current_organization_membership.name,
-        mentioned: false
+        mentioned: false,
+        reply: false
       }
     )
+  end
+
+  def notify_previous_commenters!(comment, mentioned:)
+    previous_comments = comment.commentable.comments.where.not(id: comment.id)
+    previous_commenters = current_organization.organization_memberships.
+                            where(id: previous_comments.pluck(:organization_membership_id)).
+                            where.not(id: current_organization_membership.id).
+                            distinct
+
+    previous_commenters.map do |commenter|
+      commenter.notifications.create!(
+        notification_type: "comment",
+        notification_details: {
+          comment_id: comment.id,
+          commentable_type: comment.commentable_type,
+          author_name: current_organization_membership.name,
+          mentioned: mentioned.include?(commenter),
+          reply: true
+        }
+      )
+      commenter
+    end
+  end
+
+  def create_mention_notifications!(comment, mentioned:, already_notified:)
+    (mentioned - already_notified).map do |commenter|
+      commenter.notifications.create!(
+        notification_type: "comment",
+        notification_details: {
+          comment_id: comment.id,
+          commentable_type: comment.commentable_type,
+          author_name: current_organization_membership.name,
+          mentioned: mentioned.include?(commenter),
+          reply: false
+        }
+      )
+      commenter
+    end
   end
 
   def comment_grant

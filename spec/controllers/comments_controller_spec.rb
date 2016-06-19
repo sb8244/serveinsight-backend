@@ -61,7 +61,8 @@ RSpec.describe CommentsController, type: :controller do
             comment_id: Comment.last.id,
             commentable_type: "Answer",
             author_name: membership.name,
-            mentioned: false
+            mentioned: false,
+            reply: false
           }
         )
       end
@@ -86,6 +87,53 @@ RSpec.describe CommentsController, type: :controller do
             post :create, comment: "Test", comment_grant: CommentGrant.encode(answer, duration: -1.minutes)
             expect(response.status).to eq(422)
           }.not_to change { Comment.count }
+        end
+      end
+
+      context "with previous comments on the answer" do
+        let!(:comment1) { FactoryGirl.create(:comment, commentable: answer, organization_membership: teammate2) }
+        let!(:comment2) { FactoryGirl.create(:comment, commentable: answer, organization_membership: teammate) }
+        let!(:comment3) { FactoryGirl.create(:comment, commentable: answer, organization_membership: membership) }
+        before { answer.update!(organization_membership: teammate) }
+
+        let(:request!) { post :create, comment: "Hi @Person2", comment_grant: CommentGrant.encode(answer) }
+
+        it "doesn't create a notification for the author" do
+          expect {
+            request!
+          }.not_to change { membership.notifications.count }
+        end
+
+        it "creates a single notification for the answer writer who was involved earlier" do
+          expect {
+            request!
+          }.to change { teammate.notifications.count }.by(1)
+          expect(teammate.notifications.last.attributes.deep_symbolize_keys).to include(
+            notification_type: "comment",
+            notification_details: {
+              comment_id: Comment.last.id,
+              commentable_type: "Answer",
+              author_name: membership.name,
+              mentioned: true,
+              reply: true
+            }
+          )
+        end
+
+        it "creates a single notification for the non-answer writer who was involved earlier" do
+          expect {
+            request!
+          }.to change { teammate2.notifications.count }.by(1)
+          expect(teammate2.notifications.last.attributes.deep_symbolize_keys).to include(
+            notification_type: "comment",
+            notification_details: {
+              comment_id: Comment.last.id,
+              commentable_type: "Answer",
+              author_name: membership.name,
+              mentioned: false,
+              reply: true
+            }
+          )
         end
       end
 
@@ -114,7 +162,8 @@ RSpec.describe CommentsController, type: :controller do
               comment_id: Comment.last.id,
               commentable_type: "Answer",
               author_name: membership.name,
-              mentioned: false
+              mentioned: false,
+              reply: false
             }
           )
           expect(teammate2.notifications.last.attributes.deep_symbolize_keys).to include(
@@ -123,7 +172,8 @@ RSpec.describe CommentsController, type: :controller do
               comment_id: Comment.last.id,
               commentable_type: "Answer",
               author_name: membership.name,
-              mentioned: true
+              mentioned: true,
+              reply: false
             }
           )
         end
