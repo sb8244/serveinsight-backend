@@ -82,19 +82,6 @@ class CompletedSurveysController < ApplicationController
     end
   end
 
-  def create_mention_notifications!(mentioned, mentionable:)
-    mentioned.each do |member|
-      member.notifications.create!(
-        notification_type: "mention",
-        notification_details: {
-          mentionable_id: mentionable.id,
-          mentionable_type: mentionable.class.name,
-          author_name: current_organization_membership.name
-        }
-      )
-    end
-  end
-
   def add_goals!
     return unless survey_template.goals_section?
     goal_answers.each_with_index do |goal, i|
@@ -105,6 +92,19 @@ class CompletedSurveysController < ApplicationController
       )
       mentioned = Mention::Creator.new(goal, current_organization_membership).call(goal.content)
       create_mention_notifications!(mentioned, mentionable: goal)
+    end
+  end
+
+  def create_mention_notifications!(mentioned, mentionable:)
+    mentioned.each do |member|
+      member.notifications.create!(
+        notification_type: "mention",
+        notification_details: {
+          mentionable_id: mentionable.id,
+          mentionable_type: mentionable.class.name,
+          author_name: current_organization_membership.name
+        }
+      )
     end
   end
 
