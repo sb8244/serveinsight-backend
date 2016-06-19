@@ -190,6 +190,23 @@ RSpec.describe CommentsController, type: :controller do
         }.to change { Comment.count }.by(1)
       end
 
+      it "creates a notification if the goal belongs to someone else" do
+        goal.update!(organization_membership: teammate)
+        expect {
+          request!
+        }.to change { Notification.count }.by(1)
+        expect(teammate.notifications.last.attributes.deep_symbolize_keys).to include(
+          notification_type: "comment",
+          notification_details: {
+            comment_id: Comment.last.id,
+            commentable_type: "Goal",
+            author_name: membership.name,
+            mentioned: false,
+            reply: false
+          }
+        )
+      end
+
       it "requires the answer to be in the organization" do
         goal.update!(organization_id: -1)
         expect {
