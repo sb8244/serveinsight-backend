@@ -23,6 +23,33 @@ class CommentsController < ApplicationController
     end
   end
 
+  def comment_grant
+    @comment_grant = CommentGrant.new(params.fetch(:comment_grant))
+  end
+
+  def comment_params
+    @comment_params ||= params.permit(:comment).tap do |p|
+      p[:commentable_id] = comment_grant.commentable_id
+      p[:commentable_type] = comment_grant.commentable_type
+      p[:organization_membership] = current_organization_membership
+    end
+  end
+
+  def commentable
+    case comment_params[:commentable_type]
+    when "Answer"
+      current_organization.answers.find(comment_params[:commentable_id])
+    when "SurveyInstance"
+      current_organization.survey_instances.find(comment_params[:commentable_id])
+    when "Goal"
+      current_organization.goals.find(comment_params[:commentable_id])
+    end
+  end
+
+  def invalid_comment_grant!
+    render json: { errors: ["Comment grant is invalid. Refresh and resubmit your comment."] }, status: :unprocessable_entity
+  end
+
   def create_comment_notification!(comment, already_notified:)
     return if commentable.organization_membership == current_organization_membership
     return if already_notified.include?(commentable.organization_membership)
@@ -75,32 +102,5 @@ class CommentsController < ApplicationController
       )
       commenter
     end
-  end
-
-  def comment_grant
-    @comment_grant = CommentGrant.new(params.fetch(:comment_grant))
-  end
-
-  def comment_params
-    @comment_params ||= params.permit(:comment).tap do |p|
-      p[:commentable_id] = comment_grant.commentable_id
-      p[:commentable_type] = comment_grant.commentable_type
-      p[:organization_membership] = current_organization_membership
-    end
-  end
-
-  def commentable
-    case comment_params[:commentable_type]
-    when "Answer"
-      current_organization.answers.find(comment_params[:commentable_id])
-    when "SurveyInstance"
-      current_organization.survey_instances.find(comment_params[:commentable_id])
-    when "Goal"
-      current_organization.goals.find(comment_params[:commentable_id])
-    end
-  end
-
-  def invalid_comment_grant!
-    render json: { errors: ["Comment grant is invalid. Refresh and resubmit your comment."] }, status: :unprocessable_entity
   end
 end
