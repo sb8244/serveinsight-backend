@@ -57,7 +57,8 @@ class PassupsController < ApplicationController
       notification_type: "passup",
       notification_details: {
         passup_id: passup.id,
-        passupable_type: passup.passupable_type
+        passupable_type: passup.passupable_type,
+        passed_up_by_name: passup.passed_up_by.name
       }
     )
   end

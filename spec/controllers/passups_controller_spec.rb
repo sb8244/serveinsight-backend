@@ -81,6 +81,15 @@ RSpec.describe PassupsController, type: :controller do
       expect {
         request!
       }.to change { boss.notifications.count }.by(1)
+
+      expect(boss.notifications.last.attributes.deep_symbolize_keys).to include(
+        notification_type: "passup",
+        notification_details: {
+          passup_id: Passup.last.id,
+          passupable_type: "Answer",
+          passed_up_by_name: membership.name
+        }
+      )
     end
 
     context "with an expired grant" do
