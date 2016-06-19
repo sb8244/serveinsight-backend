@@ -16,8 +16,23 @@ class CommentsController < ApplicationController
     commentable.comments.create(comment_params).tap do |comment|
       if comment.persisted?
         Mention::Creator.new(comment, current_organization_membership).call(comment.comment)
+        create_comment_notification(comment)
       end
     end
+  end
+
+  def create_comment_notification(comment)
+    return if commentable.organization_membership == current_organization_membership
+
+    commentable.organization_membership.notifications.create(
+      notification_type: "comment",
+      notification_details: {
+        comment_id: comment.id,
+        commentable_type: comment.commentable_type,
+        author_name: current_organization_membership.name,
+        mentioned: false
+      }
+    )
   end
 
   def comment_grant

@@ -44,6 +44,28 @@ RSpec.describe CommentsController, type: :controller do
         }.to change { Comment.count }.by(1)
       end
 
+      it "doesn't create a notification if no one else is involved" do
+        expect {
+          request!
+        }.not_to change { Notification.count }
+      end
+
+      it "creates a notification if the answer belongs to someone else" do
+        answer.update!(organization_membership: teammate)
+        expect {
+          request!
+        }.to change { Notification.count }.by(1)
+        expect(teammate.notifications.last.attributes.deep_symbolize_keys).to include(
+          notification_type: "comment",
+          notification_details: {
+            comment_id: Comment.last.id,
+            commentable_type: "Answer",
+            author_name: membership.name,
+            mentioned: false
+          }
+        )
+      end
+
       it "requires the answer to be in the organization" do
         answer.update!(organization_id: -1)
         expect {
@@ -78,6 +100,31 @@ RSpec.describe CommentsController, type: :controller do
             "mentioned_by_id" => membership.id,
             "mentionable_id" => Comment.last.id,
             "mentionable_type" => "Comment"
+          )
+        end
+
+        it "creates a notification for the mentions" do
+          answer.update!(organization_membership: teammate)
+          expect {
+            post :create, comment: "Hi @Person3 <-, how is it going? From @Person1 but not @Person4", comment_grant: CommentGrant.encode(answer)
+          }.to change { Notification.count }.by(2)
+          expect(teammate.notifications.last.attributes.deep_symbolize_keys).to include(
+            notification_type: "comment",
+            notification_details: {
+              comment_id: Comment.last.id,
+              commentable_type: "Answer",
+              author_name: membership.name,
+              mentioned: false
+            }
+          )
+          expect(teammate2.notifications.last.attributes.deep_symbolize_keys).to include(
+            notification_type: "comment",
+            notification_details: {
+              comment_id: Comment.last.id,
+              commentable_type: "Answer",
+              author_name: membership.name,
+              mentioned: true
+            }
           )
         end
       end
