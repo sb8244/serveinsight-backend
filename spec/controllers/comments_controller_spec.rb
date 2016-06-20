@@ -59,6 +59,7 @@ RSpec.describe CommentsController, type: :controller do
           notification_type: "comment",
           notification_details: {
             comment_id: Comment.last.id,
+            commentable_id: answer.id,
             commentable_type: "Answer",
             author_name: membership.name,
             mentioned: false,
@@ -112,6 +113,7 @@ RSpec.describe CommentsController, type: :controller do
             notification_type: "comment",
             notification_details: {
               comment_id: Comment.last.id,
+              commentable_id: answer.id,
               commentable_type: "Answer",
               author_name: membership.name,
               mentioned: true,
@@ -128,6 +130,7 @@ RSpec.describe CommentsController, type: :controller do
             notification_type: "comment",
             notification_details: {
               comment_id: Comment.last.id,
+              commentable_id: answer.id,
               commentable_type: "Answer",
               author_name: membership.name,
               mentioned: false,
@@ -160,6 +163,7 @@ RSpec.describe CommentsController, type: :controller do
             notification_type: "comment",
             notification_details: {
               comment_id: Comment.last.id,
+              commentable_id: answer.id,
               commentable_type: "Answer",
               author_name: membership.name,
               mentioned: false,
@@ -170,6 +174,7 @@ RSpec.describe CommentsController, type: :controller do
             notification_type: "comment",
             notification_details: {
               comment_id: Comment.last.id,
+              commentable_id: answer.id,
               commentable_type: "Answer",
               author_name: membership.name,
               mentioned: true,
@@ -199,6 +204,7 @@ RSpec.describe CommentsController, type: :controller do
           notification_type: "comment",
           notification_details: {
             comment_id: Comment.last.id,
+            commentable_id: goal.id,
             commentable_type: "Goal",
             author_name: membership.name,
             mentioned: false,

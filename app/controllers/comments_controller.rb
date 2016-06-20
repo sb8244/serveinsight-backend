@@ -58,6 +58,7 @@ class CommentsController < ApplicationController
       notification_type: "comment",
       notification_details: {
         comment_id: comment.id,
+        commentable_id: comment.commentable_id,
         commentable_type: comment.commentable_type,
         author_name: current_organization_membership.name,
         mentioned: false,
@@ -78,6 +79,7 @@ class CommentsController < ApplicationController
         notification_type: "comment",
         notification_details: {
           comment_id: comment.id,
+          commentable_id: comment.commentable_id,
           commentable_type: comment.commentable_type,
           author_name: current_organization_membership.name,
           mentioned: mentioned.include?(commenter),
@@ -94,6 +96,7 @@ class CommentsController < ApplicationController
         notification_type: "comment",
         notification_details: {
           comment_id: comment.id,
+          commentable_id: comment.commentable_id,
           commentable_type: comment.commentable_type,
           author_name: current_organization_membership.name,
           mentioned: mentioned.include?(commenter),

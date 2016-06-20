@@ -1,5 +1,5 @@
 class Plain::NotificationSerializer < ActiveModel::Serializer
-  attributes :id, :notification_type, :notification_details, :text
+  attributes :id, :created_at, :notification_type, :notification_details, :text
 
   def text
     return comment_text if object.notification_type == "comment"
