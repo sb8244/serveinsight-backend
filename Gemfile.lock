@@ -45,6 +45,7 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (8.2.1)
+    chronic (0.10.2)
     coderay (1.1.0)
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
@@ -199,6 +200,7 @@ DEPENDENCIES
   active_model_serializers (< 0.9)
   acts_as_commentable
   byebug
+  chronic
   db-query-matchers
   dotenv-rails
   factory_girl_rails
