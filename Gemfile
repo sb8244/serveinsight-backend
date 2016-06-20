@@ -29,6 +29,8 @@ group :test do
   gem 'timecop'
 end
 
+gem 'rails_12factor', group: :production
+
 gem 'rack-cors', :require => 'rack/cors'
 gem 'omniauth-google-oauth2', branch: 'master' # master fixes redirect issues with satellize
 gem 'dotenv-rails'
