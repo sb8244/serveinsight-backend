@@ -14,9 +14,11 @@ gem 'puma'
 group :development, :test do
   gem 'byebug'
   gem 'pry-rails'
-  gem 'factory_girl_rails'
-  gem 'faker'
 end
+
+# In production for seeds
+gem 'factory_girl_rails'
+gem 'faker'
 
 group :development do
   gem 'web-console', '~> 2.0'
