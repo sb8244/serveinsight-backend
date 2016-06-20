@@ -41,6 +41,9 @@ Rails.application.routes.draw do
   post '/auth/:provider/callback', to: 'auth#callback'
 
   require 'sidekiq/web'
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == ENV["SIDEKIQ_USERNAME"] && password == ENV["SIDEKIQ_PASSWORD"]
+  end if Rails.env.production?
   mount Sidekiq::Web => '/sidekiq'
 
   get "*path", to: "application#index"
