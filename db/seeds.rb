@@ -26,20 +26,74 @@ recurring_template = SurveyTemplate.create!(
   organization: organization,
   creator_id: ceo.id,
   name: "Weekly Direction Report",
-  next_due_at: Chronic.parse("next friday 5pm"),
+  next_due_at: Chronic.parse("last friday 5pm"),
   weeks_between_due: 1,
   goals_section: true
 )
-recurring_template.questions.create!(
+q1 = recurring_template.questions.create!(
   question: "How are you feeling?",
   organization: organization,
   order: 0,
   question_type: "num5"
 )
-recurring_template.questions.create!(
+q2 = recurring_template.questions.create!(
   question: "What do you think might hold you back next week?",
   organization: organization,
   order: 1,
   question_type: "string"
 )
 CreateSurveyInstancesJob.perform_now(recurring_template)
+
+def complete_survey(reports, q1, q2, goal:)
+  reports.each do |report|
+    instance = report.survey_instances.last
+    answers = [
+      {
+        question_id: q1.id,
+        number: 5
+      },
+      {
+        question_id: q2.id,
+        content: "@CadMaple, how are we looking on the new featureset?"
+      },
+      {
+        question_id: q2.id,
+        content: "My biggest concern is the holiday coming up next week. There is so much to get done!"
+      }
+    ]
+    goals = [
+      { content: goal }
+    ]
+    previous_goals = {}
+
+    if instance.previous_instance
+      previous_goals = instance.previous_instance.goals.map do |goal|
+        [goal.id, "complete"]
+      end.to_h
+    end
+
+    resp = HTTParty.post(
+      "#{ENV.fetch("API_BASE", "http://localhost.serveinsight.com:8000")}/completed_surveys",
+      headers: {
+        "Authorization" => "Bearer #{report.user.auth_token}",
+        "Content-Type" => "application/json"
+      },
+      body: {
+        survey_instance_id: instance.id,
+        answers: answers,
+        goals: goals,
+        goal_statuses: previous_goals
+      }.to_json
+    )
+
+    p resp if resp.code != 204
+    p 200 if resp.code == 204
+  end
+end
+
+complete_survey([d1, d2, d3, you], q1, q2, goal: "Show how Serve Insight works!")
+organization.survey_instances.where.not(completed_at: nil).update_all(completed_at: Chronic.parse("last friday at 3pm"))
+CycleSurveysJob.perform_now
+CreateSurveyInstancesJob.perform_now(recurring_template)
+sleep(1)
+complete_survey([d1, d2], q1, q2, goal: "Build more awesome features!")
