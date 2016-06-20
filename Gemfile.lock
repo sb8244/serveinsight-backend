@@ -85,6 +85,7 @@ GEM
     mime-types (2.99)
     mini_portile2 (2.0.0)
     minitest (5.8.3)
+    mock_redis (0.16.1)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -216,6 +217,7 @@ DEPENDENCIES
   foreman
   httparty
   jwt
+  mock_redis
   omniauth-google-oauth2
   pg
   pry-rails

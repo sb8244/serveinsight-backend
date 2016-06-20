@@ -29,6 +29,7 @@ group :test do
   gem 'rspec-rails'
   gem 'db-query-matchers'
   gem 'timecop'
+  gem 'mock_redis'
 end
 
 gem 'rails_12factor', group: :production
