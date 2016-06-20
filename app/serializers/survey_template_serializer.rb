@@ -12,7 +12,7 @@ class SurveyTemplateSerializer < Plain::SurveyTemplateSerializer
   end
 
   def response_count
-    42
+    object.survey_instances.completed.count
   end
 
   def creator
