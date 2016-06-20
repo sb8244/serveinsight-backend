@@ -78,7 +78,7 @@ def complete_survey(reports, q1, q2, goal:)
     end
 
     resp = HTTParty.post(
-      "#{ENV.fetch("API_BASE", "http://localhost.serveinsight.com:8000")}/completed_surveys",
+      "#{ENV.fetch("API_BASE", "http://localhost.serveinsight.com:8000/api")}/completed_surveys",
       headers: {
         "Authorization" => "Bearer #{report.user.auth_token}",
         "Content-Type" => "application/json"
@@ -99,6 +99,5 @@ end
 complete_survey([d1, d2, d3, you], q1, q2, goal: "Show how Serve Insight works!")
 organization.survey_instances.where.not(completed_at: nil).update_all(completed_at: Chronic.parse("last friday at 3pm"))
 CycleSurveysJob.perform_now
-CreateSurveyInstancesJob.perform_now(recurring_template)
-sleep(1)
+CreateSurveyInstancesJob.perform_now(recurring_template.reload)
 complete_survey([d1, d2], q1, q2, goal: "Build more awesome features!")
