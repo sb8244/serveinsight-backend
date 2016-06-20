@@ -34,6 +34,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :notifications, only: [:index, :update]
+
   post '/auth/:provider/callback', to: 'auth#callback'
 
   require 'sidekiq/web'

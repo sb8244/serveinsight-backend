@@ -6,4 +6,8 @@ class Notification < ActiveRecord::Base
   def self.pending
     where(status: "pending")
   end
+
+  def complete!
+    update!(status: "complete")
+  end
 end
