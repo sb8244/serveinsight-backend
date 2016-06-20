@@ -1,3 +1,8 @@
+if Rails.env.production?
+  dev_null = Logger.new("/dev/null")
+  ActiveRecord::Base.logger = dev_null
+end
+
 hex = SecureRandom.hex(3)
 organization = FactoryGirl.create(:organization, name: "Test Org #{hex}")
 
