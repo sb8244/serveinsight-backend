@@ -1,12 +1,12 @@
-class OrganizationsController < ApplicationController
+class Api::OrganizationsController < Api::BaseController
   before_filter :prevent_creation, only: [:create]
 
   def show
-    respond_with organization
+    respond_with :api, organization
   end
 
   def create
-    respond_with create_and_setup_organization
+    respond_with :api, create_and_setup_organization
   end
 
   private

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe SurveyInstancesController, type: :controller do
+RSpec.describe Api::SurveyInstancesController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true) }

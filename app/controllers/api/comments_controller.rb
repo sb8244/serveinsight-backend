@@ -1,4 +1,4 @@
-class CommentsController < ApplicationController
+class Api::CommentsController < Api::BaseController
   COMMENTABLE_TYPES = {
     "answer" => "Answer",
     "survey" => "SurveyInstance",
@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
 
   def create
     return invalid_comment_grant! unless comment_grant.valid?
-    respond_with created_comment, location: nil, serializer: Plain::CommentSerializer
+    respond_with :api, created_comment, location: nil, serializer: Plain::CommentSerializer
   end
 
   private

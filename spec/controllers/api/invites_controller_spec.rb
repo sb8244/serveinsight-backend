@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe InvitesController, type: :controller do
+RSpec.describe Api::InvitesController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:organization2) { FactoryGirl.create(:organization) }

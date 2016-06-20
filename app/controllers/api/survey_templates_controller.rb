@@ -1,19 +1,19 @@
-class SurveyTemplatesController < ApplicationController
+class Api::SurveyTemplatesController < Api::BaseController
   def index
-    respond_with survey_templates, users_in_scope: users_in_scope
+    respond_with :api, survey_templates, users_in_scope: users_in_scope
   end
 
   def show
-    respond_with survey_template, users_in_scope: users_in_scope
+    respond_with :api, survey_template, users_in_scope: users_in_scope
   end
 
   def create
-    respond_with created_template, users_in_scope: users_in_scope
+    respond_with :api, created_template, users_in_scope: users_in_scope
   end
 
   def update
     update_template!
-    respond_with survey_template, users_in_scope: users_in_scope
+    respond_with :api, survey_template, users_in_scope: users_in_scope
   end
 
   private

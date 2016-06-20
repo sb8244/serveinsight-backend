@@ -1,11 +1,11 @@
-class ReviewableSurveysController < ApplicationController
+class Api::ReviewableSurveysController < Api::BaseController
   def index
-    respond_with reviewable_surveys
+    respond_with :api, reviewable_surveys
   end
 
   def reports
     relevant_reports = Tree::Reviewer.new(current_organization_membership).indirect_reports
-    respond_with reviewable_surveys(member_scope: relevant_reports), include_reviewer: true
+    respond_with :api, reviewable_surveys(member_scope: relevant_reports), include_reviewer: true
   end
 
   def mark_reviewed

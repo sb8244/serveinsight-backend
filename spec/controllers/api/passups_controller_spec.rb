@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PassupsController, type: :controller do
+RSpec.describe Api::PassupsController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:boss) { FactoryGirl.create(:organization_membership, organization: organization) }

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe MentionNamesController, type: :controller do
+RSpec.describe Api::MentionNamesController, type: :controller do
   let!(:organization_membership) { FactoryGirl.create(:organization_membership, mention_name: "Test1") }
   let!(:user) { organization_membership.user }
   let!(:org) { organization_membership.organization }

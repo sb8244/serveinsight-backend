@@ -1,10 +1,10 @@
-class InvitesController < ApplicationController
+class Api::InvitesController < Api::BaseController
   def index
-    respond_with current_organization.invites.includes(:organization_membership)
+    respond_with :api, current_organization.invites.includes(:organization_membership)
   end
 
   def create
-    respond_with InviteCreator.new(current_organization, invite_params).call, location: nil
+    respond_with :api, InviteCreator.new(current_organization, invite_params).call, location: nil
   end
 
   private

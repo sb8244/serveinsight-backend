@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OrganizationMembershipsController, type: :controller do
+RSpec.describe Api::OrganizationMembershipsController, type: :controller do
   let!(:organization_membership) { FactoryGirl.create(:organization_membership) }
   let!(:user) { organization_membership.user }
   let!(:org) { organization_membership.organization }

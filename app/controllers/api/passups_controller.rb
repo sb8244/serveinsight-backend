@@ -1,20 +1,20 @@
-class PassupsController < ApplicationController
+class Api::PassupsController < Api::BaseController
   def index
-    respond_with current_organization_membership.passups.pending.order(id: :desc).includes(:passupable)
+    respond_with :api, current_organization_membership.passups.pending.order(id: :desc).includes(:passupable)
   end
 
   def create
     return no_reviewer_response unless current_organization_membership.reviewer.present?
     return invalid_grant_response unless passup_grant.valid?
 
-    respond_with created_passup, location: nil
+    respond_with :api, created_passup, location: nil
   rescue ActiveRecord::RecordNotUnique
     duplicate_passup_response
   end
 
   def complete
     passup.complete!
-    respond_with passup, location: nil
+    respond_with :api, passup, location: nil
   end
 
   private

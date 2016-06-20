@@ -1,20 +1,20 @@
-class SurveyInstancesController < ApplicationController
+class Api::SurveyInstancesController < Api::BaseController
   def index
     if params[:survey_template_id]
-      respond_with survey_template_instances, each_serializer: Plain::SurveyInstanceSerializer
+      respond_with :api, survey_template_instances, each_serializer: Plain::SurveyInstanceSerializer
     elsif params[:due]
-      respond_with due_instances, each_serializer: Plain::SurveyInstanceSerializer
+      respond_with :api, due_instances, each_serializer: Plain::SurveyInstanceSerializer
     else
       head :unprocessable_entity
     end
   end
 
   def show
-    respond_with survey_instance
+    respond_with :api, survey_instance
   end
 
   def top_due
-    respond_with top_due_survey_instance
+    respond_with :api, top_due_survey_instance
   end
 
   private

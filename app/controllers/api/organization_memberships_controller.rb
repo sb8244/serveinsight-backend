@@ -1,10 +1,10 @@
-class OrganizationMembershipsController < ApplicationController
+class Api::OrganizationMembershipsController < Api::BaseController
   def index
-    respond_with organization_memberships.order(id: :asc)
+    respond_with :api, organization_memberships.order(id: :asc)
   end
 
   def show
-    respond_with current_organization_membership
+    respond_with :api, current_organization_membership
   end
 
   def destroy
@@ -23,7 +23,7 @@ class OrganizationMembershipsController < ApplicationController
       end
     end
 
-    respond_with organization_memberships
+    respond_with :api, organization_memberships
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end

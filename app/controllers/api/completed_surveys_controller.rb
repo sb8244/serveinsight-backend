@@ -1,10 +1,10 @@
-class CompletedSurveysController < ApplicationController
+class Api::CompletedSurveysController < Api::BaseController
   def index
     if params[:all_reports]
       all_report_ids = Tree::Reviewer.new(current_organization_membership).all_reports.map(&:id)
-      respond_with survey_templates_with_completed_instances(ids: all_report_ids), each_serializer: CompletedSurveyTemplatesSerializer
+      respond_with :api, survey_templates_with_completed_instances(ids: all_report_ids), each_serializer: CompletedSurveyTemplatesSerializer
     else
-      respond_with survey_templates_with_completed_instances, each_serializer: CompletedSurveyTemplatesSerializer
+      respond_with :api, survey_templates_with_completed_instances, each_serializer: CompletedSurveyTemplatesSerializer
     end
   end
 
