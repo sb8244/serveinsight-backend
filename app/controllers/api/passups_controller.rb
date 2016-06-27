@@ -3,6 +3,10 @@ class Api::PassupsController < Api::BaseController
     respond_with :api, current_organization_membership.passups.pending.order(id: :desc).includes(:passupable)
   end
 
+  def show
+    respond_with :api, current_organization_membership.passups.includes(:passupable).find(params[:id])
+  end
+
   def create
     return no_reviewer_response unless current_organization_membership.reviewer.present?
     return invalid_grant_response unless passup_grant.valid?

@@ -57,6 +57,18 @@ RSpec.describe Api::PassupsController, type: :controller do
     end
   end
 
+  describe "GET show" do
+    let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: goal) }
+
+    it "includes the right keys" do
+      get :show, id: passup.id
+      expect(response).to be_success
+      expect(response_json[:id]).to eq(passup.id)
+      expect(response_json.keys).to match_array([:id, :passed_up_by_id, :passed_up_to_id, :created_at, :status,
+                                                    :passupable_type, :passup_grant, :passupable, :passed_up_by])
+    end
+  end
+
   describe "POST create" do
     let(:request!) { post :create, passup_grant: PassupGrant.encode(answer) }
     let(:goal_request!) { post :create, passup_grant: PassupGrant.encode(goal) }

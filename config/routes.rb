@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resource :organization, only: [:show, :create]
     resources :invites, only: [:create, :index]
     resources :comments, only: [:create]
-    resources :passups, only: [:index, :create] do
+    resources :passups, only: [:index, :show, :create] do
       member do
         post :complete
       end
