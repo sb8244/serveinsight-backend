@@ -35,7 +35,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :notifications, only: [:index, :update]
+    resources :notifications, only: [:index] do
+      member do
+        post :complete
+      end
+    end
+
     resources :answers, only: [:show]
     resources :goals, only: [:show]
   end

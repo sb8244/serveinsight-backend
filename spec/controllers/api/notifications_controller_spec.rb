@@ -115,4 +115,22 @@ RSpec.describe Api::NotificationsController, type: :controller do
       end
     end
   end
+
+  describe "POST complete" do
+    let!(:notification) do
+      membership.notifications.create!(notification_type: :comment, notification_details: {
+        comment_id: -1,
+        commentable_type: "Answer",
+        author_name: "The Author",
+        mentioned: false,
+        reply: false
+      })
+    end
+
+    it "sets the status to complete" do
+      expect {
+        post :complete, id: notification.id
+      }.to change { notification.reload.status }.from("pending").to("complete")
+    end
+  end
 end
