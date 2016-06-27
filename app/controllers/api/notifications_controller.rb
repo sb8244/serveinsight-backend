@@ -11,7 +11,7 @@ class Api::NotificationsController < Api::BaseController
   private
 
   def notifications
-    current_organization_membership.notifications.pending
+    current_organization_membership.notifications.order(created_at: :desc).limit(20)
   end
 
   def notification

@@ -33,11 +33,11 @@ RSpec.describe Api::NotificationsController, type: :controller do
         )
       end
 
-      it "doesn't list complete notifications" do
+      it "lists complete notifications" do
         notification.complete!
         get :index
         expect(response).to be_success
-        expect(response_json.count).to eq(0)
+        expect(response_json.count).to eq(1)
       end
 
       [
