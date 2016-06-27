@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Api::CommentsController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
-  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, admin: true, mention_name: "Person1") }
+  let!(:boss) { FactoryGirl.create(:organization_membership, :with_user, organization: organization) }
+  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, reviewer: boss, admin: true, mention_name: "Person1") }
   let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "Person2") }
   let!(:teammate2) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "Person3") }
 
@@ -236,6 +237,32 @@ RSpec.describe Api::CommentsController, type: :controller do
           request!
           expect(response).to be_success
         }.to change { Comment.count }.by(1)
+      end
+
+      it "doesn't mention others" do
+        expect {
+          post :create, comment: "Test @Person2 @Person3 @Person1", comment_grant: CommentGrant.encode(instance)
+        }.not_to change { Mention.count }
+      end
+
+      it "doesn't Notify others" do
+        expect {
+          post :create, comment: "Test @Person2 @Person3 @Person1", comment_grant: CommentGrant.encode(instance)
+        }.not_to change { Notification.count }
+      end
+
+      context "as the boss" do
+        before { request.headers['Authorization'] = "Bearer #{boss.user.auth_token}" }
+
+        it "notifies the creator without mentioning" do
+          expect {
+            expect {
+              post :create, comment: "Test @Person2 @Person3 @Person1", comment_grant: CommentGrant.encode(instance)
+            }.not_to change { Mention.count }
+          }.to change { Notification.count }.by(1)
+          expect(Notification.last.notification_type).to eq("comment")
+          expect(Notification.last.notification_details["commentable_type"]).to eq("SurveyInstance")
+        end
       end
 
       it "requires the answer to be in the organization" do

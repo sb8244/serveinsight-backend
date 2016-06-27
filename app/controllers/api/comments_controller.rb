@@ -15,12 +15,17 @@ class Api::CommentsController < Api::BaseController
   def created_comment
     commentable.comments.create(comment_params).tap do |comment|
       if comment.persisted?
-        mentioned_memberships = Mention::Creator.new(comment, current_organization_membership).call(comment.comment)
+        mentioned_memberships = create_mentions!(comment)
         notified = notify_previous_commenters!(comment, mentioned: mentioned_memberships)
         mention_notified = create_mention_notifications!(comment, mentioned: mentioned_memberships, already_notified: notified)
         create_comment_notification!(comment, already_notified: notified + mention_notified)
       end
     end
+  end
+
+  def create_mentions!(comment)
+    return [] if comment.commentable.is_a?(SurveyInstance)
+    Mention::Creator.new(comment, current_organization_membership).call(comment.comment)
   end
 
   def comment_grant
