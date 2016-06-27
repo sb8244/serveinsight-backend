@@ -39,6 +39,10 @@ Rails.application.routes.draw do
       member do
         post :complete
       end
+
+      collection do
+        post :complete_all
+      end
     end
 
     resources :answers, only: [:show]

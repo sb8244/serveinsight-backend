@@ -8,6 +8,11 @@ class Api::NotificationsController < Api::BaseController
     respond_with :api, notification, location: nil
   end
 
+  def complete_all
+    current_organization_membership.notifications.pending.update_all(status: "complete")
+    head :no_content
+  end
+
   private
 
   def notifications

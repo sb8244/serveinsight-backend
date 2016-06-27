@@ -133,4 +133,41 @@ RSpec.describe Api::NotificationsController, type: :controller do
       }.to change { notification.reload.status }.from("pending").to("complete")
     end
   end
+
+  describe "POST complete_all" do
+    let!(:notification) do
+      membership.notifications.create!(notification_type: :comment, notification_details: {
+        comment_id: -1,
+        commentable_type: "Answer",
+        author_name: "The Author",
+        mentioned: false,
+        reply: false
+      })
+    end
+    let!(:notification2) do
+      membership.notifications.create!(notification_type: :comment, notification_details: {
+        comment_id: -1,
+        commentable_type: "Answer",
+        author_name: "The Author",
+        mentioned: false,
+        reply: false
+      })
+    end
+    let!(:notification3) do
+      membership.notifications.create!(notification_type: :comment, notification_details: {
+        comment_id: -1,
+        commentable_type: "Answer",
+        author_name: "The Author",
+        mentioned: false,
+        reply: false
+      })
+    end
+
+    it "can complete in bulk" do
+      expect {
+        post :complete_all
+        expect(response).to be_success
+      }.to change { Notification.where(status: "pending").count }.from(3).to(0)
+    end
+  end
 end
