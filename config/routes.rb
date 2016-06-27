@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     end
 
     resources :notifications, only: [:index, :update]
+    resources :answers, only: [:show]
   end
 
   post '/auth/:provider/callback', to: 'auth#callback'

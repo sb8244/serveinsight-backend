@@ -11,6 +11,10 @@ class Answer < ActiveRecord::Base
 
   before_create :set_organization_membership_id_from_instance
 
+  def related_mentions
+    mentions + Mention.where(mentionable: comments)
+  end
+
   private
 
   def set_organization_membership_id_from_instance

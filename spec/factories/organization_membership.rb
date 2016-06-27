@@ -8,5 +8,9 @@ FactoryGirl.define do
     before(:create) do |m|
       m.mention_name = m.name.delete(" ") if m.mention_name.nil?
     end
+
+    trait :with_user do
+      user
+    end
   end
 end
