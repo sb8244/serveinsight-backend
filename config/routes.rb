@@ -49,14 +49,17 @@ Rails.application.routes.draw do
     resources :goals, only: [:show]
   end
 
-  post '/auth/:provider/callback', to: 'auth#callback'
+  post "/auth/:provider/callback", to: "auth#callback"
 
-  require 'sidekiq/web'
+  require "sidekiq/web"
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     username == ENV["SIDEKIQ_USERNAME"] && password == ENV["SIDEKIQ_PASSWORD"]
   end if Rails.env.production?
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => "/sidekiq"
+
+  get "/rails/mailers" => "rails/mailers#index"
+  get "/rails/mailers/*path" => "rails/mailers#preview"
 
   get "*path", to: "application#index"
-  root 'application#index'
+  root "application#index"
 end

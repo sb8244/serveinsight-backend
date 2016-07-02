@@ -16,6 +16,7 @@ gem 'kaminari'
 group :development, :test do
   gem 'byebug'
   gem 'pry-rails'
+  gem 'rspec-rails'
 end
 
 # In production for seeds
@@ -28,7 +29,6 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-rails'
   gem 'db-query-matchers'
   gem 'timecop'
   gem 'mock_redis'
