@@ -15,8 +15,16 @@ class Api::NotificationsController < Api::BaseController
 
   private
 
+  def page
+    params.fetch(:page, 1)
+  end
+
+  def page_size
+    params.fetch(:page_size, 20)
+  end
+
   def notifications
-    current_organization_membership.notifications.order(created_at: :desc).limit(20)
+    current_organization_membership.notifications.order(created_at: :desc).page(page).per(page_size)
   end
 
   def notification

@@ -21,11 +21,20 @@ RSpec.describe Api::NotificationsController, type: :controller do
           reply: false
         })
       end
+      let!(:notification2) do
+        membership.notifications.create!(notification_type: :comment, notification_details: {
+          comment_id: -1,
+          commentable_type: "Answer",
+          author_name: "The Author",
+          mentioned: false,
+          reply: false
+        })
+      end
 
       it "lists the notification" do
         get :index
         expect(response).to be_success
-        expect(response_json.count).to eq(1)
+        expect(response_json.count).to eq(2)
         expect(response_json[0]).to include(
           id: notification.id,
           notification_type: "comment",
@@ -37,7 +46,18 @@ RSpec.describe Api::NotificationsController, type: :controller do
         notification.complete!
         get :index
         expect(response).to be_success
+        expect(response_json.count).to eq(2)
+      end
+
+      it "can page the response" do
+        get :index, page_size: 1
         expect(response_json.count).to eq(1)
+
+        get :index, page_size: 1, page: 2
+        expect(response_json.count).to eq(1)
+
+        get :index, page_size: 1, page: 3
+        expect(response_json.count).to eq(0)
       end
 
       [
