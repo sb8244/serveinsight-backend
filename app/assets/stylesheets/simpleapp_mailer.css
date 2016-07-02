@@ -13,7 +13,7 @@ td { padding: 0; }
 /* Email preview text */
 .email_summary { display:none; font-size:1px; line-height:1px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; }
 /* Typography */
-.font_default, h1, h2, h3, h4, h5, h6, p, a { font-family: Helvetica, Arial, sans-serif; /* this is used for email clients that don't support webfonts */ }
+.font_default, h1, h2, h3, h4, h5, h6, p,  a { font-family: Helvetica, Arial, sans-serif; /* this is used for email clients that don't support webfonts */ }
 small { font-size: 86%; font-weight: normal; }
 .pricing_box_cell small { font-size: 74%; }
 .font_default, p { font-size: 15px; /* default text size */ }
@@ -248,28 +248,28 @@ h6 {
 /* Colors */
 body,
 .email_body {
-  background-color: #f2f2f2;
+  background-color: #d8dde4;
 }
-.header_cell,
-.footer_cell,
 .content_cell {
   background-color: #ffffff;
 }
+.header_cell,
 .secondary_btn td,
 .icon_primary .icon_cell,
 .primary_pricing_box {
-  background-color: #ffb26b;
+  background-color: #2f68b4;
 }
 .jumbotron_cell,
+.footer_cell,
 .pricing_box {
-  background-color: #fafafa;
+  background-color: #f2f2f5;
 }
 .primary_btn td,
 .label .font_default {
-  background-color: #666666;
+  background-color: #22aaa0;
 }
 .icon_secondary .icon_cell {
-  background-color: #dbdbdb;
+  background-color: #e1e3e7;
 }
 .label_1 .font_default {
   background-color: #62a9dd;
@@ -280,6 +280,9 @@ body,
 .label_3 .font_default {
   background-color: #df6164;
 }
+.header_cell .column_cell,
+.header_cell a,
+.header_cell a span,
 .primary_btn a,
 .primary_btn span,
 .secondary_btn a,
@@ -294,7 +297,7 @@ h2,
 h4,
 h5,
 h6 {
-  color: #666666;
+  color: #383d42;
 }
 .column_cell {
   color: #888888;
@@ -306,7 +309,7 @@ a span,
 .text-secondary,
 .column_cell .text-secondary,
 .content_cell h2 .text-secondary {
-  color: #ffb26b;
+  color: #2f68b4;
 }
 .footer_cell a,
 .footer_cell a span {
@@ -331,7 +334,7 @@ a span,
 .content .order_total,
 .pricing_box,
 .text_quote .column_cell {
-  border-color: #f2f2f2;
+  border-color: #d8dde4;
 }
 /* Responsive */
 @media screen {
