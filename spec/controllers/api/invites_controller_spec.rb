@@ -44,6 +44,13 @@ RSpec.describe Api::InvitesController, type: :controller do
       expect(OrganizationMembership.last.mention_name).to eq("test")
     end
 
+    it "sends an InviteMailer" do
+      expect {
+        request!
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+      expect(jobs(ActionMailer::DeliveryJob).last[:args].last).to eq("_aj_globalid" => OrganizationMembership.last.to_global_id.to_s)
+    end
+
     context "when a user already exists" do
       let!(:member) { FactoryGirl.create(:organization_membership, organization: organization, email: "test@test.com") }
 
@@ -55,6 +62,12 @@ RSpec.describe Api::InvitesController, type: :controller do
             expect(response_json).to include(:organization_membership)
           }.not_to change { organization.invites.count }
         }.not_to change { organization.organization_memberships.count }
+      end
+
+      it "doesn't send an InviteMailer" do
+        expect {
+          request!
+        }.not_to change { job_count(ActionMailer::DeliveryJob) }
       end
     end
 
@@ -73,6 +86,13 @@ RSpec.describe Api::InvitesController, type: :controller do
         expect {
           request!
         }.to change { organization.invites.count }.by(1)
+      end
+
+      it "sends an InviteMailer" do
+        expect {
+          request!
+        }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+        expect(jobs(ActionMailer::DeliveryJob).last[:args].last).to eq("_aj_globalid" => OrganizationMembership.last.to_global_id.to_s)
       end
 
       context "with an invite" do

@@ -42,7 +42,11 @@ module ActiveJobMatcher
   end
 
   def job_count(klass)
-    ActiveJob::Base.queue_adapter.enqueued_jobs.select{ |h| h[:job] = klass }.count
+    jobs(klass).count
+  end
+
+  def jobs(klass)
+    ActiveJob::Base.queue_adapter.enqueued_jobs.select{ |h| h[:job] == klass }
   end
 end
 
