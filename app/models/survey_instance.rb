@@ -27,4 +27,12 @@ class SurveyInstance < ActiveRecord::Base
       order(due_at: :desc).
       first
   end
+
+  def string_questions
+    survey_template.questions.order(order: :asc).pluck(:question).tap do |arr|
+      if survey_template.goals_section?
+        arr.unshift(Goal::GOAL_QUESTION)
+      end
+    end
+  end
 end
