@@ -142,7 +142,7 @@ RSpec.describe Api::CommentsController, type: :controller do
 
         it "emails everyone in the thread except the author" do
           expect {
-            request!
+            post :create, comment: "No mentions", comment_grant: CommentGrant.encode(answer)
           }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
           args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
 

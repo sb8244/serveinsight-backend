@@ -158,10 +158,12 @@ RSpec.describe Api::CompletedSurveysController, type: :controller do
         )
       end
 
-      it "sends a notification mailer" do
+      it "sends a notification mailer for 2 mention and 1 comment" do
         expect {
           post :create, survey_instance_id: instance.id, answers: full_answers
-        }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+        }.to change { job_count(ActionMailer::DeliveryJob) }.by(3)
+
+        expect(jobs(ActionMailer::DeliveryJob).map { |h| h[:args][1] }).to match_array(["mentioned", "mentioned", "direct_report_submitted"])
       end
     end
 
