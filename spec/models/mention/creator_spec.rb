@@ -57,6 +57,12 @@ RSpec.describe Mention::Creator do
       }.not_to change { Mention.count }
     end
 
+    it "doesn't email the author" do
+      expect {
+        subject.call("Hi @Person1")
+      }.not_to change { job_count(ActionMailer::DeliveryJob) }
+    end
+
     it "is case insensitive" do
       expect {
         subject.call("Hi @personsteve4")
@@ -73,6 +79,20 @@ RSpec.describe Mention::Creator do
       expect {
         expect(subject.call("Hi @Person2 @PersonSteve4")).to eq([organization_membership2, organization_membership3])
       }.to change { Mention.count }.by(2)
+    end
+
+    it "creates a NotificationMailer" do
+      expect {
+        subject.call("Hi @Person2 @PersonSteve4")
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+      args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+      [organization_membership2, organization_membership3].each do |member|
+        expect(args).to include(
+          "mention" => { "_aj_globalid" => member.mentions.last.to_global_id.to_s },
+          "_aj_symbol_keys" => ["mention"]
+        )
+      end
     end
   end
 

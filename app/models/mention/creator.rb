@@ -11,7 +11,8 @@ Mention::Creator = Struct.new(:mentionable, :organization_membership) do
       next if !mentioned
       next if mentioned == organization_membership
       next if mentioned_people.include?(mentioned)
-      mentionable.mentions.create!(organization_membership: mentioned, mentioned_by: organization_membership)
+      mention = mentionable.mentions.create!(organization_membership: mentioned, mentioned_by: organization_membership)
+      NotificationMailer.mentioned(mention: mention).deliver_later
       mentioned_people << mentioned
     end
     mentioned_people
