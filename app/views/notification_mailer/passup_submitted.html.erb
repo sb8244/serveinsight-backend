@@ -1,0 +1,58 @@
+<table class="jumbotron" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td class="jumbotron_cell" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+              <tbody>
+                <tr>
+                  <td width="580" align="center" valign="top">
+            <![endif]-->
+            <div class="col-3">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <h4><%= @report_member.name %> has passed up <%= @passup.passupable_type.downcase.indefinitize %> for your review!</h4>
+                      <p class="lead">
+                        Login to review this <%= @passup.passupable_type.downcase %> and provide valuable feedback
+                        for <%= @report_member.name.split(" ").first %>.
+                      </p>
+                      <table class="primary_btn" align="center" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                          <tr>
+                            <td class="font_default"><a href="<%= passup_url(id: @passup.id) %>">
+                              <span>Review Passup</span>
+                            </a></td>
+                          </tr>
+                        </tbody>
+                      </table><!-- end .primary_btn -->
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-3 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.jumbotron_cell -->
+    </tr>
+  </tbody>
+</table><!-- /.jumbotron -->

@@ -5,4 +5,9 @@ class NotificationMailerPreview < ActionMailer::Preview
     instance = SurveyInstance.first
     NotificationMailer.direct_report_submitted(report: report, manager: manager, survey_instance: instance)
   end
+
+  def passup_submitted
+    passup = Passup.first
+    NotificationMailer.passup_submitted(passup: passup)
+  end
 end

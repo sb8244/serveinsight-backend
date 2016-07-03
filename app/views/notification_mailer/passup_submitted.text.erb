@@ -1,0 +1,5 @@
+<%= @report_member.name %> has passed up <%= @passup.passupable_type.downcase.indefinitize %> for your review!
+=================================
+
+Login to review this <%= @passup.passupable_type.downcase %> and provide valuable feedback for <%= @report_member.name.split(" ").first %>.
+You can review this passup at <%= passup_url(id: @passup.id) %>.

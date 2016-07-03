@@ -11,7 +11,9 @@ gem 'redis-namespace'
 gem 'sinatra', :require => nil
 gem 'foreman'
 gem 'puma'
+
 gem 'kaminari'
+gem 'indefinite_article'
 
 group :development, :test do
   gem 'byebug'

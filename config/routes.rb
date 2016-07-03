@@ -62,5 +62,6 @@ Rails.application.routes.draw do
 
   get "*path", to: "application#index"
   get "/surveys/managed/*id", constraints: { id: /\d*/ }, as: :managed_survey, to: "application#index"
+  get "/passups/*id", constraints: { id: /\d*/ }, as: :passup, to: "application#index"
   root "application#index"
 end
