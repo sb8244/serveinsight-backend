@@ -81,4 +81,11 @@ Rails.application.configure do
     host: "serve.serveinsight.com",
     protocol: "https"
   }
+  ActionMailer::Base.smtp_settings = {
+    user_name: ENV["SENDGRID_USERNAME"],
+    password: ENV["SENDGRID_PASSWORD"],
+    domain: "serveinsight.com",
+    address: "smtp.sendgrid.net",
+    port: 587
+  }
 end
