@@ -61,5 +61,6 @@ Rails.application.routes.draw do
   get "/rails/mailers/*path" => "rails/mailers#preview"
 
   get "*path", to: "application#index"
+  get "/surveys/managed/*id", constraints: { id: /\d*/ }, as: :managed_survey, to: "application#index"
   root "application#index"
 end
