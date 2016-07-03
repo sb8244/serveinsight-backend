@@ -139,6 +139,21 @@ RSpec.describe Api::CommentsController, type: :controller do
             }
           )
         end
+
+        it "emails everyone in the thread except the author" do
+          expect {
+            request!
+          }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+          args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+          [teammate, teammate2].each do |member|
+            expect(args).to include(
+              "comment" => { "_aj_globalid" => Comment.last.to_global_id.to_s },
+              "to" => { "_aj_globalid" => member.to_global_id.to_s },
+              "_aj_symbol_keys" => ["comment", "to"]
+            )
+          end
+        end
       end
 
       context "with mentions" do
