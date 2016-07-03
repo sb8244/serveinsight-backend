@@ -157,6 +157,12 @@ RSpec.describe Api::CompletedSurveysController, type: :controller do
           }
         )
       end
+
+      it "sends a notification mailer" do
+        expect {
+          post :create, survey_instance_id: instance.id, answers: full_answers
+        }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+      end
     end
 
     context "with a completed survey" do

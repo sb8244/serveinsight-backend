@@ -111,6 +111,7 @@ class Api::CompletedSurveysController < Api::BaseController
 
   def notify_reviewer!
     return unless current_organization_membership.reviewer.present?
+
     current_organization_membership.reviewer.notifications.create!(
       notification_type: "review",
       notification_details: {
@@ -119,6 +120,12 @@ class Api::CompletedSurveysController < Api::BaseController
         survey_title: survey_instance.survey_template.name
       }
     )
+
+    NotificationMailer.direct_report_submitted(
+      report: current_organization_membership,
+      manager: current_organization_membership.reviewer,
+      survey_instance: survey_instance
+    ).deliver_later
   end
 
   def all_questions_have_answers?

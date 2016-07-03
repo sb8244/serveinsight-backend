@@ -1,5 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  def direct_report_submitted(report, manager, survey_instance)
+  def direct_report_submitted(report:, manager:, survey_instance:)
     @report_member = report
     @manager = manager
     @survey_instance = survey_instance
