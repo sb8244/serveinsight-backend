@@ -48,7 +48,7 @@ RSpec.describe Api::InvitesController, type: :controller do
       expect {
         request!
       }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
-      expect(jobs(ActionMailer::DeliveryJob).last[:args].last).to eq("_aj_globalid" => OrganizationMembership.last.to_global_id.to_s)
+      expect(jobs(ActionMailer::DeliveryJob).last[:args].last).to eq("_aj_globalid" => Invite.last.to_global_id.to_s)
     end
 
     context "when a user already exists" do
@@ -92,7 +92,7 @@ RSpec.describe Api::InvitesController, type: :controller do
         expect {
           request!
         }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
-        expect(jobs(ActionMailer::DeliveryJob).last[:args].last).to eq("_aj_globalid" => OrganizationMembership.last.to_global_id.to_s)
+        expect(jobs(ActionMailer::DeliveryJob).last[:args].last).to eq("_aj_globalid" => Invite.last.to_global_id.to_s)
       end
 
       context "with an invite" do

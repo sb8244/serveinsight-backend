@@ -1,6 +1,7 @@
 class InviteMailer < ApplicationMailer
-  def user_invited(member)
-    @member = member
-    mail(to: member.email, subject: "You've been invited to Serve Insight")
+  def user_invited(invite)
+    @invite = invite
+    @member = invite.organization_membership
+    mail(to: @member.email, subject: "You've been invited to Serve Insight")
   end
 end

@@ -20,9 +20,10 @@ class Api::InvitesController < Api::BaseController
       org_member = organization.organization_memberships.where(email: invite_params.fetch(:email)).first_or_create!(invite_params)
       return org_member.user if org_member.user
 
-      InviteMailer.user_invited(org_member).deliver_later
-      create_survey_instances
-      create_invite!(org_member)
+      create_invite!(org_member).tap do |invite|
+        create_survey_instances
+        InviteMailer.user_invited(invite).deliver_later
+      end
     end
 
     private
