@@ -1,0 +1,20 @@
+A new comment was added and is accessible at <%= comment_url(@comment_chain.first) %>
+=================================
+
+<%= @commentable.organization_membership.name %> on <%= @commentable.created_at.strftime("%B %d, %Y") %>:
+<% if @commentable.class == Answer %>
+  <%= @commentable.question_content %>
+  <%= @commentable.content %>
+<% elsif @commentable.class == Goal %>
+  <%= Goal::GOAL_QUESTION %>
+  <%= @commentable.content %>
+<% elsif @commentable.class == SurveyInstance %>
+  Submitted Insight
+<% end %>
+
+<% @comment_chain.each do |comment| %>
+----------
+<%= comment.organization_membership.name %> on <%= comment.created_at.strftime("%B %d, %Y") %>:
+  <%= comment.comment %>
+
+<% end %>

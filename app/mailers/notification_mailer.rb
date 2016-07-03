@@ -18,6 +18,6 @@ class NotificationMailer < ApplicationMailer
   def comment_added(comment:, to:)
     @comment_chain = comment.commentable.comments.order(created_at: :asc).to_a
     @commentable = comment.commentable
-    mail(to: to.email, subject: "Serve Insight: Comment added")
+    mail(to: to.email, subject: "Serve Insight: New comment added")
   end
 end
