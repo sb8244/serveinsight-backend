@@ -104,6 +104,12 @@ RSpec.describe Api::PassupsController, type: :controller do
       )
     end
 
+    it "sends an email" do
+      expect {
+        request!
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+    end
+
     context "with an expired grant" do
       let(:request!) { post :create, passup_grant: PassupGrant.encode(answer, duration: -1.minutes) }
 

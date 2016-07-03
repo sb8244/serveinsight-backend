@@ -65,5 +65,7 @@ class Api::PassupsController < Api::BaseController
         passed_up_by_name: passup.passed_up_by.name
       }
     )
+
+    NotificationMailer.passup_submitted(passup: passup).deliver_later
   end
 end
