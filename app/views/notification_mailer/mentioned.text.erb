@@ -1,0 +1,14 @@
+<%= @mentioned_by.name %> mentioned you in <%= @mention.mentionable_type.downcase.indefinitize %>!
+=================================
+
+<% if @mentionable.class == Answer %>
+<%= @mentionable.question_content %>
+<%= @mentionable.content %>
+<% elsif @mentionable.class == Goal %>
+<%= Goal::GOAL_QUESTION %>
+<%= @mentionable.content %>
+<% elsif @mentionable.class == Comment %>
+<%= @mentionable.comment %>
+<% end %>
+
+Go to <%= mention_url(@mention) %> to view this <%= @mentionable.class.name %>.
