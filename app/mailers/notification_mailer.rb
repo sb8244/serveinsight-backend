@@ -20,4 +20,12 @@ class NotificationMailer < ApplicationMailer
     @commentable = comment.commentable
     mail(to: to.email, subject: "Serve Insight: New comment added")
   end
+
+  def mentioned(mention:)
+    @mention = mention
+    @mentionable = mention.mentionable
+    @mentioned = mention.organization_membership
+    @mentioned_by = mention.mentioned_by
+    mail(to: @mentioned.email, subject: "Serve Insight: Mentioned in #{ mention.mentionable_type.downcase.indefinitize }")
+  end
 end
