@@ -10,6 +10,7 @@ class OrganizationMembership < ActiveRecord::Base
   has_many :survey_instances
   has_many :comments
   has_many :notifications
+  has_many :mentions
 
   validate :reviewer_id, :reviewer_is_not_user
 

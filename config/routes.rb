@@ -49,14 +49,23 @@ Rails.application.routes.draw do
     resources :goals, only: [:show]
   end
 
-  post '/auth/:provider/callback', to: 'auth#callback'
+  post "/auth/:provider/callback", to: "auth#callback"
 
-  require 'sidekiq/web'
+  require "sidekiq/web"
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     username == ENV["SIDEKIQ_USERNAME"] && password == ENV["SIDEKIQ_PASSWORD"]
   end if Rails.env.production?
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => "/sidekiq"
+
+  get "/rails/mailers" => "rails/mailers#index"
+  get "/rails/mailers/*path" => "rails/mailers#preview"
 
   get "*path", to: "application#index"
-  root 'application#index'
+  get "/surveys/managed/*id", constraints: { id: /\d*/ }, as: :managed_survey, to: "application#index"
+  get "/passups/*id", constraints: { id: /\d*/ }, as: :passup, to: "application#index"
+  get "/answers/*id", constraints: { id: /\d*/ }, as: :answer, to: "application#index"
+  get "/goals/*id", constraints: { id: /\d*/ }, as: :goal, to: "application#index"
+  get "/surveys/completed/*id", constraints: { id: /\d*/ }, as: :completed_survey, to: "application#index"
+  get "/surveys/*id", constraints: { id: /\d*/ }, as: :survey, to: "application#index"
+  root "application#index"
 end

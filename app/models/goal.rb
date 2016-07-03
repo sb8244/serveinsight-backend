@@ -1,4 +1,6 @@
 class Goal < ActiveRecord::Base
+  GOAL_QUESTION = "What do you want to accomplish this week?"
+
   belongs_to :survey_instance
   belongs_to :organization
   belongs_to :organization_membership

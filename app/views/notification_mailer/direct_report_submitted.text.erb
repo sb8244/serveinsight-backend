@@ -1,0 +1,5 @@
+<%= @report_member.name %> has submitted an Insight for your review!
+=================================
+
+Login to review this Insight and provide valuable feedback for <%= @report_member.name.split(" ").first %>.
+You can review this Insight at <%= managed_survey_url(id: @survey_instance.id) %>.

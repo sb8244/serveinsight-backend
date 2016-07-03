@@ -1,0 +1,87 @@
+<table class="jumbotron" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td class="jumbotron_cell product_row" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+                </td>
+                <td width="390" align="center" valign="top">
+            <![endif]-->
+            <div class="col-13">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <p>You have an Insight due at <%= @instance.due_at.strftime("%B %d, %Y %l:%m %p") %>.</p>
+                      <p>Thinking about your answers now will make completing your Insight easier.</p>
+
+                      <table class="primary_btn" align="center" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                          <tr>
+                            <td class="font_default"><a href="<%= survey_url(@instance.id) %>"><span>Complete Insight</span></a></td>
+                          </tr>
+                        </tbody>
+                      </table><!-- end .primary_btn -->
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-13 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.jumbotron_cell -->
+    </tr>
+  </tbody>
+</table><!-- /.jumbotron -->
+<table class="content" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <% @questions.each_with_index do |question, index| %>
+    <tr>
+      <td class="content_cell product_row" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <div class="col-13">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <p><%= question %></p>
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-13 -->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.content_cell:product_row -->
+    </tr>
+    <% end %>
+  </tbody>
+</table><!-- /.content -->

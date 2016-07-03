@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=no">
+<meta name="format-detection" content="date=no">
+<meta name="format-detection" content="address=no">
+<meta name="format-detection" content="email=no">
+<title></title>
+<link href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700" rel="stylesheet" type="text/css">
+<%= stylesheet_link_tag("simpleapp_mailer") %>
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+<div class="email_body">
+  <!--[if (gte mso 9)|(IE)]>
+  <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+    <tbody>
+      <tr>
+        <td width="580" align="center" valign="top">
+  <![endif]-->
+    <div class="email_container">
+      <table class="header" width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr>
+            <td class="header_cell col-bottom-0" align="center" valign="top">
+                <!--[if (gte mso 9)|(IE)]>
+                <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+                  <tbody>
+                    <tr>
+                      <td width="580" align="center" valign="top">
+                <![endif]-->
+                <div class="row">
+                  <!--[if (gte mso 9)|(IE)]>
+                  <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+                    <tbody>
+                      <tr>
+                        <td width="580" align="center" valign="top">
+                  <![endif]-->
+                  <div class="col-3">
+                    <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td class="column_cell font_default" align="center" valign="top">
+                            <a href="https://serveinsight.com">
+                              Serve Insight
+                              <!-- <img src="images/email_logo.png" width="156" height="42" alt="Serve Insight"/> -->
+                            </a>
+                          </td><!-- /.column_cell -->
+                        </tr>
+                      </tbody>
+                    </table><!-- /.column -->
+                  </div><!-- /.col-3 -->
+                  <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <![endif]-->
+                </div><!-- /.row -->
+                <!--[if (gte mso 9)|(IE)]>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <![endif]-->
+            </td><!-- /.header_cell -->
+          </tr>
+        </tbody>
+      </table><!-- /.header -->
+
+      <%= yield %>
+
+      <table class="footer" width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr>
+            <td class="footer_cell" align="center" valign="top">
+                <!--[if (gte mso 9)|(IE)]>
+                <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+                  <tbody>
+                    <tr>
+                      <td width="580" align="center" valign="top">
+                <![endif]-->
+                <div class="row">
+                  <!--[if (gte mso 9)|(IE)]>
+                  <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+                    <tbody>
+                      <tr>
+                        <td width="390" align="center" valign="top">
+                  <![endif]-->
+                  <div class="col-13 col-bottom-0">
+                    <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td class="column_cell font_default" align="left" valign="top">
+                          <strong>Serve Insight</strong><br />
+                          Need help? <a href="mailto:help@serveinsight.com">Send an email</a>.</small></td><!-- /.column_cell -->
+                        </tr>
+                      </tbody>
+                    </table><!-- /.column -->
+                  </div><!-- /.col-13 -->
+                  <!--[if (gte mso 9)|(IE)]>
+                      </td>
+                      <td width="190" align="center" valign="top">
+                  <![endif]-->
+                  <div class="col-1 col-bottom-0">
+                  </div><!-- /.col-1 -->
+                  <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <![endif]-->
+                </div><!-- /.row -->
+                <!--[if (gte mso 9)|(IE)]>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <![endif]-->
+            </td><!-- /.footer_cell -->
+          </tr>
+        </tbody>
+      </table><!-- /.footer -->
+    </div><!-- /.email_container -->
+  <!--[if (gte mso 9)|(IE)]>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <![endif]-->
+</div><!-- /.email_body -->
+</body>
+</html>
