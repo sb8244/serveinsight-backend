@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   delegate :organization, to: :organization_membership, allow_nil: true
 
   def organization_membership
-    organization_memberships.joins(:organization).first
+    organization_memberships.joins(:organization).last
   end
 
   def add_to_organization!(org, admin: false)

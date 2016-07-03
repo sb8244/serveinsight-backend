@@ -28,6 +28,34 @@ RSpec.describe AuthController, type: :controller do
     expect(Token.new(response_json[:token])).to be_valid
   end
 
+  context "with invite_code set" do
+    let!(:org) { FactoryGirl.create(:organization) }
+    let!(:org_member) { FactoryGirl.create(:organization_membership, organization: org, user: nil) }
+    let!(:invite) { org_member.invites.create! }
+
+    it "redeems the invite" do
+      expect {
+        post :callback, provider: :google_oauth2, invite_code: invite.code
+      }.to change { invite.reload.accepted? }.to(true)
+    end
+
+    it "connects the user to the org member" do
+      expect {
+        post :callback, provider: :google_oauth2, invite_code: invite.code
+      }.to change { org_member.reload.user }.from(nil)
+    end
+
+    context "already redeemed" do
+      before { invite.update!(accepted: true) }
+
+      it "doesn't connect the user to the org member" do
+        expect {
+          post :callback, provider: :google_oauth2, invite_code: invite.code
+        }.not_to change { org_member.reload.user }.from(nil)
+      end
+    end
+  end
+
   context "with an existing user at the email" do
     let!(:existing_user) { User.create!(name: "Test Test", email: mock_info[:email]) }
 
@@ -35,6 +63,24 @@ RSpec.describe AuthController, type: :controller do
       expect {
         post :callback, provider: :google_oauth2
       }.not_to change{ User.count }
+    end
+
+    context "with an invite_code" do
+      let!(:org) { FactoryGirl.create(:organization) }
+      let!(:org_member) { FactoryGirl.create(:organization_membership, organization: org, user: nil) }
+      let!(:invite) { org_member.invites.create! }
+
+      it "redeems the invite" do
+        expect {
+          post :callback, provider: :google_oauth2, invite_code: invite.code
+        }.to change { invite.reload.accepted? }.to(true)
+      end
+
+      it "connects the user to the org member" do
+        expect {
+          post :callback, provider: :google_oauth2, invite_code: invite.code
+        }.to change { org_member.reload.user }.from(nil).to(existing_user)
+      end
     end
   end
 end

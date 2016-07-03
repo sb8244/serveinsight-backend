@@ -7,6 +7,13 @@ class Invite < ActiveRecord::Base
 
   before_create :set_code
 
+  def apply_to_user!(user)
+    return if accepted?
+
+    user.organization_memberships << organization_membership
+    update!(accepted: true)
+  end
+
   private
 
   def set_code
