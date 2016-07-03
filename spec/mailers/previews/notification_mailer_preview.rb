@@ -10,4 +10,19 @@ class NotificationMailerPreview < ActionMailer::Preview
     passup = Passup.first
     NotificationMailer.passup_submitted(passup: passup)
   end
+
+  def comment_added_answer
+    comment = Comment.where(commentable_type: "Answer").first
+    NotificationMailer.comment_added(comment: comment, to: OrganizationMembership.first)
+  end
+
+  def comment_added_goal
+    comment = Comment.where(commentable_type: "Goal").first
+    NotificationMailer.comment_added(comment: comment, to: OrganizationMembership.first)
+  end
+
+  def comment_added_survey
+    comment = Comment.where(commentable_type: "SurveyInstance").first
+    NotificationMailer.comment_added(comment: comment, to: OrganizationMembership.first)
+  end
 end

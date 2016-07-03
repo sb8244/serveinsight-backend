@@ -1,0 +1,195 @@
+<table class="jumbotron" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td class="jumbotron_cell product_row" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+              <tbody>
+                <tr>
+                  <td width="190" align="center" valign="top">
+            <![endif]-->
+            <div class="col-1">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default image_thumb" align="center" valign="top">
+                      <p class="text-muted">
+                        <strong><%= @commentable.organization_membership.name %></strong>
+                        <br />
+                        <small><%= @commentable.created_at.strftime("%B %d, %Y") %></small>
+                      </p>
+                    </td><!-- /.column_cell:image_thumb -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-1 -->
+            <!--[if (gte mso 9)|(IE)]>
+                </td>
+                <td width="390" align="center" valign="top">
+            <![endif]-->
+            <div class="col-13">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <% if @commentable.class == Answer %>
+                        <h5 class="mt8"><%= @commentable.question_content %></h5>
+                        <p><%= @commentable.content %></p>
+                      <% elsif @commentable.class == Goal %>
+                        <h5 class="mt8"><%= Goal::GOAL_QUESTION %></h5>
+                        <p><%= @commentable.content %></p>
+                      <% else %>
+                        <h5 class="mt8">Upgrading to version +2.0</h5>
+                        <p>I would like to upgrade my store to the latest version. I was wondering if you could help me with a checklist before I start. Thank you.</p>
+                      <% end %>
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-13 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.jumbotron_cell -->
+    </tr>
+  </tbody>
+</table><!-- /.jumbotron -->
+<table class="content" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <% @comment_chain.each_with_index do |comment, index| %>
+    <tr>
+      <td class="content_cell product_row" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+              <tbody>
+                <tr>
+                  <td width="190" align="center" valign="top">
+            <![endif]-->
+            <div class="col-1">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default image_thumb" align="center" valign="top">
+                      <p class="text-muted">
+                        <strong><%= comment.organization_membership.name %></strong>
+                        <br />
+                        <small><%= comment.created_at.strftime("%B %d, %Y") %></small>
+                      </p>
+                    </td><!-- /.column_cell:image_thumb -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-1 -->
+            <!--[if (gte mso 9)|(IE)]>
+                </td>
+                <td width="390" align="center" valign="top">
+            <![endif]-->
+            <div class="col-13">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <p><%= comment.comment %></p>
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-13 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.content_cell:product_row -->
+    </tr>
+    <% if index == @comment_chain.count - 1 %>
+    <tr>
+      <td class="content_cell" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+              <tbody>
+                <tr>
+                  <td width="580" align="center" valign="top">
+            <![endif]-->
+            <div class="col-3 col-bottom-0">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <table class="primary_btn" align="center" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                          <tr>
+                            <td class="font_default"><a href="<%= comment_url(comment) %>"><span>Add your thoughts</span></a></td>
+                          </tr>
+                        </tbody>
+                      </table><!-- end .primary_btn -->
+                      <table class="icon_holder icon_secondary" width="80" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tbody>
+                          <tr>
+                            <td class="hspace">&nbsp; </td>
+                          </tr>
+                        </tbody>
+                      </table><!-- /.icon_holder:icon_secondary -->
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-3 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.content_cell:product_row -->
+    </tr>
+    <% end %>
+  </tbody>
+  <% end %>
+</table><!-- /.content -->

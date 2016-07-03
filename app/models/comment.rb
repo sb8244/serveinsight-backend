@@ -1,4 +1,5 @@
 class Comment < ActiveRecord::Base
+  # Commentable on Answer, Goal, SurveyInstance
   include ActsAsCommentable::Comment
 
   belongs_to :commentable, polymorphic: true
