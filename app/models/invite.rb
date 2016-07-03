@@ -10,6 +10,8 @@ class Invite < ActiveRecord::Base
   private
 
   def set_code
-    self.code = SecureRandom.hex(30)
+    while self.code.nil? || Invite.where(code: self.code).exists?
+      self.code = SecureRandom.hex(30)
+    end
   end
 end
