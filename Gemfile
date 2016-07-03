@@ -14,6 +14,8 @@ gem 'puma'
 
 gem 'kaminari'
 gem 'indefinite_article'
+gem 'premailer-rails'
+gem 'nokogiri'
 
 group :development, :test do
   gem 'byebug'

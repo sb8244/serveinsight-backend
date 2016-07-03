@@ -42,4 +42,12 @@ Rails.application.configure do
     host: "localhost.serveinsight.com:3000",
     protocol: "http"
   }
+
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "localhost",
+    port: 1025,
+    domain: "serveinsight.com"
+  }
 end
