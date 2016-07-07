@@ -13,7 +13,7 @@ class InsightMailer < ApplicationMailer
 
     @subject_string = if instance.due_at.today?
       "today"
-    elsif (instance.due_at + 1.days).today?
+    elsif (instance.due_at - 1.days).today?
       "tomorrow"
     else
       instance.due_at.strftime("on %B %d")
