@@ -349,7 +349,7 @@ a span,
   }
 }
 @media screen and (min-width: 631px) and (max-width: 769px) {
-.col-1, .col-2, .col-3, .col-13 {
+.col-1, .col-2, .col-3 /*, .col-13 */ {
   float: left !important;
 }
 .col-1 {
