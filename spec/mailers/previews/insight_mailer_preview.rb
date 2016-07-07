@@ -9,4 +9,10 @@ class InsightMailerPreview < ActionMailer::Preview
     instance.due_at = Time.now
     InsightMailer.insight_due(instance)
   end
+
+  def insight_due_tomorrow
+    instance = SurveyInstance.first
+    instance.due_at = 1.days.from_now
+    InsightMailer.insight_due(instance)
+  end
 end
