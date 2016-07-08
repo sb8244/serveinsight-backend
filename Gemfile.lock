@@ -43,6 +43,7 @@ GEM
     arel (6.0.3)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bugsnag (4.2.1)
     builder (3.2.2)
     byebug (8.2.1)
     chronic (0.10.2)
@@ -224,6 +225,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (< 0.9)
   acts_as_commentable
+  bugsnag
   byebug
   chronic
   db-query-matchers
