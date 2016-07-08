@@ -37,6 +37,15 @@ RSpec.describe Tree::Reviewer do
         expect(subject.all_reviewers).to eq([])
       end
     end
+
+    context "with a loop in the tree" do
+      before { root.update!(reviewer: root_child) }
+      let(:target) { root }
+
+      it "includes the reviewer but not the target" do
+        expect(subject.all_reviewers).to eq([root_child])
+      end
+    end
   end
 
   describe ".direct_reports" do
@@ -57,6 +66,15 @@ RSpec.describe Tree::Reviewer do
 
       it "is an empty array" do
         expect(subject.direct_reports).to eq([])
+      end
+    end
+
+    context "with a loop in the tree" do
+      before { root.update!(reviewer: root_child) }
+      let(:target) { root }
+
+      it "includes the child" do
+        expect(subject.direct_reports).to eq([root_child])
       end
     end
   end
@@ -89,12 +107,30 @@ RSpec.describe Tree::Reviewer do
         expect(subject.all_reports).to eq([])
       end
     end
+
+    context "with a loop in the tree" do
+      before { root.update!(reviewer: root_child) }
+      let(:target) { root }
+
+      it "includes the parent" do
+        expect(subject.all_reports).to eq([root_child, me, child1, child2, child1_child, child2_child, child1_child_child, child1_child_child_child])
+      end
+    end
   end
 
   describe "indirect_reports" do
     it "provides a list of indirect reports" do
       expect(subject.indirect_reports.count).to eq(4)
       expect(subject.indirect_reports).to eq([child1_child, child2_child, child1_child_child, child1_child_child_child])
+    end
+
+    context "with a loop in the tree" do
+      before { root.update!(reviewer: root_child) }
+      let(:target) { root }
+
+      it "includes all but the direct child" do
+        expect(subject.indirect_reports).to eq([me, child1, child2, child1_child, child2_child, child1_child_child, child1_child_child_child])
+      end
     end
   end
 end

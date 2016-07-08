@@ -7,11 +7,11 @@ module Tree
     end
 
     def all_reviewers
-      built_tree.parents.map(&:membership)
+      built_tree.parents.map(&:membership) - [target]
     end
 
     def all_reports
-      built_tree.all_children.map(&:membership)
+      built_tree.all_children.map(&:membership) - [target]
     end
 
     def direct_reports
@@ -36,8 +36,9 @@ module Tree
 
     def build_parent_nodes(tree)
       current_node = tree
+      seen_nodes = Set.new
 
-      while current_node.membership.reviewer
+      while current_node.membership.reviewer && seen_nodes.add?(current_node.membership)
         current_node.parent = Node.new(current_node.membership.reviewer)
         current_node = current_node.parent
       end
@@ -47,8 +48,10 @@ module Tree
 
     def build_child_nodes(tree)
       frontier = [tree]
+      seen_nodes = Set.new
 
       while node = frontier.shift
+        next unless seen_nodes.add?(node.membership)
         child_memberships = memberships_under_reviewer(node.membership)
         child_memberships.each do |membership|
           child_node = Node.new(membership)
