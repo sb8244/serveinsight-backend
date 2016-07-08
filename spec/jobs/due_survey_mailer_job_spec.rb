@@ -60,6 +60,20 @@ RSpec.describe DueSurveyMailerJob, type: :job do
         { "_aj_globalid" => due_1_day2.to_global_id.to_s }
       ])
     end
+
+    it "doesn't send for completed surveys" do
+      due_1_day.update!(completed_at: Time.now)
+      expect {
+        fake_job
+      }.to change { job_count(ActionMailer::DeliveryJob) }.from(0).to(1)
+    end
+
+    it "doesn't send for missed surveys" do
+      due_1_day.update!(missed: true)
+      expect {
+        fake_job
+      }.to change { job_count(ActionMailer::DeliveryJob) }.from(0).to(1)
+    end
   end
 
   context "when days=0" do
