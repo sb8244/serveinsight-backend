@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "hello@serveinsight.com"
+  default from: '"Serve Insight" <hello@serveinsight.com>'
   layout 'mailer'
 end
