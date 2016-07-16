@@ -92,6 +92,25 @@ RSpec.describe Api::CommentsController, type: :controller do
         end
       end
 
+      it "doesn't email the writer of the answer who wrote the comment" do
+        expect {
+          post :create, comment: "No mentions", comment_grant: CommentGrant.encode(answer)
+        }.not_to change { job_count(ActionMailer::DeliveryJob) }
+      end
+
+      context "the answer author isn't the commenter" do
+        before { answer.update!(organization_membership: teammate) }
+
+        it "emails the writer of the answer" do
+          expect {
+            post :create, comment: "No mentions", comment_grant: CommentGrant.encode(answer)
+          }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+
+          args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+          expect(args[0]["to"]).to eq({ "_aj_globalid" => teammate.to_global_id.to_s })
+        end
+      end
+
       context "with previous comments on the answer" do
         let!(:comment1) { FactoryGirl.create(:comment, commentable: answer, organization_membership: teammate2) }
         let!(:comment2) { FactoryGirl.create(:comment, commentable: answer, organization_membership: teammate) }

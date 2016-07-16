@@ -19,7 +19,7 @@ class Api::CommentsController < Api::BaseController
         notified = notify_previous_commenters!(comment, mentioned: mentioned_memberships)
         mention_notified = create_mention_notifications!(comment, mentioned: mentioned_memberships, already_notified: notified)
         create_comment_notification!(comment, already_notified: notified + mention_notified)
-        email_previous_commenters(comment)
+        email_commenters_and_author(comment)
       end
     end
   end
@@ -81,9 +81,11 @@ class Api::CommentsController < Api::BaseController
                             distinct
   end
 
-  def email_previous_commenters(comment)
+  def email_commenters_and_author(comment)
     previous_commenters = previous_commenters_except_current(comment)
-    previous_commenters.each do |commenter|
+    to_email = previous_commenters + [comment.commentable.organization_membership] - [current_organization_membership]
+
+    to_email.uniq.each do |commenter|
       NotificationMailer.comment_added(comment: comment, to: commenter).deliver_later
     end
   end
