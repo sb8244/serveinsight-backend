@@ -134,6 +134,19 @@ RSpec.describe Api::NotificationsController, type: :controller do
         end
       end
     end
+
+    describe "insight.reviewed type" do
+      it "includes the correct template for type=insight.reviewed" do
+        membership.notifications.create!(notification_type: "insight.reviewed", notification_details: {
+          survey_instance_id: -1,
+          survey_instance_title: "Title",
+          author_name: "Boss man"
+        })
+
+        get :index
+        expect(response_json[0][:text]).to eq("Boss man reviewed an Insight: Title")
+      end
+    end
   end
 
   describe "POST complete" do
