@@ -78,5 +78,17 @@ RSpec.describe Api::ReviewableSurveysController, type: :controller do
         post :mark_reviewed, id: manager_survey.id
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "creates a notification for the submitter" do
+      expect {
+        post :mark_reviewed, id: direct_survey.id
+      }.to change { direct_report.notifications.where(notification_type: "insight.reviewed").count }.by(1)
+
+      expect(direct_report.notifications.last.notification_details).to eq(
+        "survey_instance_id" => direct_survey.id,
+        "survey_instance_title" => direct_survey.survey_template.name,
+        "author_name" => membership.name
+      )
+    end
   end
 end

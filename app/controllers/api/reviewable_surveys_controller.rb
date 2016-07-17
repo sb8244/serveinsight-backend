@@ -11,6 +11,7 @@ class Api::ReviewableSurveysController < Api::BaseController
   def mark_reviewed
     SurveyInstance.transaction do
       reviewable_survey.update!(reviewed_at: Time.now)
+      notify_survey_submitter!(reviewable_survey)
     end
 
     head :no_content
@@ -37,5 +38,16 @@ class Api::ReviewableSurveysController < Api::BaseController
     current_organization.survey_instances.find(params[:id]).tap do |instance|
       raise ActiveRecord::RecordNotFound unless instance.organization_membership.managed_by?(current_organization_membership)
     end
+  end
+
+  def notify_survey_submitter!(survey)
+    survey.organization_membership.notifications.create!(
+      notification_type: "insight.reviewed",
+      notification_details: {
+        survey_instance_id: survey.id,
+        survey_instance_title: survey.survey_template.name,
+        author_name: current_organization_membership.name
+      }
+    )
   end
 end
