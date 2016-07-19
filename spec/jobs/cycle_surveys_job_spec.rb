@@ -43,10 +43,33 @@ RSpec.describe CycleSurveysJob, type: :job do
     }.not_to change { due1_instance1.reload.missed? }.from(false)
   end
 
+  it "doesn't create notifications for complete instances" do
+    due1_instance1.update!(completed_at: Time.now)
+    expect {
+      subject
+    }.not_to change { due1_instance1.organization_membership.notifications.count }
+  end
+
   it "sets missed on due survey instances" do
     expect {
       subject
     }.to change { due1_instance1.reload.missed? }.from(false).to(true)
+  end
+
+  it "creates notifications for missed instances" do
+    expect {
+      subject
+    }.to change { due1_instance1.organization_membership.notifications.count }.by(1)
+
+    notification = due1_instance1.organization_membership.notifications.last
+    expect(notification.attributes).to include(
+      "notification_type" => "insight.missed",
+      "notification_details" => {
+        "survey_instance_id" => due1_instance1.id,
+        "survey_instance_title" => due1.name,
+        "survey_instance_due" => due1_instance1.due_at.strftime("%FT%T.%LZ")
+      }
+    )
   end
 
   it "creates CreateSurveyInstanceJob for due templates" do
