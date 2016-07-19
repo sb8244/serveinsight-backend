@@ -8,6 +8,14 @@ class NotificationMailer < ApplicationMailer
     mail(to: manager.email, subject: "Serve Insight: Insight submitted for your review")
   end
 
+  def insight_reviewed(manager:, survey_instance:)
+    @report_member = survey_instance.organization_membership
+    @manager = manager
+    @survey_instance = survey_instance
+    @title = survey_instance.survey_template.name
+    mail(to: @report_member.email, subject: "Serve Insight: Insight reviewed")
+  end
+
   def passup_submitted(passup:)
     @report_member = passup.passed_up_by
     @manager = passup.passed_up_to

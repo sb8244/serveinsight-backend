@@ -6,6 +6,10 @@ class NotificationMailerPreview < ActionMailer::Preview
     NotificationMailer.direct_report_submitted(report: report, manager: manager, survey_instance: instance)
   end
 
+  def insight_reviewed
+    NotificationMailer.insight_reviewed(manager: OrganizationMembership.second, survey_instance: SurveyInstance.first)
+  end
+
   def passup_submitted
     passup = Passup.first
     NotificationMailer.passup_submitted(passup: passup)

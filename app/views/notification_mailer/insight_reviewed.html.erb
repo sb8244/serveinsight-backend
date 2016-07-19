@@ -1,0 +1,48 @@
+<table class="jumbotron" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td class="jumbotron_cell" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+              <tbody>
+                <tr>
+                  <td width="580" align="center" valign="top">
+            <![endif]-->
+            <div class="col-3">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <h4><%= @manager.name %> has reviewed your Insight!</h4>
+                      <p class="lead">
+                        <a href="<%= completed_survey_url(@survey_instance.id) %>"><%= @title %></a> has been reviewed. There is no action necessary at this time.
+                      </p>
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-3 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.jumbotron_cell -->
+    </tr>
+  </tbody>
+</table><!-- /.jumbotron -->
