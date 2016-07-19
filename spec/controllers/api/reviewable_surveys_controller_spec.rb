@@ -14,7 +14,7 @@ RSpec.describe Api::ReviewableSurveysController, type: :controller do
     membership.update!(reviewer: top_manager)
   end
 
-  REVIEWABLE_DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :completed_at, :goals_section,
+  REVIEWABLE_DETAILED_KEYS = [:id, :due_at, :title, :completed, :locked, :missed, :completed_at, :goals_section,
                               :previous_goals, :goals, :questions, :organization_membership, :comment_grant, :iteration, :comments]
 
   let!(:direct_survey) { FactoryGirl.create(:survey_instance, organization_membership: direct_report, reviewed_at: nil, completed_at: Time.now) }
