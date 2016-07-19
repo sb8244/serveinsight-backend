@@ -1,5 +1,5 @@
 class Plain::SurveyInstanceSerializer < ActiveModel::Serializer
-  attributes :id, :due_at, :completed?, :locked?, :missed?, :title, :completed_at, :comment_grant, :iteration
+  attributes :id, :due_at, :completed?, :locked?, :missed?, :title, :completed_at, :reviewed_at, :comment_grant, :iteration
 
   def completed?
     object.completed_at.present?
