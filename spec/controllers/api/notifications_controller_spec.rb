@@ -157,7 +157,7 @@ RSpec.describe Api::NotificationsController, type: :controller do
         })
 
         get :index
-        expect(response_json[0][:text]).to eq("Missed an Insight: Title")
+        expect(response_json[0][:text]).to eq("Insight overdue: Title")
       end
     end
   end

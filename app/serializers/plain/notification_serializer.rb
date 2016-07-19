@@ -22,7 +22,7 @@ class Plain::NotificationSerializer < ActiveModel::Serializer
   def insight_missed_text
     insight_title = object.notification_details["survey_instance_title"]
 
-    "Missed an Insight: #{insight_title}"
+    "Insight overdue: #{insight_title}"
   end
 
   def comment_text
