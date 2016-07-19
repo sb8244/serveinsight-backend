@@ -55,6 +55,16 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
         expect(response).to be_success
         expect(response_json.map { |h| h[:id] }).to eq([instance1.id, instance3.id])
       end
+
+      context "with only_missed parameter" do
+        it "only returns due missed surveys" do
+          instance2.update!(missed: true)
+          instance3 = membership.survey_instances.create!(survey_template: survey_template2, iteration: 2, due_at: 5.minutes.from_now)
+          get :index, due: true, only_missed: true
+          expect(response).to be_success
+          expect(response_json.map { |h| h[:id] }).to eq([instance2.id])
+        end
+      end
     end
   end
 

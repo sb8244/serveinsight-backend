@@ -15,6 +15,10 @@ class SurveyInstance < ActiveRecord::Base
     where(missed: false)
   end
 
+  def self.missed
+    where(missed: true)
+  end
+
   def self.completed
     where.not(completed_at: nil)
   end
