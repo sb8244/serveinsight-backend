@@ -49,5 +49,7 @@ class Api::ReviewableSurveysController < Api::BaseController
         author_name: current_organization_membership.name
       }
     )
+
+    NotificationMailer.insight_reviewed(manager: current_organization_membership, survey_instance: survey).deliver_later
   end
 end

@@ -79,7 +79,7 @@ RSpec.describe Api::ReviewableSurveysController, type: :controller do
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "creates a notification for the submitter" do
+    it "creates a notification for the Insight submitter" do
       expect {
         post :mark_reviewed, id: direct_survey.id
       }.to change { direct_report.notifications.where(notification_type: "insight.reviewed").count }.by(1)
@@ -89,6 +89,19 @@ RSpec.describe Api::ReviewableSurveysController, type: :controller do
         "survey_instance_title" => direct_survey.survey_template.name,
         "author_name" => membership.name
       )
+    end
+
+    it "emails the Insight submitter" do
+      expect {
+        post :mark_reviewed, id: direct_survey.id
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+      args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+      expect(args).to eq([{
+        "manager" => { "_aj_globalid" => membership.to_global_id.to_s },
+        "survey_instance" => { "_aj_globalid" => direct_survey.to_global_id.to_s },
+        "_aj_symbol_keys" => ["manager", "survey_instance"]
+      }])
     end
   end
 end
