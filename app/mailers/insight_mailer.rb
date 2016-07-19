@@ -21,4 +21,11 @@ class InsightMailer < ApplicationMailer
 
     mail(to: instance.organization_membership.email, subject: "Serve Insight: Insight due #{@subject_string}")
   end
+
+  def insight_overdue(instance)
+    @instance = instance
+    @title = instance.survey_template.name
+    @questions = instance.string_questions
+    mail(to: instance.organization_membership.email, subject: "Serve Insight: Insight overdue")
+  end
 end
