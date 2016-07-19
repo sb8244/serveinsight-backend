@@ -59,7 +59,7 @@ RSpec.describe CycleSurveysJob, type: :job do
   it "creates notifications for missed instances" do
     expect {
       subject
-    }.to change { due1_instance1.organization_membership.notifications.count }.by(1)
+    }.to change { Notification.count }.by(2)
 
     notification = due1_instance1.organization_membership.notifications.last
     expect(notification.attributes).to include(
@@ -70,6 +70,28 @@ RSpec.describe CycleSurveysJob, type: :job do
         "survey_instance_due" => due1_instance1.due_at.strftime("%FT%T.%LZ")
       }
     )
+
+    notification = due2_instance1.organization_membership.notifications.last
+    expect(notification.attributes).to include(
+      "notification_type" => "insight.missed",
+      "notification_details" => {
+        "survey_instance_id" => due2_instance1.id,
+        "survey_instance_title" => due2.name,
+        "survey_instance_due" => due2_instance1.due_at.strftime("%FT%T.%LZ")
+      }
+    )
+  end
+
+  it "sends emails for overdue instances" do
+    expect {
+      subject
+    }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+    args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+    expect(args).to eq([
+      { "_aj_globalid" => due1_instance1.to_global_id.to_s },
+      { "_aj_globalid" => due2_instance1.to_global_id.to_s }
+    ])
   end
 
   it "creates CreateSurveyInstanceJob for due templates" do

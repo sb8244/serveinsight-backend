@@ -32,6 +32,7 @@ class CycleSurveysJob < ActiveJob::Base
           survey_instance_due: instance.due_at
         }
       )
+      InsightMailer.insight_overdue(instance).deliver_later
     end
   end
 end
