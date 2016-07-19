@@ -11,6 +11,7 @@ gem 'redis-namespace'
 gem 'sinatra', :require => nil
 gem 'foreman'
 gem 'puma'
+gem 'newrelic_rpm'
 
 gem 'kaminari'
 gem 'indefinite_article'
