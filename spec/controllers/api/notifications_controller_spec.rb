@@ -147,6 +147,19 @@ RSpec.describe Api::NotificationsController, type: :controller do
         expect(response_json[0][:text]).to eq("Boss man reviewed an Insight: Title")
       end
     end
+
+    describe "insight.missed type" do
+      it "includes the correct template for type=insight.missed" do
+        membership.notifications.create!(notification_type: "insight.missed", notification_details: {
+          survey_instance_id: -1,
+          survey_instance_title: "Title",
+          survey_instance_due: "2016-06-09T00:00:00.000Z"
+        })
+
+        get :index
+        expect(response_json[0][:text]).to eq("Missed an Insight: Title")
+      end
+    end
   end
 
   describe "POST complete" do

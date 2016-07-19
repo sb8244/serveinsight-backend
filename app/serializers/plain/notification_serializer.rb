@@ -7,6 +7,7 @@ class Plain::NotificationSerializer < ActiveModel::Serializer
     return review_text if object.notification_type == "review"
     return passup_text if object.notification_type == "passup"
     return insight_reviewed_text if object.notification_type == "insight.reviewed"
+    return insight_missed_text if object.notification_type == "insight.missed"
   end
 
   private
@@ -16,6 +17,12 @@ class Plain::NotificationSerializer < ActiveModel::Serializer
     insight_title = object.notification_details["survey_instance_title"]
 
     "#{author_name} reviewed an Insight: #{insight_title}"
+  end
+
+  def insight_missed_text
+    insight_title = object.notification_details["survey_instance_title"]
+
+    "Missed an Insight: #{insight_title}"
   end
 
   def comment_text
