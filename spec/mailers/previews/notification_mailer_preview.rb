@@ -44,4 +44,9 @@ class NotificationMailerPreview < ActionMailer::Preview
     mention = Mention.where(mentionable_type: "Comment").first
     NotificationMailer.mentioned(mention: mention)
   end
+
+  def mentioned_shoutout
+    mention = Mention.where(mentionable_type: "Shoutout").first
+    NotificationMailer.mentioned(mention: mention)
+  end
 end

@@ -1,0 +1,42 @@
+class Api::ShoutoutsController < Api::BaseController
+  def create
+    return no_shouted_people_response if shouted_people.empty?
+    create_shoutouts!
+    head :no_content
+  end
+
+  private
+
+  def no_shouted_people_response
+    render json: { error: "Shoutouts must include at least one mention" }, status: :unprocessable_entity
+  end
+
+  def create_shoutouts!
+    Shoutout.transaction do
+      shouted_people.each do |shouted_person|
+        shoutout = shouted_person.shoutouts.create!(content: shoutout_content, shouted_by: current_organization_membership)
+        Mention::Creator.new(shoutout, current_organization_membership).create_mention_for!(shouted_person)
+        create_notification!(shoutout, shouted_person)
+      end
+    end
+  end
+
+  def shoutout_content
+    @shoutout_content ||= params.fetch(:content, "")
+  end
+
+  def shouted_people
+    @shouted_people ||= Mention::Creator.new(nil, current_organization_membership).mentioned_people(shoutout_content)
+  end
+
+  def create_notification!(shoutout, shouted_person)
+    shouted_person.notifications.create!(
+      notification_type: "shoutout",
+      notification_details: {
+        shoutout_id: shoutout.id,
+        content: shoutout.content,
+        author_name: current_organization_membership.name
+      }
+    )
+  end
+end

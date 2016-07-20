@@ -1,0 +1,86 @@
+require "rails_helper"
+
+RSpec.describe Api::ShoutoutsController, type: :controller do
+  let!(:user) { FactoryGirl.create(:user) }
+  let!(:organization) { FactoryGirl.create(:organization) }
+  let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization, mention_name: "Me") }
+  let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "teammate") }
+  let!(:teammate2) { FactoryGirl.create(:organization_membership, organization: organization, mention_name: "teammate2") }
+
+  before(:each) {
+    request.headers['Authorization'] = "Bearer #{user.auth_token}"
+    request.env["HTTP_ACCEPT"] = "application/json"
+  }
+
+  describe "POST create" do
+    it "creates a new Shoutout successfully" do
+      expect {
+        post :create, content: "@Teammate did a great job"
+        expect(response).to be_success
+      }.to change { teammate.shoutouts.count }.by(1)
+    end
+
+    it "422 without a Mention" do
+      expect {
+        post :create, content: "@Teammate4 did a great job"
+        expect(response.status).to eq(422)
+      }.not_to change { Shoutout.count }.from(0)
+    end
+
+    it "422 with only author mentioned" do
+      expect {
+        post :create, content: "@me did a great job"
+        expect(response.status).to eq(422)
+      }.not_to change { Shoutout.count }.from(0)
+    end
+
+    it "creates Mentions for everyone in the shoutout" do
+      expect {
+        expect {
+          post :create, content: "@Teammate @teammate2 did a great job"
+        }.to change { teammate2.mentions.count }.by(1)
+      }.to change { teammate.mentions.count }.by(1)
+    end
+
+    it "doesn't Mention the author" do
+      expect {
+        post :create, content: "@Teammate @me did a great job"
+      }.not_to change { membership.mentions.count }.from(0)
+    end
+
+    it "creates notifications for everyone in the shoutout" do
+      expect {
+        expect {
+          post :create, content: "@Teammate @teammate2 did a great job"
+        }.to change { teammate2.notifications.where(notification_type: "shoutout").count }.by(1)
+      }.to change { teammate.notifications.count }.by(1)
+
+      expect(Notification.last.attributes).to include(
+        "notification_type" => "shoutout",
+        "notification_details" => {
+          "shoutout_id" => Shoutout.last.id,
+          "content" => "@Teammate @teammate2 did a great job",
+          "author_name" => membership.name
+        }
+      )
+    end
+
+    it "doesn't notify the author" do
+      expect {
+        post :create, content: "@Teammate @me did a great job"
+      }.not_to change { membership.notifications.count }.from(0)
+    end
+
+    it "creates mailers for everyone in the shoutout" do
+      expect {
+        post :create, content: "@Teammate @teammate2 did a great job"
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+    end
+
+    it "doesn't mail the author" do
+      expect {
+        post :create, content: "@Teammate @teammate2 @me did a great job"
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+    end
+  end
+end

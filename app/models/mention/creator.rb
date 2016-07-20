@@ -16,11 +16,15 @@ Mention::Creator = Struct.new(:mentionable, :organization_membership) do
     mentioned_people
   end
 
+  def create_mention_for!(mentioned)
+    mention = mentionable.mentions.create!(organization_membership: mentioned, mentioned_by: organization_membership)
+    NotificationMailer.mentioned(mention: mention).deliver_later
+  end
+
   def call(text)
     mentioned_people = mentioned_people(text)
     mentioned_people.each do |mentioned|
-      mention = mentionable.mentions.create!(organization_membership: mentioned, mentioned_by: organization_membership)
-      NotificationMailer.mentioned(mention: mention).deliver_later
+      create_mention_for!(mentioned)
     end
     mentioned_people
   end
