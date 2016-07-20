@@ -43,6 +43,16 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
     end
   end
 
+  describe "GET show" do
+    let!(:shoutout) { membership.shoutouts.create!(content: "test", shouted_by: teammate) }
+
+    it "returns shoutouts" do
+      get :show, id: shoutout.id
+      expect(response).to be_success
+      expect(response_json.keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by])
+    end
+  end
+
   describe "POST create" do
     it "creates a new Shoutout successfully" do
       expect {

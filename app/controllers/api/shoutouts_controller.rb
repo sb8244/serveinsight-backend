@@ -3,6 +3,10 @@ class Api::ShoutoutsController < Api::BaseController
     respond_with current_organization_membership.shoutouts.order(id: :desc).page(page).per(10)
   end
 
+  def show
+    respond_with current_organization_membership.shoutouts.find(params[:id])
+  end
+
   def create
     return no_shouted_people_response if shouted_people.empty?
     create_shoutouts!
