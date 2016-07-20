@@ -136,6 +136,18 @@ RSpec.describe Api::OrganizationMembershipsController, type: :controller do
         }.to change { organization_membership.reload.reviewer }.from(nil).to(organization_membership2)
       end
 
+      it "doesn't update admin for the current user" do
+        expect {
+          put :bulk_update, data: [{ id: organization_membership.id, admin: false }]
+        }.not_to change { organization_membership.reload.admin? }.from(true)
+      end
+
+      it "updates admin" do
+        expect {
+          put :bulk_update, data: [{ id: organization_membership2.id, admin: true }]
+        }.to change { organization_membership2.reload.admin? }.from(false).to(true)
+      end
+
       context "when reviewer_id = user_id" do
         it "doesn't updates the reviewer_id" do
           expect {

@@ -19,6 +19,7 @@ class Api::OrganizationMembershipsController < Api::BaseController
     ActiveRecord::Base.transaction do
       bulk_update_params.fetch(:data, []).each do |params|
         membership = current_organization.organization_memberships.find_by(id: params[:id])
+        params.delete(:admin) if params[:id].to_s == current_organization_membership.id.to_s
         membership.update!(params)
       end
     end
@@ -31,7 +32,7 @@ class Api::OrganizationMembershipsController < Api::BaseController
   private
 
   def bulk_update_params
-    params.permit(data: [:id, :name, :reviewer_id])
+    params.permit(data: [:id, :name, :reviewer_id, :admin])
   end
 
   def organization_memberships
