@@ -1,4 +1,8 @@
 class Api::ShoutoutsController < Api::BaseController
+  def index
+    respond_with current_organization_membership.shoutouts.order(id: :desc).page(page).per(10)
+  end
+
   def create
     return no_shouted_people_response if shouted_people.empty?
     create_shoutouts!
@@ -6,6 +10,10 @@ class Api::ShoutoutsController < Api::BaseController
   end
 
   private
+
+  def page
+    params.fetch(:page, 1)
+  end
 
   def no_shouted_people_response
     render json: { errors: ["Shoutouts must include at least one mention"] }, status: :unprocessable_entity

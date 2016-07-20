@@ -47,7 +47,7 @@ Rails.application.routes.draw do
 
     resources :answers, only: [:show]
     resources :goals, only: [:show]
-    resources :shoutouts, only: [:create]
+    resources :shoutouts, only: [:index, :show, :create]
   end
 
   post "/auth/:provider/callback", to: "auth#callback"

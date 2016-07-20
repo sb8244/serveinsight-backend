@@ -12,6 +12,37 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
+  describe "GET index" do
+    let!(:shoutout) { membership.shoutouts.create!(content: "test", shouted_by: teammate) }
+
+    it "returns shoutouts" do
+      get :index
+      expect(response).to be_success
+      expect(response_json.count).to eq(1)
+      expect(response_json[0].keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by])
+    end
+
+    describe "paging" do
+      let!(:shoutouts) do
+        24.times do |i|
+          membership.shoutouts.create!(content: "test #{i}", shouted_by: teammate)
+        end
+      end
+
+      it "pages 10 shoutouts at a time" do
+        get :index
+        expect(response_json.map { |h| h[:id] }).to eq(Shoutout.order(id: :desc).limit(10).pluck(:id))
+        expect(response_json.count).to eq(10)
+      end
+
+      it "gives the last 5 shoutouts on the last page" do
+        get :index, page: 3
+        expect(response_json.count).to eq(5)
+        expect(response_json.map { |h| h[:id] }).to eq(Shoutout.order(id: :desc).limit(10).offset(20).pluck(:id))
+      end
+    end
+  end
+
   describe "POST create" do
     it "creates a new Shoutout successfully" do
       expect {
