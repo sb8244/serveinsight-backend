@@ -8,6 +8,7 @@ class Plain::NotificationSerializer < ActiveModel::Serializer
     return passup_text if object.notification_type == "passup"
     return insight_reviewed_text if object.notification_type == "insight.reviewed"
     return insight_missed_text if object.notification_type == "insight.missed"
+    return shoutout_text if object.notification_type == "shoutout"
   end
 
   private
@@ -23,6 +24,13 @@ class Plain::NotificationSerializer < ActiveModel::Serializer
     insight_title = object.notification_details["survey_instance_title"]
 
     "Insight overdue: #{insight_title}"
+  end
+
+  def shoutout_text
+    author_name = object.notification_details["author_name"]
+    content = object.notification_details["content"]
+
+    "#{author_name} gave you a shoutout! \"#{content.truncate(23)}\""
   end
 
   def comment_text
