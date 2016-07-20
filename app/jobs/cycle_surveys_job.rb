@@ -23,10 +23,10 @@ class CycleSurveysJob < ActiveJob::Base
     instances_scope = survey_template.survey_instances.where(id: instances.map(&:id))
     instances_scope.update_all(missed: true)
 
-    notify_instances!(instances)
+    notify_instances!(instances, survey_template)
   end
 
-  def notify_instances!(instances)
+  def notify_instances!(instances, survey_template)
     instances.each do |instance|
       instance.organization_membership.notifications.create!(
         notification_type: "insight.missed",
