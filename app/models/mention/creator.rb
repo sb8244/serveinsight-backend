@@ -16,9 +16,9 @@ Mention::Creator = Struct.new(:mentionable, :organization_membership) do
     mentioned_people
   end
 
-  def create_mention_for!(mentioned)
+  def create_mention_for!(mentioned, send_mail: true)
     mention = mentionable.mentions.create!(organization_membership: mentioned, mentioned_by: organization_membership)
-    NotificationMailer.mentioned(mention: mention).deliver_later
+    NotificationMailer.mentioned(mention: mention).deliver_later if send_mail
   end
 
   def call(text)
