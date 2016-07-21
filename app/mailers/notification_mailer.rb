@@ -41,6 +41,6 @@ class NotificationMailer < ApplicationMailer
     @shoutout = shoutout
     @shouted_person = membership
     @shouted_by = shoutout.shouted_by
-    mail(to: @membership.email, subject: "Serve Insight: #{@shouted_by.name} gave you a shoutout!")
+    mail(to: membership.email, subject: "Serve Insight: #{@shouted_by.name} gave you a shoutout!")
   end
 end

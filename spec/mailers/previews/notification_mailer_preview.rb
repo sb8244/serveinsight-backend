@@ -46,6 +46,6 @@ class NotificationMailerPreview < ActionMailer::Preview
   end
 
   def shouted
-    NotificationMailer.shouted(shoutout: Shoutout.first)
+    NotificationMailer.shouted(shoutout: Shoutout.first, membership: OrganizationMembership.first)
   end
 end
