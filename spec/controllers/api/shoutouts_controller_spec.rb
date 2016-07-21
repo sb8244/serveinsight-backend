@@ -13,7 +13,11 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
   }
 
   describe "GET index" do
-    let!(:shoutout) { membership.shoutouts.create!(content: "test", shouted_by: teammate) }
+    let!(:shoutout) do
+      Shoutout.create!(content: "test", shouted_by: teammate).tap do |shoutout|
+        Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
+      end
+    end
 
     it "returns shoutouts" do
       get :index
@@ -25,7 +29,9 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
     describe "paging" do
       let!(:shoutouts) do
         24.times do |i|
-          membership.shoutouts.create!(content: "test #{i}", shouted_by: teammate)
+          Shoutout.create!(content: "test", shouted_by: teammate).tap do |shoutout|
+            Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
+          end
         end
       end
 
@@ -44,7 +50,11 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
   end
 
   describe "GET show" do
-    let!(:shoutout) { membership.shoutouts.create!(content: "test", shouted_by: teammate) }
+    let!(:shoutout) do
+      Shoutout.create!(content: "test", shouted_by: teammate).tap do |shoutout|
+        Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
+      end
+    end
 
     it "returns shoutouts" do
       get :show, id: shoutout.id
@@ -56,9 +66,9 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
   describe "POST create" do
     it "creates a new Shoutout successfully" do
       expect {
-        post :create, content: "@Teammate did a great job"
+        post :create, content: "@Teammate @Teammate2 did a great job"
         expect(response).to be_success
-      }.to change { teammate.shoutouts.count }.by(1)
+      }.to change { Shoutout.count }.by(1)
     end
 
     it "422 without a Mention" do
