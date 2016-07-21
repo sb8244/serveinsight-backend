@@ -23,7 +23,7 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
       get :index
       expect(response).to be_success
       expect(response_json.count).to eq(1)
-      expect(response_json[0].keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by, :comment_grant, :passup_grant])
+      expect(response_json[0].keys).to match_array([:id, :created_at, :content, :organization_membership_id, :organization_membership, :comment_grant, :passup_grant])
     end
 
     describe "paging" do
@@ -59,7 +59,8 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
     it "returns shoutouts" do
       get :show, id: shoutout.id
       expect(response).to be_success
-      expect(response_json.keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by, :comments, :comment_grant, :passup_grant])
+      expect(response_json.keys).to match_array([:id, :created_at, :content, :organization_membership_id, :organization_membership,
+                                                 :comments, :comment_grant, :passup_grant, :passed_up])
     end
   end
 

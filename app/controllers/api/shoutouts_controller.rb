@@ -1,6 +1,6 @@
 class Api::ShoutoutsController < Api::BaseController
   def index
-    respond_with current_organization_membership.shoutouts.order(id: :desc).page(page).per(10), include_comments: false
+    respond_with current_organization_membership.shoutouts.order(id: :desc).page(page).per(10), include_comments: false, include_passed_up: false
   end
 
   def show
