@@ -36,4 +36,11 @@ class NotificationMailer < ApplicationMailer
     @mentioned_by = mention.mentioned_by
     mail(to: @mentioned.email, subject: "Serve Insight: Mentioned in #{ mention.mentionable_type.downcase.indefinitize }")
   end
+
+  def shouted(shoutout:)
+    @shoutout = shoutout
+    @shouted_person = shoutout.organization_membership
+    @shouted_by = shoutout.shouted_by
+    mail(to: @shouted_person.email, subject: "Serve Insight: #{@shouted_by.name} gave you a shoutout!")
+  end
 end

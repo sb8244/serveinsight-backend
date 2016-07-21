@@ -45,6 +45,12 @@ RSpec.describe Mention::Creator do
       )
     end
 
+    it "can return mentioned people without creating mentions" do
+      expect {
+        expect(subject.mentioned_people("Hi @Person2")).to eq([organization_membership2])
+      }.not_to change { Mention.count }.from(0)
+    end
+
     it "doesn't need other content" do
       expect {
         subject.call("@Person2")

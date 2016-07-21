@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160703144332) do
+ActiveRecord::Schema.define(version: 20160721010018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,17 @@ ActiveRecord::Schema.define(version: 20160703144332) do
 
   add_index "questions", ["organization_id"], name: "index_questions_on_organization_id", using: :btree
   add_index "questions", ["survey_template_id"], name: "index_questions_on_survey_template_id", using: :btree
+
+  create_table "shoutouts", force: :cascade do |t|
+    t.integer  "shouted_by_id",   null: false
+    t.text     "content",         null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "organization_id", null: false
+  end
+
+  add_index "shoutouts", ["organization_id"], name: "index_shoutouts_on_organization_id", using: :btree
+  add_index "shoutouts", ["shouted_by_id"], name: "index_shoutouts_on_shouted_by_id", using: :btree
 
   create_table "survey_instances", force: :cascade do |t|
     t.integer  "organization_membership_id",                 null: false

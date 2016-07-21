@@ -25,6 +25,8 @@ RSpec.describe Api::PassupsController, type: :controller do
     FactoryGirl.create(:answer, survey_instance: instance, organization: organization, question: question)
   end
 
+  let!(:shoutout) { organization.shoutouts.create!(content: "test", shouted_by: teammate) }
+
   describe "GET index" do
     let!(:passup) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: goal) }
     let!(:passup2) { Passup.create!(organization: organization, passed_up_by: teammate, passed_up_to: membership, passupable: answer2) }
@@ -72,6 +74,7 @@ RSpec.describe Api::PassupsController, type: :controller do
   describe "POST create" do
     let(:request!) { post :create, passup_grant: PassupGrant.encode(answer) }
     let(:goal_request!) { post :create, passup_grant: PassupGrant.encode(goal) }
+    let(:shoutout_request!) { post :create, passup_grant: PassupGrant.encode(shoutout) }
 
     it "creates a passup for the answer" do
       expect {
@@ -87,6 +90,14 @@ RSpec.describe Api::PassupsController, type: :controller do
         expect(response).to be_success
       }.to change { boss.passups.count }.by(1)
       expect(Passup.last.passupable).to eq(goal)
+    end
+
+    it "creates a passup for the shoutout" do
+      expect {
+        shoutout_request!
+        expect(response).to be_success
+      }.to change { boss.passups.count }.by(1)
+      expect(Passup.last.passupable).to eq(shoutout)
     end
 
     it "creates a Notification" do

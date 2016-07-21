@@ -11,6 +11,7 @@ class OrganizationMembership < ActiveRecord::Base
   has_many :comments
   has_many :notifications
   has_many :mentions
+  has_many :shoutouts, through: :mentions, source: :mentionable, source_type: "Shoutout"
 
   validate :reviewer_id, :reviewer_is_not_user
 

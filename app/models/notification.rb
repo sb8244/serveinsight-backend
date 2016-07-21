@@ -1,7 +1,7 @@
 class Notification < ActiveRecord::Base
   belongs_to :organization_membership
 
-  validates :notification_type, inclusion: { in: %w(comment mention review passup insight.reviewed insight.missed) }
+  validates :notification_type, inclusion: { in: %w(comment mention review passup shoutout insight.reviewed insight.missed) }
 
   def self.pending
     where(status: "pending")

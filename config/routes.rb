@@ -47,6 +47,7 @@ Rails.application.routes.draw do
 
     resources :answers, only: [:show]
     resources :goals, only: [:show]
+    resources :shoutouts, only: [:index, :show, :create]
   end
 
   post "/auth/:provider/callback", to: "auth#callback"
@@ -67,5 +68,6 @@ Rails.application.routes.draw do
   get "/goals/*id", constraints: { id: /\d*/ }, as: :goal, to: "application#index"
   get "/surveys/completed/*id", constraints: { id: /\d*/ }, as: :completed_survey, to: "application#index"
   get "/surveys/*id", constraints: { id: /\d*/ }, as: :survey, to: "application#index"
+  get "/shoutouts/*id", constraints: { id: /\d*/ }, as: :shoutout, to: "application#index"
   root "application#index"
 end

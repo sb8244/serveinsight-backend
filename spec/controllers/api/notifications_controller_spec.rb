@@ -160,6 +160,19 @@ RSpec.describe Api::NotificationsController, type: :controller do
         expect(response_json[0][:text]).to eq("Insight overdue: Title")
       end
     end
+
+    describe "shoutout type" do
+      it "includes the correct template for type=shoutout" do
+        membership.notifications.create!(notification_type: "shoutout", notification_details: {
+          shoutout_id: -1,
+          content: "This is a long shoutout that only a few characters will be included in",
+          author_name: "John Smith"
+        })
+
+        get :index
+        expect(response_json[0][:text]).to eq('John Smith gave you a shoutout! "This is a long shout..."')
+      end
+    end
   end
 
   describe "POST complete" do
