@@ -20,7 +20,7 @@ class Api::ShoutoutsController < Api::BaseController
   end
 
   def no_shouted_people_response
-    render json: { errors: ["Shoutouts must include at least one mention"] }, status: :unprocessable_entity
+    render json: { errors: ["Shoutouts must include at least one @mention"] }, status: :unprocessable_entity
   end
 
   def create_shoutouts!
