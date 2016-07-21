@@ -14,7 +14,7 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
 
   describe "GET index" do
     let!(:shoutout) do
-      Shoutout.create!(content: "test", shouted_by: teammate).tap do |shoutout|
+      organization.shoutouts.create!(content: "test", shouted_by: teammate).tap do |shoutout|
         Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
       end
     end
@@ -23,13 +23,13 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
       get :index
       expect(response).to be_success
       expect(response_json.count).to eq(1)
-      expect(response_json[0].keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by])
+      expect(response_json[0].keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by, :comment_grant, :passup_grant])
     end
 
     describe "paging" do
       let!(:shoutouts) do
         24.times do |i|
-          Shoutout.create!(content: "test", shouted_by: teammate).tap do |shoutout|
+          organization.shoutouts.create!(content: "test", shouted_by: teammate).tap do |shoutout|
             Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
           end
         end
@@ -51,7 +51,7 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
 
   describe "GET show" do
     let!(:shoutout) do
-      Shoutout.create!(content: "test", shouted_by: teammate).tap do |shoutout|
+      organization.shoutouts.create!(content: "test", shouted_by: teammate).tap do |shoutout|
         Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
     it "returns shoutouts" do
       get :show, id: shoutout.id
       expect(response).to be_success
-      expect(response_json.keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by])
+      expect(response_json.keys).to match_array([:id, :created_at, :content, :shouted_by_id, :shouted_by, :comments, :comment_grant, :passup_grant])
     end
   end
 
@@ -68,21 +68,21 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
       expect {
         post :create, content: "@Teammate @Teammate2 did a great job"
         expect(response).to be_success
-      }.to change { Shoutout.count }.by(1)
+      }.to change { organization.shoutouts.count }.by(1)
     end
 
     it "422 without a Mention" do
       expect {
         post :create, content: "@Teammate4 did a great job"
         expect(response.status).to eq(422)
-      }.not_to change { Shoutout.count }.from(0)
+      }.not_to change { organization.shoutouts.count }.from(0)
     end
 
     it "422 with only author mentioned" do
       expect {
         post :create, content: "@me did a great job"
         expect(response.status).to eq(422)
-      }.not_to change { Shoutout.count }.from(0)
+      }.not_to change { organization.shoutouts.count }.from(0)
     end
 
     it "creates Mentions for everyone in the shoutout" do

@@ -9,7 +9,8 @@ class PassupSerializer < Plain::PassupSerializer
 
   PASSUPABLE_SERIALIZERS = {
     "Answer" => AnswerSerializer,
-    "Goal" => GoalSerializer
+    "Goal" => GoalSerializer,
+    "Shoutout" => ShoutoutSerializer
   }
 
   attributes :passup_grant

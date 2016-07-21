@@ -313,5 +313,17 @@ RSpec.describe Api::CommentsController, type: :controller do
         expect(response_json.keys).to match_array([:id, :organization_membership_id, :created_at, :comment, :author_name, :private])
       end
     end
+
+    context "for a Shoutout" do
+      let!(:shoutout) { organization.shoutouts.create!(content: "test", shouted_by: teammate) }
+      let(:request!) { post :create, comment: "Test", comment_grant: CommentGrant.encode(shoutout) }
+
+      it "creates a new comment" do
+        expect {
+          request!
+          expect(response).to be_success
+        }.to change { Comment.count }.by(1)
+      end
+    end
   end
 end

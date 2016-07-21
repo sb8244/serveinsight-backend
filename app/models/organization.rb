@@ -7,6 +7,7 @@ class Organization < ActiveRecord::Base
 
   has_many :answers
   has_many :goals
+  has_many :shoutouts
 
   validates :name, presence: true
 end

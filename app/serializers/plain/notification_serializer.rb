@@ -70,7 +70,8 @@ class Plain::NotificationSerializer < ActiveModel::Serializer
   FRIENDLY_TYPES = {
     "Answer" => "answer",
     "Goal" => "goal",
-    "SurveyInstance" => "Insight"
+    "SurveyInstance" => "Insight",
+    "Shoutout" => "shoutout"
   }
 
   def friendly_type(type)

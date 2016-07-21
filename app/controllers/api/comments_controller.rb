@@ -2,7 +2,8 @@ class Api::CommentsController < Api::BaseController
   COMMENTABLE_TYPES = {
     "answer" => "Answer",
     "survey" => "SurveyInstance",
-    "goal" => "Goal"
+    "goal" => "Goal",
+    "shoutout" => "Shoutout"
   }
 
   def create
@@ -49,6 +50,8 @@ class Api::CommentsController < Api::BaseController
       current_organization.survey_instances.find(comment_params[:commentable_id])
     when "Goal"
       current_organization.goals.find(comment_params[:commentable_id])
+    when "Shoutout"
+      current_organization.shoutouts.find(comment_params[:commentable_id])
     end
   end
 
