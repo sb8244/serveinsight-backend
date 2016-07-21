@@ -4,7 +4,7 @@ class Api::ShoutoutsController < Api::BaseController
   end
 
   def show
-    respond_with current_organization_membership.shoutouts.find(params[:id])
+    respond_with permissed_shoutout
   end
 
   def create
@@ -14,6 +14,19 @@ class Api::ShoutoutsController < Api::BaseController
   end
 
   private
+
+  def permissed_shoutout
+    current_organization.shoutouts.find(params[:id]).tap do |shoutout|
+      author = shoutout.shouted_by
+      has_access = author == current_organization_membership || author.managed_by?(current_organization_membership)
+      has_access ||= mentioned_ids(shoutout).include?(current_organization_membership.id)
+      raise ActiveRecord::RecordNotFound unless has_access
+    end
+  end
+
+  def mentioned_ids(shoutout)
+    shoutout.related_mentions.map(&:organization_membership_id)
+  end
 
   def page
     params.fetch(:page, 1)

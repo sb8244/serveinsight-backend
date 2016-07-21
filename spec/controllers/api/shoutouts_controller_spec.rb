@@ -51,16 +51,40 @@ RSpec.describe Api::ShoutoutsController, type: :controller do
 
   describe "GET show" do
     let!(:shoutout) do
-      organization.shoutouts.create!(content: "test", shouted_by: teammate).tap do |shoutout|
-        Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
-      end
+      organization.shoutouts.create!(content: "test", shouted_by: teammate)
     end
 
-    it "returns shoutouts" do
+    it "returns for the owner" do
+      shoutout.update!(shouted_by: membership)
       get :show, id: shoutout.id
       expect(response).to be_success
       expect(response_json.keys).to match_array([:id, :created_at, :content, :organization_membership_id, :organization_membership,
                                                  :comments, :comment_grant, :passup_grant, :passed_up])
+    end
+
+    it "returns for mentioned" do
+      Mention::Creator.new(shoutout, teammate).create_mention_for!(membership, send_mail: false)
+      get :show, id: shoutout.id
+      expect(response).to be_success
+    end
+
+    it "returns for mentioned in comments" do
+      comment = shoutout.comments.create!(organization_membership: teammate, comment: "X")
+      Mention::Creator.new(comment, teammate).create_mention_for!(membership, send_mail: false)
+      get :show, id: shoutout.id
+      expect(response).to be_success
+    end
+
+    it "returns for owner's reviewer" do
+      teammate.update!(reviewer: membership)
+      get :show, id: shoutout.id
+      expect(response).to be_success
+    end
+
+    it "is 404 otherwise" do
+      expect {
+        get :show, id: shoutout.id
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
