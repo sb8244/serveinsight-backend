@@ -41,7 +41,7 @@ class Api::ShoutoutsController < Api::BaseController
       shoutout = current_organization.shoutouts.create!(content: shoutout_content, shouted_by: current_organization_membership)
       shouted_people.each do |shouted_person|
         Mention::Creator.new(shoutout, current_organization_membership).create_mention_for!(shouted_person, send_mail: false)
-        NotificationMailer.shouted(shoutout: shoutout).deliver_later
+        NotificationMailer.shouted(shoutout: shoutout, membership: shouted_person).deliver_later
         create_notification!(shoutout, shouted_person)
       end
     end
