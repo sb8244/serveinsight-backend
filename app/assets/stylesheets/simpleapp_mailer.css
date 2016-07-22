@@ -257,7 +257,7 @@ body,
 .secondary_btn td,
 .icon_primary .icon_cell,
 .primary_pricing_box {
-  background-color: #2f68b4;
+  background-color: #484A47;
 }
 .jumbotron_cell,
 .footer_cell,
@@ -266,7 +266,7 @@ body,
 }
 .primary_btn td,
 .label .font_default {
-  background-color: #22aaa0;
+  background-color: #5BC989;
 }
 .icon_secondary .icon_cell {
   background-color: #e1e3e7;
@@ -309,7 +309,7 @@ a span,
 .text-secondary,
 .column_cell .text-secondary,
 .content_cell h2 .text-secondary {
-  color: #2f68b4;
+  color: #484A47;
 }
 .footer_cell a,
 .footer_cell a span {
