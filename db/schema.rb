@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160721010018) do
+ActiveRecord::Schema.define(version: 20160722050614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -193,7 +193,7 @@ ActiveRecord::Schema.define(version: 20160721010018) do
     t.datetime "updated_at",                       null: false
     t.integer  "iteration",         default: 0,    null: false
     t.datetime "next_due_at",                      null: false
-    t.integer  "weeks_between_due",                null: false
+    t.integer  "weeks_between_due"
   end
 
   add_index "survey_templates", ["organization_id"], name: "index_survey_templates_on_organization_id", using: :btree
