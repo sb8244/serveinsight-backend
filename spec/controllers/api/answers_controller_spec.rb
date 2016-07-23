@@ -52,7 +52,8 @@ RSpec.describe Api::AnswersController, type: :controller do
           comment_grant: CommentGrant.encode(answer),
           passup_grant: PassupGrant.encode(answer),
           passed_up: false,
-          comments: []
+          comments: [],
+          survey_instance_id: instance.id
         )
       end
     end

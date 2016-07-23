@@ -173,7 +173,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal1),
             passup_grant: PassupGrant.encode(goal1),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal1.survey_instance.id
           },
           {
             id: goal2.id,
@@ -185,7 +186,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal2),
             passup_grant: PassupGrant.encode(goal2),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal2.survey_instance.id
           }
         ])
       end
@@ -299,7 +301,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(answer3),
             passup_grant: PassupGrant.encode(answer3),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: answer3.survey_instance.id
           }
         ])
         expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
@@ -389,7 +392,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal1),
             passup_grant: PassupGrant.encode(goal1),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal1.survey_instance.id
           },
           {
             id: goal2.id,
@@ -401,7 +405,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal2),
             passup_grant: PassupGrant.encode(goal2),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal2.survey_instance.id
           }
         ])
       end
