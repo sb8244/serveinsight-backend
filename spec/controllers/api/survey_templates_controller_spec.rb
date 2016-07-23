@@ -124,6 +124,16 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
         post :create, params
       }.to change { job_count(CreateSurveyInstancesJob) }.by(1)
     end
+
+    context "with weeks_between_due=0" do
+      before { params[:weeks_between_due] = nil }
+
+      it "isn't recurring" do
+        post :create, params
+        expect(SurveyTemplate.last.recurring?).to eq(false)
+        expect(SurveyTemplate.last.weeks_between_due).to eq(nil)
+      end
+    end
   end
 
   describe "PUT update" do
