@@ -19,6 +19,10 @@ class SurveyInstance < ActiveRecord::Base
     where.not(missed_at: nil)
   end
 
+  def self.not_missed_within_days(days:)
+    where("missed_at IS NULL OR missed_at >= ?", days.days.ago)
+  end
+
   def self.completed
     where.not(completed_at: nil)
   end
