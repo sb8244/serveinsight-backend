@@ -48,22 +48,19 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
         expect(response_json.map { |h| h[:id] }).to eq([instance2.id, instance1.id])
       end
 
-      it "doesn't return missed surveys" do
-        instance2.update!(missed: true)
+      it "doesn't return missed surveys older than 2 days" do
+        instance2.update!(missed_at: 2.days.ago - 5.seconds)
         instance3 = membership.survey_instances.create!(survey_template: survey_template2, iteration: 2, due_at: 5.minutes.from_now)
         get :index, due: true
         expect(response).to be_success
         expect(response_json.map { |h| h[:id] }).to eq([instance1.id, instance3.id])
       end
 
-      context "with only_missed parameter" do
-        it "only returns due missed surveys" do
-          instance2.update!(missed: true)
-          instance3 = membership.survey_instances.create!(survey_template: survey_template2, iteration: 2, due_at: 5.minutes.from_now)
-          get :index, due: true, only_missed: true
-          expect(response).to be_success
-          expect(response_json.map { |h| h[:id] }).to eq([instance2.id])
-        end
+      it "does return missed surveys within 2 days" do
+        instance2.update!(missed_at: 2.days.ago + 5.seconds)
+        get :index, due: true
+        expect(response).to be_success
+        expect(response_json.map { |h| h[:id] }).to eq([instance2.id, instance1.id])
       end
     end
   end
@@ -173,7 +170,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal1),
             passup_grant: PassupGrant.encode(goal1),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal1.survey_instance.id
           },
           {
             id: goal2.id,
@@ -185,7 +183,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal2),
             passup_grant: PassupGrant.encode(goal2),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal2.survey_instance.id
           }
         ])
       end
@@ -299,7 +298,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(answer3),
             passup_grant: PassupGrant.encode(answer3),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: answer3.survey_instance.id
           }
         ])
         expect(response_json[:questions].second[:answers].map { |h| h[:id] }).to eq([answer1.id, answer2.id])
@@ -389,7 +389,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal1),
             passup_grant: PassupGrant.encode(goal1),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal1.survey_instance.id
           },
           {
             id: goal2.id,
@@ -401,7 +402,8 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
             comment_grant: CommentGrant.encode(goal2),
             passup_grant: PassupGrant.encode(goal2),
             passed_up: false,
-            comments: []
+            comments: [],
+            survey_instance_id: goal2.survey_instance.id
           }
         ])
       end
@@ -429,8 +431,15 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "doesn't include missed instances" do
-      instance2.update!(missed: true)
+    it "does include missed instances within 2 days" do
+      instance2.update!(missed_at: 2.days.ago + 5.seconds)
+      get :top_due
+      expect(response).to be_success
+      expect(response_json[:id]).to eq(instance2.id)
+    end
+
+    it "doesn't include missed instances older than 2 days" do
+      instance2.update!(missed_at: 2.days.ago - 5.seconds)
       get :top_due
       expect(response).to be_success
       expect(response_json[:id]).to eq(instance1.id)

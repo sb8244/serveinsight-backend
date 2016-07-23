@@ -69,7 +69,7 @@ RSpec.describe DueSurveyMailerJob, type: :job do
     end
 
     it "doesn't send for missed surveys" do
-      due_1_day.update!(missed: true)
+      due_1_day.update!(missed_at: Time.now)
       expect {
         fake_job
       }.to change { job_count(ActionMailer::DeliveryJob) }.from(0).to(1)

@@ -21,7 +21,7 @@ class CycleSurveysJob < ActiveJob::Base
     instances = survey_template.survey_instances.due.to_a
 
     instances_scope = survey_template.survey_instances.where(id: instances.map(&:id))
-    instances_scope.update_all(missed: true)
+    instances_scope.update_all(missed_at: Time.now)
 
     notify_instances!(instances, survey_template)
   end

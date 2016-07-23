@@ -12,15 +12,23 @@ class SurveyInstance < ActiveRecord::Base
   end
 
   def self.not_missed
-    where(missed: false)
+    where(missed_at: nil)
   end
 
   def self.missed
-    where(missed: true)
+    where.not(missed_at: nil)
+  end
+
+  def self.not_missed_within_days(days:)
+    where("missed_at IS NULL OR missed_at >= ?", days.days.ago)
   end
 
   def self.completed
     where.not(completed_at: nil)
+  end
+
+  def missed?
+    missed_at.present?
   end
 
   def previous_instance

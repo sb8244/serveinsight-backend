@@ -38,7 +38,8 @@ RSpec.describe Api::GoalsController, type: :controller do
           comment_grant: CommentGrant.encode(goal),
           passup_grant: PassupGrant.encode(goal),
           passed_up: false,
-          comments: []
+          comments: [],
+          survey_instance_id: instance.id
         )
       end
     end

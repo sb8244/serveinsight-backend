@@ -43,15 +43,7 @@ class Api::SurveyInstancesController < Api::BaseController
   end
 
   def due_instances
-    scope = current_organization_membership.survey_instances.due.order(due_at: :asc)
-
-    if params[:only_missed]
-      scope = scope.missed
-    else
-      scope = scope.not_missed
-    end
-
-    scope
+    current_organization_membership.survey_instances.due.not_missed_within_days(days: 2).order(missed_at: :asc, due_at: :asc)
   end
 
   def top_due_survey_instance
