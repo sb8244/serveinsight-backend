@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160721010018) do
+ActiveRecord::Schema.define(version: 20160723031624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,18 +167,19 @@ ActiveRecord::Schema.define(version: 20160721010018) do
   add_index "shoutouts", ["shouted_by_id"], name: "index_shoutouts_on_shouted_by_id", using: :btree
 
   create_table "survey_instances", force: :cascade do |t|
-    t.integer  "organization_membership_id",                 null: false
-    t.integer  "survey_template_id",                         null: false
-    t.integer  "iteration",                                  null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.integer  "organization_membership_id", null: false
+    t.integer  "survey_template_id",         null: false
+    t.integer  "iteration",                  null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.datetime "completed_at"
-    t.datetime "due_at",                                     null: false
+    t.datetime "due_at",                     null: false
     t.datetime "reviewed_at"
-    t.boolean  "missed",                     default: false
+    t.datetime "missed_at"
   end
 
   add_index "survey_instances", ["iteration", "organization_membership_id", "survey_template_id"], name: "survey_instances_unique_members", unique: true, using: :btree
+  add_index "survey_instances", ["missed_at"], name: "index_survey_instances_on_missed_at", using: :btree
   add_index "survey_instances", ["organization_membership_id"], name: "index_survey_instances_on_organization_membership_id", using: :btree
   add_index "survey_instances", ["survey_template_id"], name: "index_survey_instances_on_survey_template_id", using: :btree
 
@@ -193,7 +194,7 @@ ActiveRecord::Schema.define(version: 20160721010018) do
     t.datetime "updated_at",                       null: false
     t.integer  "iteration",         default: 0,    null: false
     t.datetime "next_due_at",                      null: false
-    t.integer  "weeks_between_due",                null: false
+    t.integer  "weeks_between_due"
   end
 
   add_index "survey_templates", ["organization_id"], name: "index_survey_templates_on_organization_id", using: :btree
