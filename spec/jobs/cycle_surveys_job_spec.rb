@@ -115,6 +115,12 @@ RSpec.describe CycleSurveysJob, type: :job do
       }.not_to change { due1.reload.iteration }
     end
 
+    it "sets completed_at on the template" do
+      expect {
+        subject
+      }.to change { due1.reload.completed_at }.from(nil).to(Time.now)
+    end
+
     it "sets missed on instances" do
       expect {
         subject
