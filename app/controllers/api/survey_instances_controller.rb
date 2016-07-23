@@ -43,7 +43,7 @@ class Api::SurveyInstancesController < Api::BaseController
   end
 
   def due_instances
-    current_organization_membership.survey_instances.due.not_missed_within_days(days: 2).order(due_at: :asc)
+    current_organization_membership.survey_instances.due.not_missed_within_days(days: 2).order(missed_at: :asc, due_at: :asc)
   end
 
   def top_due_survey_instance
