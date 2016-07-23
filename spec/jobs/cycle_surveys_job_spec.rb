@@ -109,6 +109,12 @@ RSpec.describe CycleSurveysJob, type: :job do
       }.not_to change { due1.reload.next_due_at }
     end
 
+    it "doesn't update the iteration" do
+      expect {
+        subject
+      }.not_to change { due1.reload.iteration }
+    end
+
     it "sets missed on instances" do
       expect {
         subject
