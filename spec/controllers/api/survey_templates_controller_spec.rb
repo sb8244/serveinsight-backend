@@ -188,6 +188,15 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
       expect(template.reload.ordered_questions.map(&:question)).to eq(["first", "edit", "new"])
     end
 
+    it "sets recurring to true" do
+      template.update!(weeks_between_due: nil, recurring: false)
+      expect {
+        expect {
+          put :update, id: template.id, weeks_between_due: 1
+        }.to change { template.reload.recurring? }.from(false).to(true)
+      }.to change { template.weeks_between_due }.from(nil).to(1)
+    end
+
     context "with survey instances in this iteration" do
       let!(:previous_instance) { membership.survey_instances.create!(survey_template: template, iteration: template.iteration - 1, due_at: 10.days.ago) }
       let!(:current_instance) { membership.survey_instances.create!(survey_template: template, iteration: template.iteration, due_at: template.next_due_at) }
