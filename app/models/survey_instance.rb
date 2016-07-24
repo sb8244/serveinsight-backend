@@ -7,7 +7,7 @@ class SurveyInstance < ActiveRecord::Base
 
   acts_as_commentable
 
-  def self.due
+  def self.not_completed
     where(completed_at: nil)
   end
 
