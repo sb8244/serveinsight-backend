@@ -31,8 +31,7 @@ class Api::SurveyInstancesController < Api::BaseController
 
   def survey_instance
     eager_loaded_instances.find(params[:id]).tap do |instance|
-      instance_owner = instance.organization_membership
-      owner_or_managed = instance_owner == current_organization_membership || instance_owner.managed_by?(current_organization_membership)
+      owner_or_managed = instance.member_has_access?(current_organization_membership)
       raise ActiveRecord::RecordNotFound unless owner_or_managed
     end
   end

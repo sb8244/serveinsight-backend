@@ -12,10 +12,6 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
     request.env["HTTP_ACCEPT"] = "application/json"
   }
 
-  SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :missed, :completed_at, :reviewed_at, :comment_grant, :iteration]
-  DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership, :comments]
-  COMMENT_ATTRIBUTES = [:id, :organization_membership_id, :created_at, :comment, :author_name, :private]
-
   describe "GET index" do
     let!(:survey_template) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
     let!(:survey_template2) { FactoryGirl.create(:survey_template, iteration: 1, organization: organization) }
@@ -37,7 +33,7 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
 
       it "only includes simple keys" do
         get :index, survey_template_id: survey_template.id
-        expect(response_json.first.keys).to match_array(SIMPLE_KEYS)
+        expect(response_json.first.keys).to match_array(SerializerKeys::SurveyInstance::SIMPLE_KEYS)
       end
     end
 
@@ -75,7 +71,7 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
     it "shows the template attributes" do
       get :show, id: instance.id
       expect(response).to be_success
-      expect(response_json.keys).to match_array(DETAILED_KEYS)
+      expect(response_json.keys).to match_array(SerializerKeys::SurveyInstance::DETAILED_KEYS)
     end
 
     it "lists out the questions in the right order" do
@@ -217,7 +213,7 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
           rendered_answer = response_json[:goals].first
           expect(rendered_answer[:id]).to eq(goal1.id)
           expect(rendered_answer).to include(:comments)
-          expect(rendered_answer[:comments][0].keys).to match_array(COMMENT_ATTRIBUTES)
+          expect(rendered_answer[:comments][0].keys).to match_array(SerializerKeys::SurveyInstance::COMMENT_ATTRIBUTES)
           expect(rendered_answer[:comments].count).to eq(2)
           expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
         end
@@ -342,7 +338,7 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
           rendered_answer = response_json[:questions].second[:answers].first
           expect(rendered_answer[:id]).to eq(answer1.id)
           expect(rendered_answer).to include(:comments)
-          expect(rendered_answer[:comments][0].keys).to match_array(COMMENT_ATTRIBUTES)
+          expect(rendered_answer[:comments][0].keys).to match_array(SerializerKeys::SurveyInstance::COMMENT_ATTRIBUTES)
           expect(rendered_answer[:comments].count).to eq(2)
           expect(rendered_answer[:comments].map { |h| h[:id] }).to eq([comment2.id, comment1.id])
         end
@@ -420,7 +416,7 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
     it "shows the template attributes" do
       get :top_due
       expect(response).to be_success
-      expect(response_json.keys).to match_array(DETAILED_KEYS)
+      expect(response_json.keys).to match_array(SerializerKeys::SurveyInstance::DETAILED_KEYS)
       expect(response_json[:id]).to eq(instance2.id)
     end
 

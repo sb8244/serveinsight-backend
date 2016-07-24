@@ -47,4 +47,10 @@ class SurveyInstance < ActiveRecord::Base
       end
     end
   end
+
+  def member_has_access?(organization_membership)
+    instance_owner = self.organization_membership
+    owner_or_managed = instance_owner == organization_membership || instance_owner.managed_by?(organization_membership)
+    owner_or_managed
+  end
 end

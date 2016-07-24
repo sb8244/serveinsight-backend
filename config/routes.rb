@@ -34,6 +34,7 @@ Rails.application.routes.draw do
         post :mark_reviewed
       end
     end
+    resources :previous_insights, only: [:show]
 
     resources :notifications, only: [:index] do
       member do

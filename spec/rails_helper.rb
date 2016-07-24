@@ -50,6 +50,14 @@ module ActiveJobMatcher
   end
 end
 
+module SerializerKeys
+  module SurveyInstance
+    SIMPLE_KEYS = [:id, :due_at, :title, :completed, :locked, :missed, :completed_at, :reviewed_at, :comment_grant, :iteration]
+    DETAILED_KEYS = SIMPLE_KEYS + [:goals_section, :previous_goals, :goals, :questions, :organization_membership, :comments]
+    COMMENT_ATTRIBUTES = [:id, :organization_membership_id, :created_at, :comment, :author_name, :private]
+  end
+end
+
 DBQueryMatchers.configure do |config|
   config.schemaless = true
 end
