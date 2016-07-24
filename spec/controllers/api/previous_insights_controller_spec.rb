@@ -38,6 +38,12 @@ RSpec.describe Api::PreviousInsightsController, type: :controller do
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it "doesn't include not due insights" do
+      survey4.update!(due_at: 1.day.from_now)
+      get :show, id: survey4.id
+      expect(response_json.count).to eq(3)
+    end
+
     context "for one-off surveys" do
       before { template.update!(weeks_between_due: nil) }
 

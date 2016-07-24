@@ -23,6 +23,7 @@ class Api::PreviousInsightsController < Api::BaseController
   def insights_for_template
     survey_template.survey_instances.
       where(organization_membership: survey_instance.organization_membership).
+      due_in_past.
       order(iteration: :desc)
   end
 end

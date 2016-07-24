@@ -11,6 +11,10 @@ class SurveyInstance < ActiveRecord::Base
     where(completed_at: nil)
   end
 
+  def self.due_in_past
+    where("due_at <= now()")
+  end
+
   def self.not_missed
     where(missed_at: nil)
   end
