@@ -1,5 +1,9 @@
 class Api::PreviousInsightsController < Api::BaseController
   def show
+    if survey_template.weeks_between_due.nil? && insights_for_template.count == 1
+      return render json: { error: "one-off" }, status: :unprocessable_entity
+    end
+
     respond_with :api, insights_for_template, each_serializer: Plain::SurveyInstanceSerializer
   end
 

@@ -37,5 +37,22 @@ RSpec.describe Api::PreviousInsightsController, type: :controller do
         get :show, id: survey4.id
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    context "for one-off surveys" do
+      before { template.update!(weeks_between_due: nil) }
+
+      it "is a 422 with only one survey" do
+        template.survey_instances.where.not(id: survey4.id).delete_all
+        get :show, id: survey4.id
+        expect(response.status).to eq(422)
+        expect(response_json[:error]).to eq("one-off")
+      end
+
+      it "is a success with more than 1 survey" do
+        get :show, id: survey4.id
+        expect(response).to be_success
+        expect(response_json.count).to eq(4)
+      end
+    end
   end
 end
