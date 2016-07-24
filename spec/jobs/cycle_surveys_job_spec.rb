@@ -99,4 +99,44 @@ RSpec.describe CycleSurveysJob, type: :job do
       subject
     }.to change { job_count(CreateSurveyInstancesJob) }.by(2)
   end
+
+  context "for 1 time templates" do
+    before { due1.update!(weeks_between_due: nil) }
+
+    it "doesn't update next_due_at" do
+      expect {
+        subject
+      }.not_to change { due1.reload.next_due_at }
+    end
+
+    it "doesn't update the iteration" do
+      expect {
+        subject
+      }.not_to change { due1.reload.iteration }
+    end
+
+    it "sets completed_at on the template" do
+      expect {
+        subject
+      }.to change { due1.reload.completed_at }.from(nil).to(Time.now)
+    end
+
+    it "sets missed on instances" do
+      expect {
+        subject
+      }.to change { due1_instance1.reload.missed? }.to(true)
+    end
+
+    it "sends emails for overdue instances" do
+      expect {
+        subject
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+      args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+      expect(args).to eq([
+        { "_aj_globalid" => due1_instance1.to_global_id.to_s },
+        { "_aj_globalid" => due2_instance1.to_global_id.to_s }
+      ])
+    end
+  end
 end
