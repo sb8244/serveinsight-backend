@@ -4,6 +4,7 @@ RSpec.describe Api::PreviousInsightsController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   let!(:organization) { FactoryGirl.create(:organization) }
   let!(:membership) { FactoryGirl.create(:organization_membership, user: user, organization: organization) }
+  let!(:teammate) { FactoryGirl.create(:organization_membership, organization: organization) }
 
   let!(:template) { FactoryGirl.create(:survey_template_with_questions, organization: organization) }
   let!(:survey1) { FactoryGirl.create(:survey_instance, survey_template: template, organization_membership: membership, iteration: 1, completed_at: 5.weeks.ago) }
@@ -28,6 +29,13 @@ RSpec.describe Api::PreviousInsightsController, type: :controller do
     it "includes completed_at/due_at of the insights" do
       get :show, id: survey3.id
       expect(response_json[0].keys).to match_array(SerializerKeys::SurveyInstance::SIMPLE_KEYS)
+    end
+
+    it "is a 404 without access" do
+      survey4.update!(organization_membership: teammate)
+      expect {
+        get :show, id: survey4.id
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
