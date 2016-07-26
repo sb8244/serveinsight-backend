@@ -20,6 +20,11 @@ RSpec.describe CycleSurveysJob, type: :job do
     expect { subject }.not_to change { not_due.reload.attributes }
   end
 
+  it "doesn't touch completed_at survey_templates" do
+    due1.update!(completed_at: Time.now)
+    expect { subject }.not_to change { due1.reload.attributes }
+  end
+
   it "updates the iteration on due survey templates" do
     expect {
       expect {

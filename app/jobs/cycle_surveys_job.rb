@@ -3,7 +3,7 @@ class CycleSurveysJob < ActiveJob::Base
 
   def perform
     SurveyTemplate.transaction do
-      update_ids = due_scope.pluck(:id)
+      update_ids = due_scope.active.pluck(:id)
 
       due_scope.where(id: update_ids).where.not(weeks_between_due: nil).update_all("iteration = iteration + 1")
       due_scope.where(id: update_ids).where(weeks_between_due: nil).update_all(completed_at: Time.now)
