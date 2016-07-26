@@ -33,7 +33,7 @@ class Api::InvitesController < Api::BaseController
     end
 
     def create_survey_instances
-      organization.survey_templates.each do |survey_template|
+      organization.survey_templates.active.each do |survey_template|
         CreateSurveyInstancesJob.perform_later(survey_template)
       end
     end

@@ -8,6 +8,10 @@ class SurveyTemplate < ActiveRecord::Base
     where("next_due_at < ?", Time.now)
   end
 
+  def self.active
+    where(completed_at: nil)
+  end
+
   def ordered_questions
     questions.select(&:current?).sort_by(&:order)
   end

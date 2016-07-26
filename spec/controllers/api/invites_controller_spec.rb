@@ -117,6 +117,13 @@ RSpec.describe Api::InvitesController, type: :controller do
           request!
         }.to change { job_count(CreateSurveyInstancesJob) }.by(2)
       end
+
+      it "doesn't trigger for completed templates" do
+        template1.update!(completed_at: Time.now)
+        expect {
+          request!
+        }.to change { job_count(CreateSurveyInstancesJob) }.by(1)
+      end
     end
   end
 end
