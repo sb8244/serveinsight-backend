@@ -13,4 +13,14 @@ RSpec.describe CreateSurveyInstancesJob, type: :job do
       perform_enqueued_jobs { job }
     }.to change { SurveyInstance.count }.by(2)
   end
+
+  context "with completed_at on the template" do
+    before { survey_template.update!(completed_at: Time.now) }
+
+    it "doesn't create any instances" do
+      expect {
+        perform_enqueued_jobs { job }
+      }.not_to change { SurveyInstance.count }.from(0)
+    end
+  end
 end
