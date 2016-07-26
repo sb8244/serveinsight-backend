@@ -213,5 +213,33 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
         }.not_to change { previous_instance.reload.attributes }
       end
     end
+
+    describe "setting completed=true" do
+      let(:request!) { put :update, id: template.id, completed: true }
+
+      it "sets completed_at on the template" do
+        expect {
+          request!
+        }.to change { template.reload.completed_at }.to(Time.now)
+      end
+
+      context "with survey instances in this iteration" do
+        let!(:previous_instance) { membership.survey_instances.create!(survey_template: template, iteration: template.iteration - 1, due_at: 10.days.ago) }
+        let!(:current_instance) { membership.survey_instances.create!(survey_template: template, iteration: template.iteration, due_at: template.next_due_at) }
+
+        it "hard deletes non-completed instances" do
+          expect {
+            request!
+          }.to change { SurveyInstance.find_by(id: current_instance.id) }.from(current_instance).to(nil)
+        end
+
+        it "keeps completed instances" do
+          current_instance.update!(completed_at: Time.now)
+          expect {
+            request!
+          }.not_to change { current_instance.reload.attributes }
+        end
+      end
+    end
   end
 end

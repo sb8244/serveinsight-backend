@@ -42,6 +42,7 @@ class Api::SurveyTemplatesController < Api::BaseController
   def update_template!
     survey_template.update!(template_params) if template_params.any?
     survey_template.update_instances_due! if template_params.key?(:next_due_at)
+    survey_template.completed! if params.key?(:completed)
     return unless update_question_params.any?
 
     delete_questions_not_in_update!
