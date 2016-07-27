@@ -70,6 +70,7 @@ RSpec.describe Api::OrganizationMembershipsController, type: :controller do
                                  id: organization_membership.id,
                                  name: organization_membership.name,
                                  email: organization_membership.email,
+                                 mention_name: organization_membership.mention_name,
                                  role: "",
                                  admin: false,
                                  direct_reports: [],
@@ -181,6 +182,45 @@ RSpec.describe Api::OrganizationMembershipsController, type: :controller do
         delete :destroy, id: organization_membership.id
         expect(response).to be_success
       }.to change { OrganizationMembership.count }.by(-1)
+    end
+  end
+
+  describe "PUT update" do
+    it "can update name and email" do
+      expect {
+        put :update, name: "New", email: "new@new.com"
+      }.to change { organization_membership.reload.attributes }
+
+      expect(organization_membership.name).to eq("New")
+      expect(organization_membership.email).to eq("new@new.com")
+    end
+
+    it "doesn't change user" do
+      expect {
+        put :update, name: "New", email: "new@new.com"
+      }.not_to change { organization_membership.user.reload.attributes }
+    end
+
+    it "doesn't update the mention name with the same name" do
+      expect {
+        expect {
+          put :update, name: organization_membership.name, email: "new@new.com"
+        }.not_to change { organization_membership.reload.mention_name }
+      }.not_to change { organization_membership.name }
+    end
+
+    it "updates the mention name to reflect the new name" do
+      expect {
+        put :update, name: "New Person"
+      }.to change { organization_membership.reload.mention_name }.to("NewPerson")
+    end
+
+    it "can take Mr." do
+      expect {
+        expect {
+          put :update, name: "Mr. Tester"
+        }.to change { organization_membership.reload.mention_name }.to("MrTester")
+      }.to change { organization_membership.name }.to("Mr. Tester")
     end
   end
 end

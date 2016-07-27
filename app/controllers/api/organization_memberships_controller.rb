@@ -7,6 +7,11 @@ class Api::OrganizationMembershipsController < Api::BaseController
     respond_with :api, current_organization_membership
   end
 
+  def update
+    current_organization_membership.update(update_params)
+    respond_with :api, current_organization_membership
+  end
+
   def destroy
     organization_memberships.find(params[:id]).destroy
 
@@ -33,6 +38,16 @@ class Api::OrganizationMembershipsController < Api::BaseController
 
   def bulk_update_params
     params.permit(data: [:id, :name, :reviewer_id, :admin])
+  end
+
+  def update_params
+    params.permit(:name, :email).tap do |p|
+      if p[:name]
+        p[:mention_name] = MentionNameCreator.new(p[:name],
+                                                  organization: current_organization,
+                                                  organization_membership: current_organization_membership).mention_name
+      end
+    end
   end
 
   def organization_memberships

@@ -6,7 +6,7 @@ FactoryGirl.define do
     email { Faker::Internet.email }
 
     before(:create) do |m|
-      m.mention_name = m.name.delete(" ") if m.mention_name.nil?
+      m.mention_name = m.name.gsub(/\W/,'') if m.mention_name.nil?
     end
 
     trait :with_user do

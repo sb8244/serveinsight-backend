@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     resource :user, only: [:show]
-    resource :organization_membership, only: [:show]
+    resource :organization_membership, only: [:show, :update]
     resources :organization_memberships, only: [:index, :destroy] do
       collection do
         put :bulk_update
