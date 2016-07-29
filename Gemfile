@@ -8,6 +8,7 @@ gem 'rails', '4.2.5'
 gem 'pg'
 gem 'sidekiq'
 gem 'redis-namespace'
+gem 'redis'
 gem 'sinatra', :require => nil
 gem 'foreman'
 gem 'puma'
@@ -54,3 +55,6 @@ gem 'acts_as_commentable'
 
 gem 'chronic'
 gem 'httparty'
+
+# Slack
+gem 'slack-bot-server'
