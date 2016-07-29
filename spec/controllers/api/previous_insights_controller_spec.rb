@@ -39,7 +39,7 @@ RSpec.describe Api::PreviousInsightsController, type: :controller do
     end
 
     context "for one-off surveys" do
-      before { template.update!(weeks_between_due: nil) }
+      before { template.update!(days_between_due: nil) }
 
       it "is a 422 with only one survey" do
         template.survey_instances.where.not(id: survey4.id).delete_all

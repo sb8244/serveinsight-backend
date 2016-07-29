@@ -50,10 +50,10 @@ class Api::SurveyTemplatesController < Api::BaseController
   end
 
   def template_params
-    params.permit(:name, :goals_section, :weeks_between_due).tap do |p|
+    params.permit(:name, :goals_section, :days_between_due).tap do |p|
       p[:next_due_at] = DateTime.strptime(params.fetch(:first_due_at), "%m/%d/%Y %H:%M %z") if params.key?(:first_due_at)
-      p[:recurring] = false if params.key?(:weeks_between_due) && params[:weeks_between_due].nil?
-      p[:recurring] = true if params.key?(:weeks_between_due) && !params[:weeks_between_due].nil?
+      p[:recurring] = false if params.key?(:days_between_due) && params[:days_between_due].nil?
+      p[:recurring] = true if params.key?(:days_between_due) && !params[:days_between_due].nil?
     end
   end
 

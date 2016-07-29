@@ -25,7 +25,7 @@ RSpec.describe Api::CompletedSurveysController, type: :controller do
     let!(:direct_report_instance) { direct_report.survey_instances.create!(survey_template: survey_template2, iteration: 1, due_at: Time.now, completed_at: 3.minutes.ago) }
     let!(:sub_report_instance) { sub_report.survey_instances.create!(survey_template: survey_template, iteration: 1, due_at: Time.now, completed_at: 2.minutes.ago) }
 
-    EXPECTED_KEYS = [:active, :created_at, :goals_section, :id, :name, :next_due_at, :recurring, :updated_at, :weeks_between_due, :survey_instances, :completed_at]
+    EXPECTED_KEYS = [:active, :created_at, :goals_section, :id, :name, :next_due_at, :recurring, :updated_at, :days_between_due, :survey_instances, :completed_at]
 
     it "returns the survey templates that have completed instances with recent templates first" do
       get :index

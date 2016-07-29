@@ -3,7 +3,7 @@ FactoryGirl.define do
     organization
     creator_id -1
     name { Faker::Lorem.words(3).join(" ") }
-    weeks_between_due 1
+    days_between_due 7
     next_due_at { 7.days.from_now }
 
     trait :with_questions do
@@ -17,7 +17,7 @@ FactoryGirl.define do
     organization
     creator_id -1
     name { Faker::Lorem.words(3).join(" ") }
-    weeks_between_due 1
+    days_between_due 7
     next_due_at { 7.days.from_now }
 
     after(:create) do |template|

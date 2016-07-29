@@ -7,8 +7,8 @@ RSpec.describe CycleSurveysJob, type: :job do
 
   let!(:due1_due) { 1.minute.ago }
   let!(:due2_due) { 10.hours.ago }
-  let!(:due1) { FactoryGirl.create(:survey_template_with_questions, iteration: 1, weeks_between_due: 1, next_due_at: due1_due, organization: organization) }
-  let!(:due2) { FactoryGirl.create(:survey_template_with_questions, iteration: 2, weeks_between_due: 2, next_due_at: due2_due, organization: organization) }
+  let!(:due1) { FactoryGirl.create(:survey_template_with_questions, iteration: 1, days_between_due: 7, next_due_at: due1_due, organization: organization) }
+  let!(:due2) { FactoryGirl.create(:survey_template_with_questions, iteration: 2, days_between_due: 14, next_due_at: due2_due, organization: organization) }
   let!(:not_due) { FactoryGirl.create(:survey_template_with_questions, iteration: 2, next_due_at: 5.minutes.from_now, organization: organization) }
 
   let!(:due1_instance1) { member1.survey_instances.create!(survey_template: due1, iteration: 1, due_at: due1.next_due_at) }
@@ -106,7 +106,7 @@ RSpec.describe CycleSurveysJob, type: :job do
   end
 
   context "for 1 time templates" do
-    before { due1.update!(weeks_between_due: nil) }
+    before { due1.update!(days_between_due: nil) }
 
     it "doesn't update next_due_at" do
       expect {

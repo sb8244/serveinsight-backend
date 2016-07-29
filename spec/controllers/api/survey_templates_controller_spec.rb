@@ -11,7 +11,7 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
   }
 
   SURVEY_KEYS = [:id, :name, :created_at, :updated_at, :active, :recurring, :goals_section,
-                 :users_in_scope, :response_count, :creator, :questions, :next_due_at, :weeks_between_due, :completed_at]
+                 :users_in_scope, :response_count, :creator, :questions, :next_due_at, :days_between_due, :completed_at]
   QUESTION_KEYS = [:id, :question, :created_at, :updated_at, :question_type]
 
   describe "GET index" do
@@ -70,7 +70,7 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
           }
         ],
         first_due_at: "08/01/2016 20:00 -0500",
-        weeks_between_due: 2
+        days_between_due: 14
       }
     end
 
@@ -125,13 +125,13 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
       }.to change { job_count(CreateSurveyInstancesJob) }.by(1)
     end
 
-    context "with weeks_between_due=0" do
-      before { params[:weeks_between_due] = nil }
+    context "with days_between_due=0" do
+      before { params[:days_between_due] = nil }
 
       it "isn't recurring" do
         post :create, params
         expect(SurveyTemplate.last.recurring?).to eq(false)
-        expect(SurveyTemplate.last.weeks_between_due).to eq(nil)
+        expect(SurveyTemplate.last.days_between_due).to eq(nil)
       end
     end
   end
@@ -189,12 +189,12 @@ RSpec.describe Api::SurveyTemplatesController, type: :controller do
     end
 
     it "sets recurring to true" do
-      template.update!(weeks_between_due: nil, recurring: false)
+      template.update!(days_between_due: nil, recurring: false)
       expect {
         expect {
-          put :update, id: template.id, weeks_between_due: 1
+          put :update, id: template.id, days_between_due: 7
         }.to change { template.reload.recurring? }.from(false).to(true)
-      }.to change { template.weeks_between_due }.from(nil).to(1)
+      }.to change { template.days_between_due }.from(nil).to(7)
     end
 
     context "with survey instances in this iteration" do

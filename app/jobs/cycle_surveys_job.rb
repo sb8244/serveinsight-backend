@@ -5,8 +5,8 @@ class CycleSurveysJob < ActiveJob::Base
     SurveyTemplate.transaction do
       update_ids = due_scope.active.pluck(:id)
 
-      due_scope.where(id: update_ids).where.not(weeks_between_due: nil).update_all("iteration = iteration + 1")
-      due_scope.where(id: update_ids).where(weeks_between_due: nil).update_all(completed_at: Time.now)
+      due_scope.where(id: update_ids).where.not(days_between_due: nil).update_all("iteration = iteration + 1")
+      due_scope.where(id: update_ids).where(days_between_due: nil).update_all(completed_at: Time.now)
 
       due_scope.where(id: update_ids).find_each do |survey_template|
         update_next_due!(survey_template)
@@ -21,8 +21,8 @@ class CycleSurveysJob < ActiveJob::Base
   end
 
   def update_next_due!(survey_template)
-    return if survey_template.weeks_between_due.nil?
-    survey_template.update!(next_due_at: survey_template.next_due_at + survey_template.weeks_between_due.weeks)
+    return if survey_template.days_between_due.nil?
+    survey_template.update!(next_due_at: survey_template.next_due_at + survey_template.days_between_due.days)
   end
 
   def update_instances!(survey_template)
