@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160728235519) do
+ActiveRecord::Schema.define(version: 20160729000056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,17 +184,16 @@ ActiveRecord::Schema.define(version: 20160728235519) do
   add_index "survey_instances", ["survey_template_id"], name: "index_survey_instances_on_survey_template_id", using: :btree
 
   create_table "survey_templates", force: :cascade do |t|
-    t.integer  "organization_id",                  null: false
-    t.integer  "creator_id",                       null: false
-    t.string   "name",                             null: false
-    t.boolean  "active",            default: true, null: false
-    t.boolean  "recurring",         default: true, null: false
-    t.boolean  "goals_section",     default: true, null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.integer  "iteration",         default: 0,    null: false
-    t.datetime "next_due_at",                      null: false
-    t.integer  "weeks_between_due"
+    t.integer  "organization_id",                 null: false
+    t.integer  "creator_id",                      null: false
+    t.string   "name",                            null: false
+    t.boolean  "active",           default: true, null: false
+    t.boolean  "recurring",        default: true, null: false
+    t.boolean  "goals_section",    default: true, null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.integer  "iteration",        default: 0,    null: false
+    t.datetime "next_due_at",                     null: false
     t.datetime "completed_at"
     t.integer  "days_between_due"
   end
