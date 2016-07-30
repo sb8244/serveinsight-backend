@@ -52,7 +52,5 @@ gem 'active_model_serializers', '< 0.9'
 gem 'responders', '~> 2.0'
 gem 'acts_as_commentable'
 
-gem 'devise'
-
 gem 'chronic'
 gem 'httparty'
