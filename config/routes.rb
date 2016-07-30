@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   scope "api/auth" do
     devise_for :users, controllers: {
       sessions: "api/auth/sessions",
-      registrations: "api/auth/registrations"
+      registrations: "api/auth/registrations",
+      confirmations: "api/auth/confirmations"
     }
   end
 
