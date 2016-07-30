@@ -1,0 +1,55 @@
+<table class="jumbotron" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td class="jumbotron_cell" align="center" valign="top">
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+            <tbody>
+              <tr>
+                <td width="580" align="center" valign="top">
+          <![endif]-->
+          <div class="row">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
+              <tbody>
+                <tr>
+                  <td width="580" align="center" valign="top">
+            <![endif]-->
+            <div class="col-3">
+              <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td class="column_cell font_default" align="center" valign="top">
+                      <h4>Welcome <%= @email %>!</h4>
+                      <p class="lead">
+                        You must confirm your account to start using Serve Insight.
+                      </p>
+                      <table class="primary_btn" align="center" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                          <tr>
+                            <td class="font_default"><a href="<%= confirmation_url(@resource, confirmation_token: @token) %>"><span>Confirm &amp; Get Started</span></a></td>
+                          </tr>
+                        </tbody>
+                      </table><!-- end .primary_btn -->
+                    </td><!-- /.column_cell -->
+                  </tr>
+                </tbody>
+              </table><!-- /.column -->
+            </div><!-- /.col-3 -->
+            <!--[if (gte mso 9)|(IE)]>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <![endif]-->
+          </div><!-- /.row -->
+          <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+      </td><!-- /.jumbotron_cell -->
+    </tr>
+  </tbody>
+</table><!-- /.jumbotron -->
