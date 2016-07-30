@@ -9,21 +9,35 @@ class Api::Auth::SessionsController < Devise::SessionsController
     self.resource = warden.authenticate(auth_options)
 
     if resource && resource.active_for_confirmation?
-      render json: {
-        token: resource.auth_token
-      }
+      valid_response
     elsif resource
-      render json: {
-        errors: {
-          confirmation: ["has not been completed"]
-        }
-      }, status: :unauthorized
+      confirmation_not_completed
     else
-      render json: {
-        errors: {
-          login: ["is not valid"]
-        }
-      }, status: :unprocessable_entity
+      invalid_login
     end
+  end
+
+  private
+
+  def valid_response
+    render json: {
+      token: resource.auth_token
+    }
+  end
+
+  def confirmation_not_completed
+    render json: {
+      errors: {
+        confirmation: ["has not been completed"]
+      }
+    }, status: :unauthorized
+  end
+
+  def invalid_login
+    render json: {
+      errors: {
+        login: ["is not valid"]
+      }
+    }, status: :unprocessable_entity
   end
 end
