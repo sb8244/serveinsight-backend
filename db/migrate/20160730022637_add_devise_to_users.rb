@@ -4,6 +4,8 @@ class AddDeviseToUsers < ActiveRecord::Migration
       ## Database authenticatable
       t.string :encrypted_password, null: false, default: ""
 
+      t.string :unconfirmed_email
+
       ## Recoverable
       t.string   :reset_password_token
       t.datetime :reset_password_sent_at
@@ -26,8 +28,12 @@ class AddDeviseToUsers < ActiveRecord::Migration
   end
 
   def self.down
-    # By default, we don't want to make any assumption about how to roll back a migration when your
-    # model already existed. Please edit below which fields you would like to remove in this migration.
-    raise ActiveRecord::IrreversibleMigration
+    remove = [:encrypted_password, :reset_password_token, :reset_password_sent_at, :sign_in_count, :current_sign_in_at,
+              :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :confirmation_token,
+              :confirmed_at, :confirmation_sent_at, :unconfirmed_email]
+
+    remove.each do |column|
+      remove_column :users, column
+    end
   end
 end

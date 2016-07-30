@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 20160730022637) do
     t.datetime "updated_at",                          null: false
     t.string   "name",                                null: false
     t.string   "encrypted_password",     default: "", null: false
+    t.string   "unconfirmed_email"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.integer  "sign_in_count",          default: 0,  null: false

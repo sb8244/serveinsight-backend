@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
+  scope "api/auth" do
+    devise_for :users, controllers: {
+      sessions: "api/auth/sessions",
+      registrations: "api/auth/registrations"
+    }
+  end
+
   namespace :api do
+
     resource :user, only: [:show]
     resource :organization_membership, only: [:show, :update]
     resources :organization_memberships, only: [:index, :destroy] do
