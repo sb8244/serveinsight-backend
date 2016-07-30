@@ -34,4 +34,8 @@ class User < ActiveRecord::Base
   def password_required?
     false
   end
+
+  def send_confirmation_notification?
+    false
+  end
 end

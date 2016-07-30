@@ -4,7 +4,6 @@ class Api::Auth::ConfirmationsController < Devise::ConfirmationsController
   clear_respond_to
   respond_to :json
 
-
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
