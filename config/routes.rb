@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       confirmations: "api/auth/confirmations"
     }
   end
+  get "/", to: "application#index", as: :users # Fake it for Devise
 
   namespace :api do
 

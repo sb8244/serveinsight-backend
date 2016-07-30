@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+         :recoverable, :trackable, :validatable, :confirmable
 
   validates :name, presence: true
   validates :email, presence: true
@@ -37,5 +37,19 @@ class User < ActiveRecord::Base
 
   def send_confirmation_notification?
     false
+  end
+
+  def active_for_authentication?
+    active = super
+
+    if !active
+      !active_for_confirmation?
+    else
+      true
+    end
+  end
+
+  def active_for_confirmation?
+    !confirmation_required? || confirmed? || confirmation_period_valid?
   end
 end
