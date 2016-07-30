@@ -64,6 +64,7 @@ end
 
 RSpec.configure do |config|
   config.include JsonHelpers, type: :controller
+  config.include Devise::TestHelpers, type: :controller
   config.include ActiveJobMatcher
   config.include ActiveJob::TestHelper, type: :job
 
