@@ -25,6 +25,12 @@ RSpec.describe Api::Auth::SessionsController, type: :controller do
           post :create, user: { email: user.email, password: password }
           expect(response_json).to eq(token: user.auth_token)
         end
+
+        it "is tracked" do
+          expect {
+            post :create, user: { email: user.email, password: password }
+          }.to change { user.reload.last_sign_in_at }.from(nil).to(Time.now)
+        end
       end
 
       context "without confirmation" do
