@@ -31,7 +31,8 @@ class AuthController < ApplicationController
     {
       name: "#{info.first_name} #{info.last_name}",
       email: info.email,
-      image_url: info.image
+      image_url: info.image,
+      confirmed_at: Time.now
     }
   end
 
