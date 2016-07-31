@@ -84,5 +84,6 @@ Rails.application.routes.draw do
   get "/surveys/completed/*id", constraints: { id: /\d*/ }, as: :completed_survey, to: "application#index"
   get "/surveys/*id", constraints: { id: /\d*/ }, as: :survey, to: "application#index"
   get "/shoutouts/*id", constraints: { id: /\d*/ }, as: :shoutout, to: "application#index"
+  get "/confirm/token", to: "application#index", as: :frontend_confirmation
   root "application#index"
 end

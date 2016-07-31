@@ -27,7 +27,7 @@
                       <table class="primary_btn" align="center" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
                           <tr>
-                            <td class="font_default"><a href="<%= confirmation_url(@resource, confirmation_token: @token) %>"><span>Confirm &amp; Get Started</span></a></td>
+                            <td class="font_default"><a href="<%= frontend_confirmation_url(confirmation_token: @token) %>"><span>Confirm &amp; Get Started</span></a></td>
                           </tr>
                         </tbody>
                       </table><!-- end .primary_btn -->
