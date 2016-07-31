@@ -6,7 +6,9 @@ Rails.application.routes.draw do
       confirmations: "api/auth/confirmations"
     }
 
-    post "users/confirmation/resend", to: "api/auth/confirmations#resend"
+    devise_scope :user do
+      post "users/confirmation/resend", to: "api/auth/confirmations#resend"
+    end
   end
   get "/", to: "application#index", as: :users # Fake it for Devise
 
