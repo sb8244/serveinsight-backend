@@ -86,5 +86,6 @@ Rails.application.routes.draw do
   get "/surveys/*id", constraints: { id: /\d*/ }, as: :survey, to: "application#index"
   get "/shoutouts/*id", constraints: { id: /\d*/ }, as: :shoutout, to: "application#index"
   get "/confirm/token", to: "application#index", as: :frontend_confirmation
+  get "/reset_password", to: "application#index", as: :frontend_reset_password
   root "application#index"
 end
