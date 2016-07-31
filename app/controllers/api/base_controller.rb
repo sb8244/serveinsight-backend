@@ -40,7 +40,8 @@ class Api::BaseController < ApplicationController
     return if current_user.blank? || current_user.confirmed?
 
     render json: {
-      error: "email_not_confirmed"
+      error: "email_not_confirmed",
+      email: current_user.email
     }, status: :unauthorized
   end
 
