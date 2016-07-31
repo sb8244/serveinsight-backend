@@ -28,7 +28,7 @@ class Api::Auth::SessionsController < Devise::SessionsController
   def confirmation_not_completed
     render json: {
       errors: {
-        confirmation: ["has not been completed"]
+        email: ["has not been confirmed"]
       }
     }, status: :unprocessable_entity
   end
