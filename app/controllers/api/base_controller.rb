@@ -37,7 +37,7 @@ class Api::BaseController < ApplicationController
   end
 
   def verify_confirmed_user!
-    return if current_user.confirmed?
+    return if current_user.blank? || current_user.confirmed?
 
     render json: {
       error: "email_not_confirmed"

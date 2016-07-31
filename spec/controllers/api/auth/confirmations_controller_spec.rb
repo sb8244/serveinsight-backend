@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Api::Auth::ConfirmationsController, type: :controller do
   let!(:user) do
-    FactoryGirl.create(:user, confirmation_token: "testing")
+    FactoryGirl.create(:user, confirmation_token: "testing", confirmed_at: nil)
   end
 
   before do

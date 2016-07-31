@@ -1,5 +1,6 @@
 class Api::Auth::ConfirmationsController < Devise::ConfirmationsController
   skip_before_filter :authenticate_user!
+  skip_before_filter :verify_confirmed_user!
 
   clear_respond_to
   respond_to :json
