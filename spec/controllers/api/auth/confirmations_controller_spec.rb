@@ -47,6 +47,30 @@ RSpec.describe Api::Auth::ConfirmationsController, type: :controller do
         }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
       end
 
+      it "updates confirmation_last_send_at" do
+        expect {
+          post :resend
+        }.to change { user.reload.confirmation_last_send_at }.from(nil).to(Time.now)
+      end
+
+      context "with a confirmation_last_send_at" do
+        it "within last minute doesn't resend the confirmation_instructions" do
+          user.update!(confirmation_last_send_at: 59.seconds.ago)
+          expect {
+            post :resend
+            expect(response).to be_success
+          }.not_to change { job_count(ActionMailer::DeliveryJob) }
+        end
+
+        it "over last minute does resend the confirmation_instructions" do
+          user.update!(confirmation_last_send_at: 61.seconds.ago)
+          expect {
+            post :resend
+            expect(response).to be_success
+          }.to change { job_count(ActionMailer::DeliveryJob) }
+        end
+      end
+
       context "with a confirmed user" do
         before { user.confirm }
 
@@ -54,7 +78,7 @@ RSpec.describe Api::Auth::ConfirmationsController, type: :controller do
           expect {
             post :resend
             expect(response).to be_success
-          }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+          }.not_to change { job_count(ActionMailer::DeliveryJob) }
         end
       end
     end

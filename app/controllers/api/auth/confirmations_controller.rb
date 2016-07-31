@@ -20,7 +20,13 @@ class Api::Auth::ConfirmationsController < Devise::ConfirmationsController
   end
 
   def resend
-    current_user.send(:send_on_create_confirmation_instructions)
+    if current_user && !current_user.confirmed?
+      if current_user.confirmation_last_send_at.nil? || current_user.confirmation_last_send_at < 1.minute.ago
+        current_user.send(:send_on_create_confirmation_instructions)
+        current_user.update!(confirmation_last_send_at: Time.now)
+      end
+    end
+
     head :no_content
   end
 end
