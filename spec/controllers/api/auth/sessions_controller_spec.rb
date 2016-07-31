@@ -34,11 +34,11 @@ RSpec.describe Api::Auth::SessionsController, type: :controller do
       end
 
       context "without confirmation" do
-        it "is a 422 with confirmation error" do
+        it "is successful" do
           user.update!(confirmed_at: nil)
           post :create, user: { email: user.email, password: password }
-          expect(response.status).to eq(422)
-          expect(response_json).to eq(errors: { email: ["has not been confirmed"] })
+          expect(response).to be_success
+          expect(response_json).to eq(token: user.auth_token)
         end
       end
     end

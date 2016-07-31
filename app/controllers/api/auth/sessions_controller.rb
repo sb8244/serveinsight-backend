@@ -9,10 +9,8 @@ class Api::Auth::SessionsController < Devise::SessionsController
   def create
     self.resource = warden.authenticate(auth_options)
 
-    if resource && resource.active_for_confirmation?
+    if resource
       valid_response
-    elsif resource
-      confirmation_not_completed
     else
       invalid_login
     end
