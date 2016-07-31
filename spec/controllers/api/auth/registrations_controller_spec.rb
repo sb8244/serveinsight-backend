@@ -22,6 +22,12 @@ RSpec.describe Api::Auth::RegistrationsController, type: :controller do
       params
     }
 
+    let(:mismatch_params) {
+      params = valid_params.dup
+      params[:user][:password_confirmation] = params[:user][:password] + "X"
+      params
+    }
+
     it "creates a new user" do
       expect {
         post :create, valid_params
@@ -40,6 +46,14 @@ RSpec.describe Api::Auth::RegistrationsController, type: :controller do
         post :create, no_name_params
         expect(response.status).to eq(422)
         expect(response_json).to eq(errors: { name: ["can't be blank"] })
+      }.not_to change { User.count }
+    end
+
+    it "requires matchin passwords" do
+      expect {
+        post :create, mismatch_params
+        expect(response.status).to eq(422)
+        expect(response_json).to eq(errors: { password_confirmation: ["doesn't match Password"] })
       }.not_to change { User.count }
     end
   end

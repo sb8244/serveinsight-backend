@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   validates :name, presence: true
   validates :email, presence: true
+  validates_confirmation_of :password, only: :create
 
   has_many :organization_memberships
 
