@@ -5,6 +5,8 @@ Rails.application.routes.draw do
       registrations: "api/auth/registrations",
       confirmations: "api/auth/confirmations"
     }
+
+    post "users/confirmation/resend", to: "api/auth/confirmations#resend"
   end
   get "/", to: "application#index", as: :users # Fake it for Devise
 

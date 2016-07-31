@@ -1,5 +1,5 @@
 class Api::Auth::ConfirmationsController < Devise::ConfirmationsController
-  skip_before_filter :authenticate_user!
+  before_filter :authenticate_user!, only: [:resend]
   skip_before_filter :verify_confirmed_user!
 
   clear_respond_to
@@ -17,5 +17,10 @@ class Api::Auth::ConfirmationsController < Devise::ConfirmationsController
     else
       render json: { errors: resource.errors }, status: :unprocessable_entity
     end
+  end
+
+  def resend
+    current_user.send(:send_on_create_confirmation_instructions)
+    head :no_content
   end
 end
