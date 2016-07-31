@@ -30,7 +30,7 @@ class Api::Auth::SessionsController < Devise::SessionsController
       errors: {
         confirmation: ["has not been completed"]
       }
-    }, status: :unauthorized
+    }, status: :unprocessable_entity
   end
 
   def invalid_login

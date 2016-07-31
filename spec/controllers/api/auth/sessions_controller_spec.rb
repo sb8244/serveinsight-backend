@@ -34,9 +34,9 @@ RSpec.describe Api::Auth::SessionsController, type: :controller do
       end
 
       context "without confirmation" do
-        it "is a 401 with confirmation error" do
+        it "is a 422 with confirmation error" do
           post :create, user: { email: user.email, password: password }
-          expect(response.status).to eq(401)
+          expect(response.status).to eq(422)
           expect(response_json).to eq(errors: { confirmation: ["has not been completed"] })
         end
       end
@@ -46,7 +46,7 @@ RSpec.describe Api::Auth::SessionsController, type: :controller do
       context "with confirmation" do
         before { user.confirm }
 
-        it "is a 401 with invalid error" do
+        it "is a 422 with invalid error" do
           post :create, user: { email: user.email, password: "password" }
           expect(response.status).to eq(422)
           expect(response_json).to eq(errors: { login: ["is not valid"] })
@@ -54,7 +54,7 @@ RSpec.describe Api::Auth::SessionsController, type: :controller do
       end
 
       context "without confirmation" do
-        it "is a 401 with invalid error" do
+        it "is a 422 with invalid error" do
           post :create, user: { email: user.email, password: "password" }
           expect(response.status).to eq(422)
           expect(response_json).to eq(errors: { login: ["is not valid"] })
