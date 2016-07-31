@@ -20,7 +20,10 @@ class Api::Auth::RegistrationsController < Devise::RegistrationsController
 
       if resource.active_for_authentication?
         sign_up(resource_name, resource)
-        respond_with resource, location: after_sign_up_path_for(resource)
+
+        render json: {
+          token: resource.auth_token
+        }
       else
         expire_data_after_sign_in!
         respond_with resource, location: after_inactive_sign_up_path_for(resource)

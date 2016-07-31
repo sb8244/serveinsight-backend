@@ -41,6 +41,11 @@ RSpec.describe Api::Auth::RegistrationsController, type: :controller do
       }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
     end
 
+    it "includes auth_token" do
+      post :create, valid_params
+      expect(response_json).to eq(token: User.last.auth_token)
+    end
+
     it "requires name" do
       expect {
         post :create, no_name_params
