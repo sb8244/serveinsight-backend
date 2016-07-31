@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
     false
   end
 
+  # Needed to allow confirmationless login - handled elsewhere
   def active_for_authentication?
     active = super
 
