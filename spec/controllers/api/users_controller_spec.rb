@@ -17,6 +17,19 @@ RSpec.describe Api::UsersController, type: :controller do
       it "is a 401" do
         get :show
         expect(response.status).to eq(401)
+        expect(response_json).to eq(error: "logged_out")
+      end
+    end
+
+    context "with a not confirmed user" do
+      before do
+        user.update!(confirmed_at: nil)
+      end
+
+      it "is a 401" do
+        get :show
+        expect(response.status).to eq(401)
+        expect(response_json).to eq(error: "email_not_confirmed", email: user.email)
       end
     end
 

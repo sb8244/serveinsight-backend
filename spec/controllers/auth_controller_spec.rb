@@ -22,6 +22,11 @@ RSpec.describe AuthController, type: :controller do
                                     )
   end
 
+  it "is email confirmed" do
+    post :callback, provider: :google_oauth2
+    expect(User.last.confirmed_at).to eq(Time.now)
+  end
+
   it "returns a valid auth token" do
     post :callback, provider: :google_oauth2
     expect(response_json).to include(:token)

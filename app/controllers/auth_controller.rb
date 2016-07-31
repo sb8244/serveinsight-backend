@@ -31,13 +31,15 @@ class AuthController < ApplicationController
     {
       name: "#{info.first_name} #{info.last_name}",
       email: info.email,
-      image_url: info.image
+      image_url: info.image,
+      confirmed_at: Time.now
     }
   end
 
   def check_for_invite!(user)
     return unless params[:invite_code]
     invite = Invite.find_by(code: params[:invite_code])
+    return unless invite
     invite.apply_to_user!(user)
   end
 end

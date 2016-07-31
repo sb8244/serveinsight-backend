@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
+  scope "api/auth" do
+    devise_for :users, controllers: {
+      sessions: "api/auth/sessions",
+      registrations: "api/auth/registrations",
+      confirmations: "api/auth/confirmations",
+      passwords: "api/auth/passwords"
+    }
+
+    devise_scope :user do
+      post "users/confirmation/resend", to: "api/auth/confirmations#resend"
+    end
+  end
+  get "/", to: "application#index", as: :users # Fake it for Devise
+
   namespace :api do
+
     resource :user, only: [:show]
     resource :organization_membership, only: [:show, :update]
     resources :organization_memberships, only: [:index, :destroy] do
@@ -70,5 +85,7 @@ Rails.application.routes.draw do
   get "/surveys/completed/*id", constraints: { id: /\d*/ }, as: :completed_survey, to: "application#index"
   get "/surveys/*id", constraints: { id: /\d*/ }, as: :survey, to: "application#index"
   get "/shoutouts/*id", constraints: { id: /\d*/ }, as: :shoutout, to: "application#index"
+  get "/confirm/token", to: "application#index", as: :frontend_confirmation
+  get "/reset_password", to: "application#index", as: :frontend_reset_password
   root "application#index"
 end
