@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
 
   delegate :organization, to: :organization_membership, allow_nil: true
 
+  after_update :send_password_change_email, if: :needs_password_change_email?
+
   def organization_membership
     organization_memberships.joins(:organization).last
   end
@@ -52,5 +54,13 @@ class User < ActiveRecord::Base
 
   def active_for_confirmation?
     !confirmation_required? || confirmed? || confirmation_period_valid?
+  end
+
+  def needs_password_change_email?
+    encrypted_password_changed? && persisted?
+  end
+
+  def send_password_change_email
+    EmailAuthMailer.password_change(self).deliver_later
   end
 end
