@@ -7,7 +7,7 @@ class EmailAuthMailerPreview < ActionMailer::Preview
     EmailAuthMailer.reset_password_instructions(User.first, "faketoken", {})
   end
 
-  def unlock_instructions
-    EmailAuthMailer.unlock_instructions(User.first, "faketoken", {})
+  def password_change
+    EmailAuthMailer.password_change(User.first, {})
   end
 end
