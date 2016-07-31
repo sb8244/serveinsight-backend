@@ -39,6 +39,7 @@ class AuthController < ApplicationController
   def check_for_invite!(user)
     return unless params[:invite_code]
     invite = Invite.find_by(code: params[:invite_code])
+    return unless invite
     invite.apply_to_user!(user)
   end
 end

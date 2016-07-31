@@ -9,7 +9,6 @@ class Api::Auth::RegistrationsController < Devise::RegistrationsController
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
-
   # POST /resource
   def create
     build_resource(sign_up_params)
@@ -18,6 +17,7 @@ class Api::Auth::RegistrationsController < Devise::RegistrationsController
     yield resource if block_given?
     if resource.persisted?
       resource.send(:send_on_create_confirmation_instructions)
+      check_for_invite!(resource)
 
       if resource.active_for_authentication?
         sign_up(resource_name, resource)
@@ -34,5 +34,18 @@ class Api::Auth::RegistrationsController < Devise::RegistrationsController
       set_minimum_password_length
       respond_with resource
     end
+  end
+
+  private
+
+  def invite_code
+    params.fetch(:user)[:invite_code]
+  end
+
+  def check_for_invite!(user)
+    return unless invite_code
+    invite = Invite.find_by(code: invite_code)
+    return unless invite
+    invite.apply_to_user!(user)
   end
 end
