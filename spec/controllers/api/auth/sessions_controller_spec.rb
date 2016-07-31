@@ -31,6 +31,12 @@ RSpec.describe Api::Auth::SessionsController, type: :controller do
             post :create, user: { email: user.email, password: password }
           }.to change { user.reload.last_sign_in_at }.from(nil).to(Time.now)
         end
+
+        it "can't login a gmail user" do
+          user.update!(encrypted_password: "")
+          post :create, user: { email: user.email, password: "" }
+          expect(response).not_to be_success
+        end
       end
 
       context "without confirmation" do
