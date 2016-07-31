@@ -1,5 +1,6 @@
 class Api::BaseController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :verify_confirmed_user!
 
   respond_to :json
 
@@ -29,7 +30,18 @@ class Api::BaseController < ApplicationController
   end
 
   def unauthorized!
-    head :unauthorized
+    render json: {
+
+      error: "logged_out"
+    }, status: :unauthorized
+  end
+
+  def verify_confirmed_user!
+    return if current_user.confirmed?
+
+    render json: {
+      error: "email_not_confirmed"
+    }, status: :unauthorized
   end
 
   serialization_scope :current_organization_membership
