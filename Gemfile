@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.2.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5'
+gem 'rails', '4.2.7'
 
 gem 'pg'
 gem 'sidekiq'
@@ -31,6 +31,7 @@ gem 'faker'
 group :development do
   gem 'web-console', '~> 2.0'
   gem 'spring'
+  gem 'brakeman', require: false
 end
 
 group :test do
