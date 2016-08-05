@@ -35,6 +35,14 @@ RSpec.describe Api::SurveyInstancesController, type: :controller do
         get :index, survey_template_id: survey_template.id
         expect(response_json.first.keys).to match_array(SerializerKeys::SurveyInstance::SIMPLE_KEYS)
       end
+
+
+      it "doesn't return missed surveys older than 7 days" do
+        instance1.update!(missed_at: 7.days.ago - 5.seconds)
+        get :index, survey_template_id: survey_template.id
+        expect(response).to be_success
+        expect(response_json.map { |h| h[:id] }).to eq([complete_instance.id])
+      end
     end
 
     context "with due parameter" do

@@ -38,11 +38,17 @@ class Api::SurveyInstancesController < Api::BaseController
 
   def survey_template_instances
     survey_template = current_organization.survey_templates.find(params[:survey_template_id])
-    current_organization_membership.survey_instances.where(survey_template: survey_template).order(due_at: :desc)
+    current_organization_membership.survey_instances.
+      where(survey_template: survey_template).
+      not_missed_within_days(days: 7).
+      order(due_at: :desc)
   end
 
   def due_instances
-    current_organization_membership.survey_instances.not_completed.not_missed_within_days(days: 2).order(missed_at: :asc, due_at: :asc)
+    current_organization_membership.survey_instances.
+      not_completed.
+      not_missed_within_days(days: 2).
+      order(missed_at: :asc, due_at: :asc)
   end
 
   def top_due_survey_instance
