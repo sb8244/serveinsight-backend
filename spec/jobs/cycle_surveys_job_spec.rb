@@ -99,6 +99,13 @@ RSpec.describe CycleSurveysJob, type: :job do
     ])
   end
 
+  it "doesn't send emails for already missed instances" do
+    due1_instance1.update!(missed_at: Time.now)
+    expect {
+      subject
+    }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+  end
+
   it "creates CreateSurveyInstanceJob for due templates" do
     expect {
       subject

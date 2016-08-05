@@ -26,7 +26,7 @@ class CycleSurveysJob < ActiveJob::Base
   end
 
   def update_instances!(survey_template)
-    instances = survey_template.survey_instances.not_completed.to_a
+    instances = survey_template.survey_instances.not_completed.not_missed.to_a
 
     instances_scope = survey_template.survey_instances.where(id: instances.map(&:id))
     instances_scope.update_all(missed_at: Time.now)
