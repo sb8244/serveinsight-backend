@@ -35,10 +35,22 @@ RSpec.describe Api::Auth::RegistrationsController, type: :controller do
       }.to change { User.count }.by(1)
     end
 
+    it "sends an AdminMailer" do
+      expect {
+        post :create, valid_params
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
+      args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+      expect(args).to eq([
+        { "_aj_globalid" => User.last.to_global_id.to_s },
+        { "_aj_symbol_keys" => [] }
+      ])
+    end
+
     it "sends a confirmation email" do
       expect {
         post :create, valid_params
-      }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+      }.to change { job_count(ActionMailer::DeliveryJob) }.by(2)
     end
 
     it "includes auth_token" do

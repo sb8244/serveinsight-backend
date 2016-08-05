@@ -16,6 +16,10 @@ class Api::Auth::RegistrationsController < Devise::RegistrationsController
     resource.save
     yield resource if block_given?
     if resource.persisted?
+      if resource.created_at > 10.seconds.ago
+        AdminMailer.user_added(resource).deliver_later
+      end
+
       resource.send(:send_on_create_confirmation_instructions)
       check_for_invite!(resource)
 

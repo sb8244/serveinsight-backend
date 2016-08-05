@@ -22,6 +22,17 @@ RSpec.describe AuthController, type: :controller do
                                     )
   end
 
+  it "sends an AdminMailer" do
+    expect {
+      post :callback, provider: :google_oauth2
+    }.to change { job_count(ActionMailer::DeliveryJob) }.by(1)
+    args = jobs(ActionMailer::DeliveryJob).map { |h| h[:args].last }
+
+    expect(args).to eq([
+      { "_aj_globalid" => User.last.to_global_id.to_s }
+    ])
+  end
+
   it "is email confirmed" do
     post :callback, provider: :google_oauth2
     expect(User.last.confirmed_at).to eq(Time.now)

@@ -20,7 +20,9 @@ class AuthController < ApplicationController
   end
 
   def create_user!
-    User.create!(user_params)
+    User.create!(user_params).tap do |user|
+      AdminMailer.user_added(user).deliver_later
+    end
   end
 
   def info
