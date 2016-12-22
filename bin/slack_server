@@ -33,7 +33,7 @@ server.on_add do |token|
   SteveBot.new(token: token)
 end
 
-server.add_bot('xoxb-64301512374-5s0ShTgBav0RgKwcrWeX0Ywu')
+server.add_bot('<revoked>')
 
 # Actually start the server. This line is blocking; code after
 # it won't be executed.
